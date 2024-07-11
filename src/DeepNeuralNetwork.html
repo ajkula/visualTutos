@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visualisation du Réseau de Neurones</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+  <style>
+    .tooltip {
+      position: absolute;
+      background-color: black;
+      color: whitesmoke;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 14px;
+      max-width: 200px;
+      z-index: 1000;
+      pointer-events: none;
+    }
+
+    .slider-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 60%;
+      margin: 20px auto;
+    }
+
+    .slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 15px;
+      border-radius: 5px;
+      background: #d3d3d3;
+      outline: none;
+      opacity: 0.7;
+      transition: opacity .2s;
+    }
+
+    .slider:hover {
+      opacity: 1;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: #4CAF50;
+      cursor: pointer;
+    }
+
+    .slider::-moz-range-thumb {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: #4CAF50;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect, useCallback } = React;
+
+    const networkData = {
+      inputLayer: [
+        { id: 'input1', type: 'Entrée', description: 'Pixel R', value: 0.7 },
+        { id: 'input2', type: 'Entrée', description: 'Pixel G', value: 0.3 },
+        { id: 'input3', type: 'Entrée', description: 'Pixel B', value: 0.5 },
+        { id: 'input4', type: 'Entrée', description: 'Pixel A', value: 1.0 },
+      ],
+      hiddenLayers: [
+        [
+          { id: 'hidden1_1', type: 'ReLU', description: 'Extraction de caractéristiques', operation: 'max(0, x)' },
+          { id: 'hidden1_2', type: 'ReLU', description: 'Extraction de caractéristiques', operation: 'max(0, x)' },
+          { id: 'hidden1_3', type: 'ReLU', description: 'Extraction de caractéristiques', operation: 'max(0, x)' },
+          { id: 'hidden1_4', type: 'ReLU', description: 'Extraction de caractéristiques', operation: 'max(0, x)' },
+          { id: 'hidden1_5', type: 'ReLU', description: 'Extraction de caractéristiques', operation: 'max(0, x)' },
+          { id: 'hidden1_6', type: 'ReLU', description: 'Extraction de caractéristiques', operation: 'max(0, x)' },
+        ],
+        [
+          { id: 'hidden2_1', type: 'Tanh', description: 'Traitement intermédiaire', operation: 'tanh(x)' },
+          { id: 'hidden2_2', type: 'Tanh', description: 'Traitement intermédiaire', operation: 'tanh(x)' },
+          { id: 'hidden2_3', type: 'Tanh', description: 'Traitement intermédiaire', operation: 'tanh(x)' },
+          { id: 'hidden2_4', type: 'Tanh', description: 'Traitement intermédiaire', operation: 'tanh(x)' },
+        ],
+      ],
+      outputLayer: [
+        { id: 'output1', type: 'Classification', description: 'Sortie (Classification)', operation: 'Softmax', example: '[0.7, 0.2, 0.1]' },
+        { id: 'output2', type: 'Régression', description: 'Sortie (Régression)', operation: 'Linéaire', example: '42.5' },
+        { id: 'output3', type: 'Génération', description: 'Sortie (Génération)', operation: 'Sampling', example: 'Texte généré' },
+      ],
+    };
+
+    const Neuron = ({ cx, cy, r, data, onMouseEnter, onMouseLeave, isActive }) => (
+      <g onMouseEnter={() => onMouseEnter(data)} onMouseLeave={onMouseLeave}>
+        <circle
+          cx={cx}
+          cy={cy}
+          r={r}
+          fill={isActive ? "yellow" : "white"}
+          stroke="black"
+          strokeWidth="2"
+        />
+        <circle
+          cx={cx}
+          cy={cy}
+          r={r + 10}
+          fill="transparent"
+          pointerEvents="all"
+        />
+      </g>
+    );
+
+    const Arrow = ({ startX, startY, endX, endY, isActive }) => (
+      <line
+        x1={startX}
+        y1={startY}
+        x2={endX}
+        y2={endY}
+        stroke={isActive ? "red" : "black"}
+        strokeWidth={isActive ? "2" : "1"}
+        markerEnd="url(#arrowhead)"
+      />
+    );
+
+    const Tooltip = ({ content, position }) => (
+      <div className="tooltip" style={{ left: position.x + 10, top: position.y + 10 }}>
+        <p><strong>Type:</strong> {content.type}</p>
+        <p><strong>Description:</strong> {content.description}</p>
+        {content.value !== undefined && <p><strong>Valeur:</strong> {content.value}</p>}
+        {content.operation && <p><strong>Opération:</strong> {content.operation}</p>}
+        {content.example && <p><strong>Exemple:</strong> {content.example}</p>}
+      </div>
+    );
+
+    const NeuralNetwork = () => {
+    const [hoveredNeuron, setHoveredNeuron] = useState(null);
+    const [animationProgress, setAnimationProgress] = useState(0);
+    const [activePath, setActivePath] = useState([]);
+    const [animationSpeed, setAnimationSpeed] = useState(50);
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+      const handleMouseEnter = useCallback((data) => {
+        setHoveredNeuron(data);
+      }, []);
+
+      const handleMouseMove = useCallback((event) => {
+        setMousePosition({ x: event.clientX, y: event.clientY });
+      }, []);
+
+      useEffect(() => {
+        document.addEventListener('mousemove', handleMouseMove);
+        return () => {
+          document.removeEventListener('mousemove', handleMouseMove);
+        };
+      }, [handleMouseMove]);
+
+      useEffect(() => {
+        const interval = setInterval(() => {
+          setAnimationProgress((prev) => (prev + 0.005) % 1);
+        }, animationSpeed);
+        return () => clearInterval(interval);
+      }, [animationSpeed]);
+
+      useEffect(() => {
+        const totalLayers = networkData.hiddenLayers.length + 2;
+        const currentLayerIndex = Math.floor(animationProgress * totalLayers);
+        const nextLayerIndex = (currentLayerIndex + 1) % totalLayers;
+
+        const currentLayer = currentLayerIndex === 0 ? networkData.inputLayer :
+          currentLayerIndex === totalLayers - 1 ? networkData.outputLayer :
+            networkData.hiddenLayers[currentLayerIndex - 1];
+
+        const nextLayer = nextLayerIndex === 0 ? networkData.inputLayer :
+          nextLayerIndex === totalLayers - 1 ? networkData.outputLayer :
+            networkData.hiddenLayers[nextLayerIndex - 1];
+
+        const currentNeuronIndex = Math.floor(Math.random() * currentLayer.length);
+        const nextNeuronIndex = Math.floor(Math.random() * nextLayer.length);
+
+        setActivePath([
+          { layerIndex: currentLayerIndex, neuronIndex: currentNeuronIndex },
+          { layerIndex: nextLayerIndex, neuronIndex: nextNeuronIndex },
+        ]);
+      }, [animationProgress]);
+
+      const layerWidth = 150;
+      const neuronRadius = 20;
+      const svgWidth = 800;
+      const svgHeight = 500;
+
+      const renderLayer = (layer, layerIndex) => (
+        layer.map((neuron, index) => {
+          const x = (layerIndex + 1) * layerWidth;
+          const y = (index + 1) * (svgHeight / (layer.length + 1));
+          const isActive = activePath.some(p => p.layerIndex === layerIndex && p.neuronIndex === index);
+          return (
+            <Neuron
+              key={neuron.id}
+              cx={x}
+              cy={y}
+              r={neuronRadius}
+              data={neuron}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={() => setHoveredNeuron(null)}
+              isActive={isActive}
+            />
+          );
+        })
+      );
+
+      const renderArrows = () => {
+        const arrows = [];
+        const layers = [networkData.inputLayer, ...networkData.hiddenLayers, networkData.outputLayer];
+
+        for (let i = 0; i < layers.length - 1; i++) {
+          const startLayer = layers[i];
+          const endLayer = layers[i + 1];
+
+          startLayer.forEach((startNeuron, startIndex) => {
+            const startX = (i + 1) * layerWidth;
+            const startY = (startIndex + 1) * (svgHeight / (startLayer.length + 1));
+
+            endLayer.forEach((endNeuron, endIndex) => {
+              const endX = (i + 2) * layerWidth;
+              const endY = (endIndex + 1) * (svgHeight / (endLayer.length + 1));
+
+              const isActive = activePath.some(p => p.layerIndex === i && p.neuronIndex === startIndex) &&
+                activePath.some(p => p.layerIndex === i + 1 && p.neuronIndex === endIndex);
+
+              arrows.push(
+                <Arrow
+                  key={`${startNeuron.id}-${endNeuron.id}`}
+                  startX={startX + neuronRadius}
+                  startY={startY}
+                  endX={endX - neuronRadius}
+                  endY={endY}
+                  isActive={isActive}
+                />
+              );
+            });
+          });
+        }
+
+        return arrows;
+      };
+
+      const handleSpeedChange = (event) => {
+        const newSpeed = 210 - parseInt(event.target.value);
+        setAnimationSpeed(newSpeed);
+    };
+
+      return (
+        <div className="flex flex-col items-center">
+          <svg width={svgWidth} height={svgHeight}>
+            <defs>
+              <marker
+                id="arrowhead"
+                markerWidth="10"
+                markerHeight="7"
+                refX="9"
+                refY="3.5"
+                orient="auto"
+              >
+                <polygon points="0 0, 10 3.5, 0 7" fill="black" />
+              </marker>
+            </defs>
+            {renderArrows()}
+            {renderLayer(networkData.inputLayer, 0)}
+            {networkData.hiddenLayers.map((layer, index) => renderLayer(layer, index + 1))}
+            {renderLayer(networkData.outputLayer, networkData.hiddenLayers.length + 1)}
+          </svg>
+          <div className="slider-container">
+            <input
+              type="range"
+              min="1"
+              max="200"
+              value={210 - animationSpeed}
+              className="slider"
+              onChange={handleSpeedChange}
+            />
+            <span className="mt-2">
+              Vitesse: {Math.round(1000 / animationSpeed)} fps
+            </span>
+          </div>
+          {hoveredNeuron && <Tooltip content={hoveredNeuron} position={mousePosition} />}
+        </div>
+      );
+    };
+
+    ReactDOM.render(<NeuralNetwork />, document.getElementById('root'));
+  </script>
+</body>
+
+</html>

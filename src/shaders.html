@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Les mathématiques des shaders</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <style>
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .accordion-content.active {
+            max-height: 2000px;
+        }
+
+        svg {
+          max-width: 500px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+        <h1 class="text-3xl font-bold text-center p-6 bg-blue-500 text-white">Les mathématiques des shaders</h1>
+        
+        <div class="accordion">
+            <!-- Algèbre linéaire -->
+            <div class="border-b">
+                <button class="w-full text-left p-4 font-semibold focus:outline-none">
+                    1. Algèbre linéaire (vecteurs et matrices)
+                </button>
+                <div class="accordion-content p-4">
+                    <p class="mb-4">
+                        L'algèbre linéaire est fondamentale dans les shaders pour représenter et manipuler des objets dans l'espace 3D. Les vecteurs sont utilisés pour décrire des positions, des directions et des couleurs, tandis que les matrices permettent d'appliquer des transformations comme des rotations, des mises à l'échelle et des translations.
+                    </p>
+                    <p class="mb-4">
+                        Les vecteurs dans les shaders sont généralement représentés comme des tuples de 2, 3 ou 4 composantes. Par exemple, un vecteur de position 3D pourrait être (x, y, z), tandis qu'une couleur RGB serait (r, g, b). Les opérations sur les vecteurs, comme l'addition ou la multiplication par un scalaire, sont effectuées composante par composante.
+                    </p>
+                    <p class="mb-4">
+                        Les matrices sont utilisées pour les transformations. Une matrice 4x4 peut représenter toute combinaison de rotation, mise à l'échelle, translation et projection perspective. La multiplication d'un vecteur par une matrice permet d'appliquer ces transformations de manière efficace.
+                    </p>
+                    <h3 class="font-semibold">Exemple de calcul :</h3>
+                    <p>Rotation d'un point (x, y) de 90 degrés autour de l'origine :</p>
+                    <pre class="bg-gray-100 p-2 mt-2 rounded">
+[ cos(90°)  -sin(90°) ] [ x ]  =  [ -y ]
+[ sin(90°)   cos(90°) ] [ y ]     [  x ]
+                    </pre>
+                    <h3 class="font-semibold mt-4">Schéma visuel :</h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="w-full max-w-md mx-auto mt-4">
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" />
+                            </marker>
+                        </defs>
+                        <line x1="100" y1="100" x2="100" y2="0" stroke="black" stroke-width="1" marker-end="url(#arrowhead)"/>
+                        <line x1="100" y1="100" x2="200" y2="100" stroke="black" stroke-width="1" marker-end="url(#arrowhead)"/>
+                        <line x1="100" y1="100" x2="150" y2="50" stroke="red" stroke-width="2" marker-end="url(#arrowhead)"/>
+                        <line x1="100" y1="100" x2="50" y2="150" stroke="blue" stroke-width="2" marker-end="url(#arrowhead)"/>
+                        <path d="M 150 50 A 70.71 70.71 0 0 1 50 150" fill="none" stroke="green" stroke-width="1" stroke-dasharray="5,5"/>
+                        <text x="160" y="40" font-size="12">Original</text>
+                        <text x="30" y="160" font-size="12">Rotated</text>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Trigonométrie -->
+            <div class="border-b">
+                <button class="w-full text-left p-4 font-semibold focus:outline-none">
+                    2. Trigonométrie
+                </button>
+                <div class="accordion-content p-4">
+                    <p class="mb-4">
+                        La trigonométrie joue un rôle crucial dans les shaders pour créer des mouvements cycliques, des rotations et des effets d'ondulation. Les fonctions trigonométriques comme le sinus, le cosinus et la tangente sont largement utilisées pour générer des animations fluides et des effets visuels.
+                    </p>
+                    <p class="mb-4">
+                        Le sinus et le cosinus sont particulièrement utiles pour créer des mouvements oscillatoires. Par exemple, en faisant varier la position d'un objet en fonction du sinus du temps, on obtient un mouvement de va-et-vient fluide. Ces fonctions sont également essentielles pour les calculs de rotation, comme nous l'avons vu dans l'exemple de l'algèbre linéaire.
+                    </p>
+                    <p class="mb-4">
+                        La trigonométrie est aussi utilisée dans les calculs d'éclairage, où l'angle entre la normale d'une surface et la direction de la lumière détermine l'intensité de l'éclairage. Les fonctions trigonométriques inverses (arcsin, arccos, arctan) sont utilisées pour ces calculs.
+                    </p>
+                    <h3 class="font-semibold">Exemple de calcul :</h3>
+                    <p>Position y d'un objet oscillant : y = A * sin(ωt)</p>
+                    <p>Où A est l'amplitude, ω la fréquence angulaire, et t le temps.</p>
+                    <h3 class="font-semibold mt-4">Schéma visuel :</h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100" class="w-full max-w-md mx-auto mt-4">
+                        <path d="M0,50 Q75,0 150,50 T300,50" fill="none" stroke="blue" stroke-width="2"/>
+                        <line x1="0" y1="50" x2="300" y2="50" stroke="black" stroke-width="1"/>
+                        <line x1="0" y1="0" x2="0" y2="100" stroke="black" stroke-width="1"/>
+                        <text x="310" y="55" font-size="12">Temps</text>
+                        <text x="5" y="10" font-size="12">Amplitude</text>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Interpolation -->
+            <div class="border-b">
+                <button class="w-full text-left p-4 font-semibold focus:outline-none">
+                    3. Interpolation
+                </button>
+                <div class="accordion-content p-4">
+                    <p class="mb-4">
+                        L'interpolation est une technique mathématique essentielle dans les shaders pour créer des transitions douces entre différentes valeurs. Elle est utilisée pour mélanger des couleurs, des positions, des rotations et d'autres propriétés de manière fluide.
+                    </p>
+                    <p class="mb-4">
+                        L'interpolation linéaire (ou "lerp") est la forme la plus simple et la plus couramment utilisée. Elle calcule une valeur intermédiaire entre deux points en fonction d'un facteur t qui varie de 0 à 1. Cette technique est utilisée pour créer des dégradés de couleurs, des mouvements fluides entre deux positions, ou pour mélanger des textures.
+                    </p>
+                    <p class="mb-4">
+                        Des formes plus avancées d'interpolation, comme l'interpolation bilinéaire (pour les surfaces 2D) ou trilinéaire (pour les volumes 3D), sont utilisées pour le filtrage de textures et le mélange de valeurs dans des espaces multidimensionnels. Les courbes de Bézier et les splines sont également des formes d'interpolation utilisées pour créer des mouvements plus complexes et des formes courbes.
+                    </p>
+                    <h3 class="font-semibold">Exemple de calcul :</h3>
+                    <p>Interpolation linéaire entre les couleurs rouge (1,0,0) et bleu (0,0,1) :</p>
+                    <pre class="bg-gray-100 p-2 mt-2 rounded">
+color = (1-t) * (1,0,0) + t * (0,0,1)
+                    </pre>
+                    <p>où t varie de 0 à 1.</p>
+                    <h3 class="font-semibold mt-4">Schéma visuel :</h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 50" class="w-full max-w-md mx-auto mt-4">
+                        <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:rgb(255,0,0);stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:rgb(0,0,255);stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="300" height="50" fill="url(#gradient)" />
+                        <text x="10" y="30" fill="white" font-size="12">Rouge</text>
+                        <text x="250" y="30" fill="white" font-size="12">Bleu</text>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Calcul vectoriel -->
+            <div class="border-b">
+                <button class="w-full text-left p-4 font-semibold focus:outline-none">
+                    4. Calcul vectoriel
+                </button>
+                <div class="accordion-content p-4">
+                    <p class="mb-4">
+                        Le calcul vectoriel est fondamental dans les shaders pour effectuer des opérations sur des vecteurs en 3D, ce qui est essentiel pour les calculs d'éclairage, de réflexion et de géométrie. Les principales opérations incluent le produit scalaire (dot product) et le produit vectoriel (cross product).
+                    </p>
+                    <p class="mb-4">
+                        Le produit scalaire est utilisé pour calculer l'angle entre deux vecteurs, ce qui est crucial pour déterminer l'intensité de la lumière sur une surface. Plus l'angle entre la normale de la surface et la direction de la lumière est petit, plus la surface est éclairée. Le produit scalaire donne une mesure de cette relation.
+                    </p>
+                    <p class="mb-4">
+                        Le produit vectoriel est utilisé pour calculer un vecteur perpendiculaire à deux autres vecteurs. C'est particulièrement utile pour générer des normales de surface à partir de vecteurs tangents, ou pour calculer des vecteurs de réflexion dans les effets de miroitement.
+                    </p>
+                    <h3 class="font-semibold">Exemple de calcul :</h3>
+                    <p>Produit scalaire pour le calcul de l'intensité lumineuse :</p>
+                    <pre class="bg-gray-100 p-2 mt-2 rounded">
+intensité = dot(normal, directionLumière)
+                    </pre>
+                    <h3 class="font-semibold mt-4">Schéma visuel :</h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="w-full max-w-md mx-auto mt-4">
+                        <defs>
+                            <marker id="arrowhead2" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" />
+                            </marker>
+                        </defs>
+                        <line x1="100" y1="150" x2="100" y2="50" stroke="blue" stroke-width="2" marker-end="url(#arrowhead2)"/>
+                        <line x1="100" y1="150" x2="180" y2="70" stroke="yellow" stroke-width="2" marker-end="url(#arrowhead2)"/>
+                        <path d="M 100 150 Q 140 110 180 70" fill="none" stroke="green" stroke-width="1" stroke-dasharray="5,5"/>
+                        <text x="85" y="40" font-size="12">Normal</text>
+                        <text x="185" y="65" font-size="12">Lumière</text>
+                        <text x="130" y="100" font-size="12">θ</text>
+                    </svg>
+                </div>
+            </div>
+            <!-- Espaces colorimétriques -->
+            <div class="border-b">
+              <button class="w-full text-left p-4 font-semibold focus:outline-none">
+                  5. Espaces colorimétriques
+              </button>
+              <div class="accordion-content p-4">
+                  <p class="mb-4">
+                      Les espaces colorimétriques sont des modèles mathématiques utilisés pour représenter et manipuler les couleurs dans les shaders. Comprendre et utiliser différents espaces colorimétriques permet aux développeurs de shaders de créer des effets visuels plus riches et plus précis.
+                  </p>
+                  <p class="mb-4">
+                      L'espace RGB (Rouge, Vert, Bleu) est le plus couramment utilisé dans les shaders, car il correspond directement à la façon dont les écrans affichent les couleurs. Cependant, d'autres espaces colorimétriques comme HSL (Teinte, Saturation, Luminosité) ou HSV (Teinte, Saturation, Valeur) peuvent être plus intuitifs pour certaines manipulations de couleurs.
+                  </p>
+                  <p class="mb-4">
+                      La conversion entre ces espaces colorimétriques implique des formules mathématiques spécifiques. Par exemple, la conversion de RGB à HSL permet de modifier facilement la teinte d'une couleur sans affecter sa luminosité, ce qui peut être utile pour créer des effets de changement de couleur progressif ou des palettes de couleurs harmonieuses.
+                  </p>
+                  <h3 class="font-semibold">Exemple de calcul :</h3>
+                  <p>Conversion de RGB à HSL (simplifiée) :</p>
+                  <pre class="bg-gray-100 p-2 mt-2 rounded">
+H = atan2(sqrt(3) * (G - B), 2 * R - G - B)
+S = max(R,G,B) - min(R,G,B)
+L = (max(R,G,B) + min(R,G,B)) / 2
+                  </pre>
+                  <h3 class="font-semibold mt-4">Schéma visuel :</h3>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="w-full max-w-md mx-auto mt-4">
+                      <defs>
+                          <linearGradient id="hue" x1="0%" y1="0%" x2="100%" y2="0%">
+                              <stop offset="0%" style="stop-color:hsl(0,100%,50%);stop-opacity:1" />
+                              <stop offset="16.67%" style="stop-color:hsl(60,100%,50%);stop-opacity:1" />
+                              <stop offset="33.33%" style="stop-color:hsl(120,100%,50%);stop-opacity:1" />
+                              <stop offset="50%" style="stop-color:hsl(180,100%,50%);stop-opacity:1" />
+                              <stop offset="66.67%" style="stop-color:hsl(240,100%,50%);stop-opacity:1" />
+                              <stop offset="83.33%" style="stop-color:hsl(300,100%,50%);stop-opacity:1" />
+                              <stop offset="100%" style="stop-color:hsl(360,100%,50%);stop-opacity:1" />
+                          </linearGradient>
+                      </defs>
+                      <circle cx="100" cy="100" r="90" fill="url(#hue)" stroke="black" stroke-width="2"/>
+                      <line x1="100" y1="10" x2="100" y2="190" stroke="white" stroke-width="2"/>
+                      <text x="105" y="20" font-size="12" fill="white">H</text>
+                      <text x="105" y="100" font-size="12" fill="white">S</text>
+                      <text x="105" y="185" font-size="12" fill="white">L</text>
+                  </svg>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <script>
+      document.querySelectorAll('.accordion button').forEach(button => {
+          button.addEventListener('click', () => {
+              const content = button.nextElementSibling;
+              content.classList.toggle('active');
+          });
+      });
+  </script>
+</body>
+</html>
