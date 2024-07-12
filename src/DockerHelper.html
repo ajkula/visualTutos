@@ -46,6 +46,22 @@
       background-color: #2980b9;
     }
 
+    .update-button {
+      background-color: #34dbc8;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      height: 30px;
+      width: 25%;
+      margin-top: 10px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .update-button:hover {
+      background-color: #29b9b4;
+    }
+
     .collapsible {
       background-color: #f1f1f1;
       color: #444;
@@ -91,6 +107,7 @@
       margin-bottom: 10px;
       border: 1px solid #ddd;
       border-radius: 4px;
+      max-width: -webkit-fill-available;
     }
 
     input[type="submit"] {
@@ -105,74 +122,121 @@
     input[type="submit"]:hover {
       background-color: #27ae60;
     }
+
+    pre {
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .scrollable-content {
+      max-height: 300px;
+      overflow-y: auto;
+      scrollbar-width: none;
+      /* Pour Firefox */
+      -ms-overflow-style: none;
+      /* Internet Explorer Edge */
+    }
+
+    .scrollable-content::-webkit-scrollbar {
+      display: none;
+      /* Chrome Safari Opera */
+    }
   </style>
 </head>
 
 <body>
-  <h1>Création et remplissage d'une base de données PostgreSQL dans un conteneur Docker</h1>
+  <header>
+    <h1>Création et remplissage d'une base de données PostgreSQL dans un conteneur Docker</h1>
+  </header>
 
-  <h2>Personnalisez vos commandes</h2>
-  <form id="dockerForm">
-    <input type="text" id="containerName" placeholder="Nom du conteneur">
-    <input type="password" id="password" placeholder="Mot de passe de la base de données">
-    <input type="text" id="port" placeholder="Port">
-    <input type="text" id="volumeName" placeholder="Nom du volume">
-    <input type="text" id="sqlFilePath" placeholder="Chemin du fichier SQL">
-    <select id="dockerMethod">
-      <option value="terminal">Docker Terminal</option>
-      <option value="compose">Docker Compose</option>
-      <option value="desktop">Docker Desktop</option>
-    </select>
-    <button type="submit">Mettre à jour</button>
-  </form>
+  <main>
+    <section aria-labelledby="personalization">
+      <h2 id="personalization">Personnalisez vos commandes</h2>
+      <form id="dockerForm" aria-label="Formulaire de personnalisation des commandes Docker">
+        <div>
+          <label for="containerName">Nom du conteneur:</label>
+          <input type="text" id="containerName" name="containerName" required>
+        </div>
+        <div>
+          <label for="password">Mot de passe de la base de données:</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+          <label for="port">Port:</label>
+          <input type="text" id="port" name="port" required pattern="[0-9]*"
+            title="Veuillez entrer un numéro de port valide">
+        </div>
+        <div>
+          <label for="volumeName">Nom du volume:</label>
+          <input type="text" id="volumeName" name="volumeName" required>
+        </div>
+        <div>
+          <label for="sqlFilePath">Chemin du fichier SQL:</label>
+          <input type="text" id="sqlFilePath" name="sqlFilePath" required>
+        </div>
+        <div>
+          <label for="dockerMethod">Méthode Docker:</label>
+          <select id="dockerMethod" name="dockerMethod">
+            <option value="terminal">Docker Terminal</option>
+            <option value="compose">Docker Compose</option>
+            <option value="desktop">Docker Desktop</option>
+          </select>
+        </div>
+        <button type="submit" class="update-button">Mettre à jour</button>
+      </form>
+    </section>
 
-  <h2>Prérequis</h2>
-  <ul>
-    <li>Docker installé sur votre machine</li>
-    <li>Un fichier SQL contenant vos instructions de création et de remplissage de la base de données</li>
-  </ul>
+    <section aria-labelledby="prerequisites">
+      <h2 id="prerequisites">Prérequis</h2>
+      <ul>
+        <li>Docker installé sur votre machine</li>
+        <li>Un fichier SQL contenant vos instructions de création et de remplissage de la base de données</li>
+      </ul>
+    </section>
 
-  <h2>Procédure</h2>
+    <section aria-labelledby="procedure">
+      <h2 id="procedure">Procédure</h2>
 
-  <div id="dockerTerminal">
-    <h3>1. Créer un volume Docker pour la persistance des données</h3>
-    <div class="code-block">
-      <button class="copy-button">Copier</button>
-      <pre><code id="createVolume" class="bash">
+      <div id="dockerTerminal">
+        <h3>1. Créer un volume Docker pour la persistance des données</h3>
+        <div class="code-block">
+          <button class="copy-button" aria-label="Copier la commande de création de volume">Copier</button>
+          <pre><code id="createVolume" aria-label="Commande pour créer un volume Docker">
 docker volume create <span class="volume-name">pgdata</span>
-          </code></pre>
-    </div>
+                  </code></pre>
+        </div>
 
-    <h3>2. Lancer un conteneur PostgreSQL</h3>
-    <div class="code-block">
-      <button class="copy-button">Copier</button>
-      <pre><code id="runContainer" class="bash">
+        <h3>2. Lancer un conteneur PostgreSQL</h3>
+        <div class="code-block">
+          <button class="copy-button" aria-label="Copier la commande de lancement du conteneur">Copier</button>
+          <pre><code id="runContainer" aria-label="Commande pour lancer un conteneur PostgreSQL">
 docker run --name <span class="container-name">mon-postgres</span> -e POSTGRES_PASSWORD=<span class="db-password">motdepasse</span> -d -p <span class="port-number">5432</span>:5432 -v <span class="volume-name">pgdata</span>:/var/lib/postgresql/data postgres:latest
-          </code></pre>
-    </div>
+                  </code></pre>
+        </div>
 
-    <h3>3. Copier votre fichier SQL dans le conteneur</h3>
-    <div class="code-block">
-      <button class="copy-button">Copier</button>
-      <pre><code id="copySqlFile" class="bash">
+        <h3>3. Copier votre fichier SQL dans le conteneur</h3>
+        <div class="code-block">
+          <button class="copy-button" aria-label="Copier la commande de copie du fichier SQL">Copier</button>
+          <pre><code id="copySqlFile" aria-label="Commande pour copier le fichier SQL dans le conteneur">
 docker cp <span class="sql-file-path">chemin/vers/votre/fichier.sql</span> <span class="container-name">mon-postgres</span>:/tmp/fichier.sql
-          </code></pre>
-    </div>
+                  </code></pre>
+        </div>
 
-    <h3>4. Exécuter le script SQL dans le conteneur</h3>
-    <div class="code-block">
-      <button class="copy-button">Copier</button>
-      <pre><code id="executeSqlScript" class="bash">
+        <h3>4. Exécuter le script SQL dans le conteneur</h3>
+        <div class="code-block">
+          <button class="copy-button" aria-label="Copier la commande d'exécution du script SQL">Copier</button>
+          <pre><code id="executeSqlScript" aria-label="Commande pour exécuter le script SQL dans le conteneur">
 docker exec -it <span class="container-name">mon-postgres</span> psql -U postgres -d postgres -f /tmp/fichier.sql
-          </code></pre>
-    </div>
-  </div>
+                  </code></pre>
+        </div>
+      </div>
 
-  <div id="dockerCompose" style="display:none;">
-    <h3>1. Créer un fichier docker-compose.yml</h3>
-    <div class="code-block">
-      <button class="copy-button">Copier</button>
-      <pre><code id="dockerComposeFile" class="yaml">
+      <div id="dockerCompose" style="display:none;">
+        <h3>1. Créer un fichier docker-compose.yml</h3>
+        <div class="code-block">
+          <button class="copy-button" aria-label="Copier le contenu du fichier docker-compose.yml">Copier</button>
+          <pre><code id="dockerComposeFile" aria-label="Contenu du fichier docker-compose.yml">
 version: '3.8'
 services:
 db:
@@ -187,83 +251,91 @@ db:
     - ./<span class="sql-file-path">chemin/vers/votre/fichier.sql</span>:/docker-entrypoint-initdb.d/init.sql
 volumes:
 <span class="volume-name">pgdata</span>:
-          </code></pre>
-    </div>
+                  </code></pre>
+        </div>
 
-    <h3>2. Lancer le conteneur avec Docker Compose</h3>
-    <div class="code-block">
-      <button class="copy-button">Copier</button>
-      <pre><code id="runDockerCompose" class="bash">
+        <h3>2. Lancer le conteneur avec Docker Compose</h3>
+        <div class="code-block">
+          <button class="copy-button" aria-label="Copier la commande de lancement avec Docker Compose">Copier</button>
+          <pre><code id="runDockerCompose" aria-label="Commande pour lancer le conteneur avec Docker Compose">
 docker-compose up -d
-          </code></pre>
-    </div>
-  </div>
+                  </code></pre>
+        </div>
+      </div>
 
-  <div id="dockerDesktop" style="display:none;">
-    <h3>Utilisation de Docker Desktop</h3>
+      <div id="dockerDesktop" style="display:none;">
+        <h3>Utilisation de Docker Desktop</h3>
 
-    <p>Pour utiliser Docker Desktop avec PostgreSQL :</p>
-    <ol>
-      <li>Ouvrez Docker Desktop</li>
-      <li>Cliquez sur "Add container" ou "Create container"</li>
-      <li>Recherchez "postgres" dans le champ de recherche</li>
-      <li>Sélectionnez l'image officielle PostgreSQL</li>
-      <li>Configurez les options suivantes :
-        <ul>
-          <li>Container Name: <span id="containerNameDesktop" class="container-name">mon-postgres</span></li>
-          <li>Ports: <span id="portDesktop" class="port-number">5432</span>:5432</li>
-          <li>Volumes: Ajoutez un volume nommé <span id="volumeNameDesktop" class="volume-name">pgdata</span> mappé à
-            /var/lib/postgresql/data</li>
-          <li>Environment Variables: POSTGRES_PASSWORD=<span id="passwordDesktop" class="db-password">motdepasse</span>
+        <p>Pour utiliser Docker Desktop avec PostgreSQL :</p>
+        <ol>
+          <li>Ouvrez Docker Desktop</li>
+          <li>Cliquez sur "Add container" ou "Create container"</li>
+          <li>Recherchez "postgres" dans le champ de recherche</li>
+          <li>Sélectionnez l'image officielle PostgreSQL</li>
+          <li>Configurez les options suivantes :
+            <ul>
+              <li>Container Name: <span id="containerNameDesktop" class="container-name">mon-postgres</span></li>
+              <li>Ports: <span id="portDesktop" class="port-number">5432</span>:5432</li>
+              <li>Volumes: Ajoutez un volume nommé <span id="volumeNameDesktop" class="volume-name">pgdata</span> mappé
+                à /var/lib/postgresql/data</li>
+              <li>Environment Variables: POSTGRES_PASSWORD=<span id="passwordDesktop"
+                  class="db-password">motdepasse</span></li>
+            </ul>
           </li>
-        </ul>
-      </li>
-      <li>Cliquez sur "Run" pour démarrer le conteneur</li>
-    </ol>
+          <li>Cliquez sur "Run" pour démarrer le conteneur</li>
+        </ol>
 
-    <p>Pour exécuter votre script SQL, suivez ces étapes :</p>
-    <ol>
-      <li>Copiez d'abord votre fichier SQL dans le conteneur :</li>
-      <li>Ensuite, exécutez le script SQL dans le conteneur :</li>
-    </ol>
-  </div>
+        <p>Pour exécuter votre script SQL, suivez ces étapes :</p>
+        <ol>
+          <li>Copiez d'abord votre fichier SQL dans le conteneur :</li>
+          <li>Ensuite, exécutez le script SQL dans le conteneur :</li>
+        </ol>
+      </div>
+    </section>
 
-  <h2>Copier un fichier depuis le conteneur vers le système local</h2>
-  <p>Pour copier un fichier depuis le volume du conteneur vers votre système de fichiers local, utilisez la commande
-    suivante :</p>
-  <div class="code-block">
-    <button class="copy-button">Copier</button>
-    <pre><code id="copyFromContainer" class="bash">
+    <section aria-labelledby="copy-from-container">
+      <h2 id="copy-from-container">Copier un fichier depuis le conteneur vers le système local</h2>
+      <p>Pour copier un fichier depuis le volume du conteneur vers votre système de fichiers local, utilisez la commande
+        suivante :</p>
+      <div class="code-block">
+        <button class="copy-button" aria-label="Copier la commande de copie depuis le conteneur">Copier</button>
+        <pre><code id="copyFromContainer" aria-label="Commande pour copier un fichier depuis le conteneur">
 docker cp <span class="container-name">mon-postgres</span>:/chemin/dans/le/conteneur/fichier.sql /chemin/local/destination/fichier.sql
-    </code></pre>
-  </div>
+              </code></pre>
+      </div>
 
-  <p>Par exemple, pour copier un fichier de sauvegarde nommé 'backup.sql' depuis le répertoire
-    '/var/lib/postgresql/data/' du conteneur vers votre bureau :</p>
-  <div class="code-block">
-    <button class="copy-button">Copier</button>
-    <pre><code id="copyFromContainerExample" class="bash">
+      <p>Par exemple, pour copier un fichier de sauvegarde nommé 'backup.sql' depuis le répertoire
+        '/var/lib/postgresql/data/' du conteneur vers votre bureau :</p>
+      <div class="code-block">
+        <button class="copy-button"
+          aria-label="Copier l'exemple de commande de copie depuis le conteneur">Copier</button>
+        <pre><code id="copyFromContainerExample" aria-label="Exemple de commande pour copier un fichier de sauvegarde depuis le conteneur">
 docker cp <span class="container-name">mon-postgres</span>:/var/lib/postgresql/data/backup.sql ~/Desktop/backup.sql
-    </code></pre>
-  </div>
+              </code></pre>
+      </div>
 
-  <p><strong>Note :</strong> Cette commande doit être exécutée depuis un terminal sur votre machine hôte, pas à
-    l'intérieur du conteneur. Assurez-vous d'avoir les permissions nécessaires pour écrire dans le répertoire de
-    destination sur votre système local.</p>
+      <p><strong>Note :</strong> Cette commande doit être exécutée depuis un terminal sur votre machine hôte, pas à
+        l'intérieur du conteneur. Assurez-vous d'avoir les permissions nécessaires pour écrire dans le répertoire de
+        destination sur votre système local.</p>
+    </section>
 
-  <h2>Notes importantes</h2>
-  <ul>
-    <li>Remplacez <code><span class="db-password">motdepasse</span></code> par un mot de passe sécurisé de votre choix.
-    </li>
-    <li>Ajustez <code><span class="sql-file-path">chemin/vers/votre/fichier.sql</span></code> avec le chemin réel de
-      votre fichier SQL sur votre système local.</li>
-    <li>Le port <span class="port-number">5432</span> est exposé sur votre machine hôte. Vous pouvez vous connecter à la
-      base de données avec un client PostgreSQL en utilisant
-      <code>localhost:<span class="port-number">5432</span></code>.</li>
-    <li><strong>Important :</strong> Notez que la commande <code>docker cp</code> est utilisée pour copier le fichier
-      SQL de votre système local vers le conteneur avant de l'exécuter. Cette étape est nécessaire car le conteneur n'a
-      pas accès direct à votre système de fichiers local.</li>
-  </ul>
+    <section aria-labelledby="important-notes">
+      <h2 id="important-notes">Notes importantes</h2>
+      <ul>
+        <li>Remplacez <code><span class="db-password">motdepasse</span></code> par un mot de passe sécurisé de votre
+          choix.</li>
+        <li>Ajustez <code><span class="sql-file-path">chemin/vers/votre/fichier.sql</span></code> avec le chemin réel de
+          votre fichier SQL sur votre système local.</li>
+        <li>Le port <span class="port-number">5432</span> est exposé sur votre machine hôte. Vous pouvez vous connecter
+          à la base de données avec un client PostgreSQL en utilisant
+          <code>localhost:<span class="port-number">5432</span></code>.
+        </li>
+        <li><strong>Important :</strong> Notez que la commande <code>docker cp</code> est utilisée pour copier le
+          fichier SQL de votre système local vers le conteneur avant de l'exécuter. Cette étape est nécessaire car le
+          conteneur n'a pas accès direct à votre système de fichiers local.</li>
+      </ul>
+    </section>
+  </main>
 
   <script>
     function copyToClipboard(btn) {
@@ -279,7 +351,7 @@ docker cp <span class="container-name">mon-postgres</span>:/var/lib/postgresql/d
         btn.textContent = "Copier";
       }, 2000);
     }
-  
+
     function updateCommands() {
       var containerName = document.getElementById('containerName').value || 'mon-postgres';
       var dbPassword = document.getElementById('password').value || 'motdepasse';
@@ -287,25 +359,25 @@ docker cp <span class="container-name">mon-postgres</span>:/var/lib/postgresql/d
       var volumeName = document.getElementById('volumeName').value || 'pgdata';
       var sqlFilePath = document.getElementById('sqlFilePath').value || 'chemin/vers/votre/fichier.sql';
       var dockerMethod = document.getElementById('dockerMethod').value;
-  
+
       // Update common elements
       document.querySelectorAll('.container-name').forEach(el => el.textContent = containerName);
       document.querySelectorAll('.db-password').forEach(el => el.textContent = dbPassword);
       document.querySelectorAll('.port-number').forEach(el => el.textContent = dbPort);
       document.querySelectorAll('.volume-name').forEach(el => el.textContent = volumeName);
       document.querySelectorAll('.sql-file-path').forEach(el => el.textContent = sqlFilePath);
-  
+
       // Show/hide appropriate sections
       document.getElementById('dockerTerminal').style.display = dockerMethod === 'terminal' ? 'block' : 'none';
       document.getElementById('dockerCompose').style.display = dockerMethod === 'compose' ? 'block' : 'none';
       document.getElementById('dockerDesktop').style.display = dockerMethod === 'desktop' ? 'block' : 'none';
-  
+
       // Update specific commands
       document.getElementById('createVolume').textContent = `docker volume create ${volumeName}`;
       document.getElementById('runContainer').textContent = `docker run --name ${containerName} -e POSTGRES_PASSWORD=${dbPassword} -d -p ${dbPort}:5432 -v ${volumeName}:/var/lib/postgresql/data postgres:latest`;
       document.getElementById('copySqlFile').textContent = `docker cp ${sqlFilePath} ${containerName}:/tmp/fichier.sql`;
       document.getElementById('executeSqlScript').textContent = `docker exec -it ${containerName} psql -U postgres -d postgres -f /tmp/fichier.sql`;
-  
+
       document.getElementById('dockerComposeFile').textContent = `
   version: '3.8'
   services:
@@ -321,32 +393,31 @@ docker cp <span class="container-name">mon-postgres</span>:/var/lib/postgresql/d
         - ./${sqlFilePath}:/docker-entrypoint-initdb.d/init.sql
   volumes:
     ${volumeName}:`;
-  
+
       document.getElementById('copyFromContainer').textContent = `docker cp ${containerName}:/chemin/dans/le/conteneur/fichier.sql /chemin/local/destination/fichier.sql`;
       document.getElementById('copyFromContainerExample').textContent = `docker cp ${containerName}:/var/lib/postgresql/data/backup.sql ~/Desktop/backup.sql`;
-  
-      // Highlight code if Prism is available
+
+      // highlight code if Prism is available
       if (typeof Prism !== 'undefined') {
         Prism.highlightAll();
       }
     }
-  
-    // Set up event listeners
-    document.getElementById('dockerForm').addEventListener('submit', function(e) {
+
+    // event listeners
+    document.getElementById('dockerForm').addEventListener('submit', function (e) {
       e.preventDefault();
       updateCommands();
     });
-  
+
     document.getElementById('dockerMethod').addEventListener('change', updateCommands);
-  
-    // Set up copy buttons
+
+    // copy buttons
     document.querySelectorAll('.code-block button').forEach(button => {
-      button.addEventListener('click', function() {
+      button.addEventListener('click', function () {
         copyToClipboard(this);
       });
     });
-  
-    // Initial update
+
     updateCommands();
   </script>
 </body>
