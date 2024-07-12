@@ -29,6 +29,12 @@
       margin: 20px auto;
     }
 
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
     .slider {
       -webkit-appearance: none;
       appearance: none;
@@ -143,11 +149,11 @@
     );
 
     const NeuralNetwork = () => {
-    const [hoveredNeuron, setHoveredNeuron] = useState(null);
-    const [animationProgress, setAnimationProgress] = useState(0);
-    const [activePath, setActivePath] = useState([]);
-    const [animationSpeed, setAnimationSpeed] = useState(50);
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+      const [hoveredNeuron, setHoveredNeuron] = useState(null);
+      const [animationProgress, setAnimationProgress] = useState(0);
+      const [activePath, setActivePath] = useState([]);
+      const [animationSpeed, setAnimationSpeed] = useState(50);
+      const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
       const handleMouseEnter = useCallback((data) => {
         setHoveredNeuron(data);
@@ -257,28 +263,30 @@
       const handleSpeedChange = (event) => {
         const newSpeed = 210 - parseInt(event.target.value);
         setAnimationSpeed(newSpeed);
-    };
+      };
 
       return (
         <div className="flex flex-col items-center">
-          <svg width={svgWidth} height={svgHeight}>
-            <defs>
-              <marker
-                id="arrowhead"
-                markerWidth="10"
-                markerHeight="7"
-                refX="9"
-                refY="3.5"
-                orient="auto"
-              >
-                <polygon points="0 0, 10 3.5, 0 7" fill="black" />
-              </marker>
-            </defs>
-            {renderArrows()}
-            {renderLayer(networkData.inputLayer, 0)}
-            {networkData.hiddenLayers.map((layer, index) => renderLayer(layer, index + 1))}
-            {renderLayer(networkData.outputLayer, networkData.hiddenLayers.length + 1)}
-          </svg>
+          <div className="container">
+            <svg width={svgWidth} height={svgHeight}>
+              <defs>
+                <marker
+                  id="arrowhead"
+                  markerWidth="10"
+                  markerHeight="7"
+                  refX="9"
+                  refY="3.5"
+                  orient="auto"
+                >
+                  <polygon points="0 0, 10 3.5, 0 7" fill="black" />
+                </marker>
+              </defs>
+              {renderArrows()}
+              {renderLayer(networkData.inputLayer, 0)}
+              {networkData.hiddenLayers.map((layer, index) => renderLayer(layer, index + 1))}
+              {renderLayer(networkData.outputLayer, networkData.hiddenLayers.length + 1)}
+            </svg>
+          </div>
           <div className="slider-container">
             <input
               type="range"
