@@ -1,138 +1,148 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Éditeur SVG Interactif Amélioré</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.1.1/svg.min.js"></script>
-    <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            display: flex;
-            height: 90%;
-        }
-        #editor, #render {
-            width: 50%;
-            height: 100%;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-        #editor {
-            border-right: 1px solid #ccc;
-        }
-        #svg-code {
-            width: 100%;
-            height: 100%;
-            resize: none;
-        }
-        #error-zone {
-            height: 10%;
-            background-color: #ffeeee;
-            padding: 10px;
-            box-sizing: border-box;
-            overflow-y: auto;
-        }
-        #render svg {
-            border: 1px solid #ddd;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Éditeur SVG Interactif Amélioré</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.1.1/svg.min.js"></script>
+  <style>
+    body,
+    html {
+      height: 100%;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      display: flex;
+      height: 90%;
+    }
+
+    #editor,
+    #render {
+      width: 50%;
+      height: 100%;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    #editor {
+      border-right: 1px solid #ccc;
+    }
+
+    #svg-code {
+      width: 100%;
+      height: 100%;
+      resize: none;
+    }
+
+    #error-zone {
+      height: 10%;
+      background-color: #ffeeee;
+      padding: 10px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    #render svg {
+      border: 1px solid #ddd;
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <div id="editor">
-            <textarea id="svg-code">
-<!-- SVG viewport définit la zone visible du dessin -->
-<!-- viewBox="0 0 240 120" signifie que le dessin s'étend de 0 à 240 sur l'axe X et de 0 à 120 sur l'axe Y -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 120">
-  <defs>
-    <!-- Définition d'un masque pour créer les coins arrondis -->
-    <clipPath id="rounded-corners">
-      <!-- Rectangle avec coins arrondis : x=10, y=10 (position), width=220, height=100 (taille), rx=ry=20 (rayon des coins) -->
-      <rect x="10" y="10" width="150" height="80" rx="20" ry="20" />
-    </clipPath>
-  </defs>
-  
-  <!-- Groupe d'éléments auxquels on applique le masque de coins arrondis -->
-  <g clip-path="url(#rounded-corners)">
-    <!-- Rectangle de fond bleu -->
-    <!-- x=10, y=10 (position du coin supérieur gauche), width=220, height=100 (dimensions) -->
-    <rect x="10" y="10" width="220" height="100" fill="#000091"/>
-    
-    <!-- Chemin pour créer la diagonale rouge -->
-    <!-- d="M10 110 L230 10" signifie : Déplacer à (10,110), tracer une ligne jusqu'à (230,10) -->
-
-
-    <!-- Rectangle de fond bleu -->
-    <!-- x=10, y=10 (position du coin supérieur gauche), width=220, height=100 (dimensions) -->
-    <rect x="105" y="10" width="110" height="100" fill="#E1000F" />
-  </g>
-  
-  <!-- Groupe pour le texte "DSFR Builder" -->
-  <!-- translate(30, 35) déplace le groupe de 30 unités vers la droite et 35 vers le bas -->
-  <g transform="translate(20, 35)">
-    <text font-family="Arial, sans-serif" font-weight="bold" fill="#ffffff">
-      <!-- Premier tspan pour "DSFR" : x=0, y=0 (relatif au groupe), font-size=28 -->
-      <tspan x="0" y="10" font-size="26">DSFR</tspan>
-      <!-- Second tspan pour "Builder" : x=0, y=32 (32 unités sous "DSFR"), font-size=24 -->
-      <tspan x="0" y="38" font-size="22">Builder</tspan>
-    </text>
-  </g>
-  
-  <!-- Texte pour "/>" -->
-  <!-- x=190, y=70 (position), font-size=40, text-anchor="middle" pour centrer horizontalement -->
-  <text x="133" y="68" font-family="Arial, sans-serif" font-weight="bold" font-size="50" fill="#ffffff" text-anchor="middle">/&gt;</text>
-</svg>
-            </textarea>
-        </div>
-        <div id="render"></div>
-    </div>
-    <div id="error-zone"></div>
-
-    <script>
-        const editor = document.getElementById('svg-code');
-        const render = document.getElementById('render');
-        const errorZone = document.getElementById('error-zone');
-        let draw;
-        let selectedElement;
-
-        function updateRender() {
-            try {
-                render.innerHTML = editor.value;
-                initSVG();
-                errorZone.textContent = '';
-            } catch (e) {
-                errorZone.textContent = 'Erreur : ' + e.message;
-            }
-        }
-
-        function initSVG() {
-            if (draw) draw.remove();
-            draw = SVG().addTo('#render').size(400, 300);
-            draw.svg(editor.value);
+  <div class="container">
+    <div id="editor">
+      <textarea id="svg-code">
+        <!-- SVG viewport définit la zone visible du dessin -->
+        <!-- viewBox="0 0 240 120" signifie que le dessin s'étend de 0 à 240 sur l'axe X et de 0 à 120 sur l'axe Y -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 120">
+          <defs>
+            <!-- Définition d'un masque pour créer les coins arrondis -->
+            <clipPath id="rounded-corners">
+              <!-- Rectangle avec coins arrondis : x=10, y=10 (position), width=220, height=100 (taille), rx=ry=20 (rayon des coins) -->
+              <rect x="10" y="10" width="150" height="80" rx="20" ry="20" />
+            </clipPath>
+          </defs>
+          
+          <!-- Groupe d'éléments auxquels on applique le masque de coins arrondis -->
+          <g clip-path="url(#rounded-corners)">
+            <!-- Rectangle de fond bleu -->
+            <!-- x=10, y=10 (position du coin supérieur gauche), width=220, height=100 (dimensions) -->
+            <rect x="10" y="10" width="220" height="100" fill="#000091"/>
             
-            draw.find('rect, circle').forEach(el => {
-                el.click(function() {
-                    if (selectedElement) selectedElement.selectize(false, {pointSize: 5}).resize('stop');
-                    selectedElement = this.selectize({pointSize: 5}).resize();
-                    selectedElement.on('resizing', function(e) {
-                        updateCode();
-                    });
-                });
-            });
-        }
+            <!-- Chemin pour créer la diagonale rouge -->
+            <!-- d="M10 110 L230 10" signifie : Déplacer à (10,110), tracer une ligne jusqu'à (230,10) -->
+        
+        
+            <!-- Rectangle de fond bleu -->
+            <!-- x=10, y=10 (position du coin supérieur gauche), width=220, height=100 (dimensions) -->
+            <rect x="105" y="10" width="110" height="100" fill="#E1000F" />
+          </g>
+          
+          <!-- Groupe pour le texte -->
+          <g transform="translate(20, 35)">
+            <text font-family="Arial, sans-serif" font-weight="bold" fill="#ffffff">
+              <!-- Premier tspan pour "DSFR" : x=0, y=0 (relatif au groupe), font-size=28 -->
+              <tspan x="0" y="10" font-size="26">DSFR</tspan>
+              <!-- Second tspan pour "Builder" : x=0, y=32 (32 unités sous "DSFR"), font-size=24 -->
+              <tspan x="0" y="38" font-size="22">Builder</tspan>
+            </text>
+          </g>
+          
+          <!-- Texte pour "/>" -->
+          <!-- x=190, y=70 (position), font-size=40, text-anchor="middle" pour centrer horizontalement -->
+          <text x="133" y="68" font-family="Arial, sans-serif" font-weight="bold" font-size="50" fill="#ffffff" text-anchor="middle">/></text>
+        </svg>
+      </textarea>
+    </div>
+    <div id="render"></div>
+  </div>
+  <div id="error-zone"></div>
 
-        function updateCode() {
-            editor.value = render.innerHTML;
-        }
+  <script>
+    const editor = document.getElementById('svg-code');
+    const render = document.getElementById('render');
+    const errorZone = document.getElementById('error-zone');
+    let draw;
+    let selectedElement;
 
-        editor.addEventListener('input', updateRender);
+    function updateRender() {
+      try {
+        render.innerHTML = editor.value;
+        initSVG();
+        errorZone.textContent = '';
+      } catch (e) {
+        errorZone.textContent = 'Erreur : ' + e.message;
+      }
+    }
 
-        // Initialisation
-        updateRender();
-    </script>
+    function initSVG() {
+      if (draw) draw.remove();
+      draw = SVG().addTo('#render').size(400, 300);
+      draw.svg(editor.value);
+
+      draw.find('rect, circle').forEach(el => {
+        el.click(function () {
+          if (selectedElement) selectedElement.selectize(false, { pointSize: 5 }).resize('stop');
+          selectedElement = this.selectize({ pointSize: 5 }).resize();
+          selectedElement.on('resizing', function (e) {
+            updateCode();
+          });
+        });
+      });
+    }
+
+    function updateCode() {
+      editor.value = render.innerHTML;
+    }
+
+    editor.addEventListener('input', updateRender);
+
+    // Initialisation
+    updateRender();
+  </script>
 </body>
+
 </html>
