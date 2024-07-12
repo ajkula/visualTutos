@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tufte : Impact environnemental des visualisations numériques</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    h1,
+    h2 {
+      color: #2c3e50;
+    }
+
+    .concept {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .example {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #3498db;
+    }
+
+    svg {
+      max-width: 100%;
+      height: auto;
+      margin: 10px 0;
+    }
+
+    .tooltip {
+      position: absolute;
+      background-color: black;
+      color: whitesmoke;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-size: 14px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .interactive {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Tufte : Impact environnemental des visualisations numériques</h1>
+
+  <div class="concept">
+    <h2>1. Efficacité énergétique des visualisations</h2>
+    <p>Appliquer les principes de Tufte pour créer des visualisations économes en énergie.</p>
+    <svg id="energy-efficiency" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <rect class="interactive" x="50" y="50" width="100" height="100" fill="#e74c3c" />
+      <rect class="interactive" x="250" y="50" width="100" height="100" fill="#2ecc71" />
+      <path d="M170,100 L230,100" stroke="#333" stroke-width="2" marker-end="url(#arrow)" />
+      <text x="100" y="170" text-anchor="middle" font-size="14">Haute consommation</text>
+      <text x="300" y="170" text-anchor="middle" font-size="14">Basse consommation</text>
+      <defs>
+        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L0,6 L9,3 z" fill="#333" />
+        </marker>
+      </defs>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Simplifier les visualisations pour réduire la charge de calcul et la consommation d'énergie.</li>
+        <li>Privilégier des designs minimalistes qui transmettent efficacement l'information.</li>
+        <li>Optimiser les algorithmes de rendu pour une meilleure efficacité énergétique.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>2. Réduction de l'empreinte des données</h2>
+    <p>Utiliser les techniques de Tufte pour maximiser l'information tout en minimisant le volume de données.</p>
+    <svg id="data-footprint" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <circle class="interactive" cx="100" cy="100" r="70" fill="#3498db" opacity="0.7" />
+      <circle class="interactive" cx="300" cy="100" r="40" fill="#3498db" />
+      <text x="100" y="180" text-anchor="middle" font-size="14">Données brutes</text>
+      <text x="300" y="180" text-anchor="middle" font-size="14">Données optimisées</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Utiliser des techniques de compression de données sans perte d'information significative.</li>
+        <li>Adopter des formats de fichiers efficients pour le stockage et la transmission des visualisations.</li>
+        <li>Appliquer le principe de la densité de données pour maximiser l'information par octet.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>3. Visualisations adaptatives</h2>
+    <p>Créer des visualisations qui s'adaptent aux contraintes énergétiques et matérielles.</p>
+    <svg id="adaptive-viz" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <rect class="interactive" x="50" y="50" width="100" height="100" fill="#3498db" />
+      <rect class="interactive" x="170" y="50" width="100" height="100" fill="#3498db" opacity="0.7" />
+      <rect class="interactive" x="290" y="50" width="100" height="100" fill="#3498db" opacity="0.4" />
+      <text x="100" y="170" text-anchor="middle" font-size="12">Haute performance</text>
+      <text x="220" y="170" text-anchor="middle" font-size="12">Performance moyenne</text>
+      <text x="340" y="170" text-anchor="middle" font-size="12">Basse performance</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Concevoir des visualisations qui s'ajustent automatiquement aux capacités de l'appareil.</li>
+        <li>Utiliser des techniques de dégradation gracieuse pour maintenir l'efficacité sur des appareils moins
+          puissants.</li>
+        <li>Prioriser les éléments essentiels de la visualisation dans les contextes de ressources limitées.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>4. Sensibilisation à l'impact environnemental</h2>
+    <p>Intégrer des indicateurs d'impact environnemental dans les visualisations elles-mêmes.</p>
+    <svg id="environmental-awareness" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <path d="M50,150 Q125,50 200,100 T350,75" fill="none" stroke="#3498db" stroke-width="3" />
+      <circle class="interactive" cx="200" cy="100" r="10" fill="#2ecc71" />
+      <rect class="interactive" x="320" y="20" width="60" height="30" fill="#f1c40f" rx="5" />
+      <text x="350" y="40" text-anchor="middle" font-size="12">12g CO2</text>
+      <text x="200" y="180" text-anchor="middle" font-size="14">Visualisation avec indicateur d'impact</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Incorporer des métriques d'impact environnemental de manière non intrusive dans les visualisations.</li>
+        <li>Utiliser des indicateurs visuels subtils pour représenter l'empreinte carbone de la visualisation.</li>
+        <li>Eduquer les utilisateurs sur l'impact de leur consommation de données à travers la visualisation.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>5. Durabilité des visualisations</h2>
+    <p>Appliquer les principes de Tufte pour créer des visualisations durables et réutilisables.</p>
+    <svg id="visualization-sustainability" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <circle cx="200" cy="100" r="80" fill="none" stroke="#3498db" stroke-width="3" />
+      <path class="interactive" d="M160,140 A60,60 0 0,1 160,60" fill="none" stroke="#2ecc71" stroke-width="3" />
+      <path class="interactive" d="M240,60 A60,60 0 0,1 240,140" fill="none" stroke="#e74c3c" stroke-width="3" />
+      <text x="200" y="180" text-anchor="middle" font-size="14">Cycle de vie des visualisations</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Concevoir des visualisations modulaires et facilement mises à jour pour prolonger leur durée de vie.</li>
+        <li>Utiliser des formats et des standards ouverts pour assurer la pérennité et l'accessibilité des
+          visualisations.</li>
+        <li>Favoriser la réutilisation des composants de visualisation pour réduire la duplication des efforts et des
+          ressources.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="tooltip" class="tooltip"></div>
+
+  <script>
+    const tooltip = document.getElementById('tooltip');
+    const interactiveElements = document.querySelectorAll('.interactive');
+
+    function showTooltip(event, text) {
+      tooltip.innerHTML = text;
+      tooltip.style.opacity = 1;
+      tooltip.style.left = `${event.pageX + 10}px`;
+      tooltip.style.top = `${event.pageY + 10}px`;
+    }
+
+    function hideTooltip() {
+      tooltip.style.opacity = 0;
+    }
+
+    interactiveElements.forEach(element => {
+      element.addEventListener('mouseover', (e) => {
+        let text;
+        switch (e.target.parentNode.id) {
+          case 'energy-efficiency':
+            text = e.target.x.baseVal.value === 50 ? "Visualisation gourmande en ressources" : "Visualisation optimisée et économe";
+            break;
+          case 'data-footprint':
+            text = e.target.r.baseVal.value === 70 ? "Volume important de données non optimisées" : "Données compressées et optimisées";
+            break;
+          case 'adaptive-viz':
+            text = e.target.x.baseVal.value === 50 ? "Version complète pour appareils performants" :
+              e.target.x.baseVal.value === 170 ? "Version allégée pour performances moyennes" : "Version minimaliste pour appareils à faibles ressources";
+            break;
+          case 'environmental-awareness':
+            text = e.target.tagName === 'circle' ? "Point de données avec faible impact" : "Indicateur d'empreinte carbone de la visualisation";
+            break;
+          case 'visualization-sustainability':
+            text = e.target.getAttribute('stroke') === '#2ecc71' ? "Cycle de création et d'utilisation" : "Cycle de mise à jour et de réutilisation";
+            break;
+          default:
+            text = "Élément interactif";
+        }
+        showTooltip(e, text);
+      });
+      element.addEventListener('mouseout', hideTooltip);
+    });
+  </script>
+</body>
+
+</html>

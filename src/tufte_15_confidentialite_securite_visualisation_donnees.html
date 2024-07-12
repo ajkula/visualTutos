@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tufte : Confidentialité et sécurité dans la visualisation des données</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    h1,
+    h2 {
+      color: #2c3e50;
+    }
+
+    .concept {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .example {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #3498db;
+    }
+
+    svg {
+      max-width: 100%;
+      height: auto;
+      margin: 10px 0;
+    }
+
+    .tooltip {
+      position: absolute;
+      background-color: black;
+      color: whitesmoke;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-size: 14px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .interactive {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Tufte : Confidentialité et sécurité dans la visualisation des données</h1>
+
+  <div class="concept">
+    <h2>1. Anonymisation des données</h2>
+    <p>Appliquer les principes de Tufte pour visualiser des données anonymisées sans perdre leur signification.</p>
+    <svg id="data-anonymization" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <line x1="50" y1="150" x2="350" y2="150" stroke="#333" stroke-width="2" />
+      <line x1="50" y1="150" x2="50" y2="50" stroke="#333" stroke-width="2" />
+      <rect class="interactive" x="75" y="100" width="50" height="50" fill="#3498db" opacity="0.7" />
+      <rect class="interactive" x="175" y="75" width="50" height="75" fill="#3498db" opacity="0.7" />
+      <rect class="interactive" x="275" y="50" width="50" height="100" fill="#3498db" opacity="0.7" />
+      <text x="100" y="170" text-anchor="middle" font-size="12">Groupe A</text>
+      <text x="200" y="170" text-anchor="middle" font-size="12">Groupe B</text>
+      <text x="300" y="170" text-anchor="middle" font-size="12">Groupe C</text>
+      <text x="200" y="190" text-anchor="middle" font-size="14">Données agrégées anonymisées</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Utiliser des agrégations pour représenter des tendances sans révéler de données individuelles.</li>
+        <li>Employer des catégories génériques pour préserver l'anonymat tout en maintenant la pertinence des données.
+        </li>
+        <li>Maintenir la clarté et la précision des visualisations malgré l'anonymisation.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>2. Visualisation de données chiffrées</h2>
+    <p>Représenter visuellement la sécurité des données tout en respectant les principes de clarté de Tufte.</p>
+    <svg id="encrypted-data-viz" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <path class="interactive" d="M50,100 Q125,50 200,100 T350,100" fill="none" stroke="#3498db" stroke-width="2" />
+      <path class="interactive" d="M50,100 Q125,150 200,100 T350,100" fill="none" stroke="#e74c3c" stroke-width="2"
+        stroke-dasharray="5,5" />
+      <circle cx="200" cy="100" r="20" fill="#2ecc71" />
+      <text x="200" y="105" text-anchor="middle" font-size="14" fill="white">🔒</text>
+      <text x="200" y="180" text-anchor="middle" font-size="14">Données chiffrées vs déchiffrées</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Utiliser des lignes continues pour les données déchiffrées et des lignes en pointillés pour les données
+          chiffrées.</li>
+        <li>Employer des symboles simples mais efficaces pour indiquer l'état de chiffrement.</li>
+        <li>Maintenir la lisibilité globale tout en différenciant clairement les états de sécurité des données.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>3. Contrôle d'accès aux visualisations</h2>
+    <p>Intégrer des niveaux d'accès dans les visualisations tout en préservant leur intégrité selon Tufte.</p>
+    <svg id="access-control" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <rect x="50" y="50" width="300" height="100" fill="#fff" stroke="#333" />
+      <rect class="interactive" x="60" y="60" width="80" height="80" fill="#3498db" opacity="0.3" />
+      <rect class="interactive" x="160" y="60" width="80" height="80" fill="#3498db" opacity="0.6" />
+      <rect class="interactive" x="260" y="60" width="80" height="80" fill="#3498db" />
+      <text x="100" y="170" text-anchor="middle" font-size="12">Niveau 1</text>
+      <text x="200" y="170" text-anchor="middle" font-size="12">Niveau 2</text>
+      <text x="300" y="170" text-anchor="middle" font-size="12">Niveau 3</text>
+      <text x="200" y="190" text-anchor="middle" font-size="14">Niveaux d'accès aux données</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Utiliser des niveaux de détail ou d'opacité pour représenter différents niveaux d'accès.</li>
+        <li>Maintenir une structure cohérente dans la visualisation, quel que soit le niveau d'accès.</li>
+        <li>Fournir des indications claires sur les parties de la visualisation accessibles à chaque niveau.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>4. Visualisation des menaces de sécurité</h2>
+    <p>Représenter efficacement les menaces de sécurité dans les visualisations de données.</p>
+    <svg id="security-threats" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <circle cx="200" cy="100" r="80" fill="none" stroke="#333" stroke-width="2" />
+      <path class="interactive" d="M200,20 A80,80 0 0,1 273,100" fill="#e74c3c" opacity="0.3" />
+      <path class="interactive" d="M273,100 A80,80 0 0,1 200,180" fill="#f39c12" opacity="0.3" />
+      <path class="interactive" d="M200,180 A80,80 0 0,1 127,100" fill="#2ecc71" opacity="0.3" />
+      <path class="interactive" d="M127,100 A80,80 0 0,1 200,20" fill="#3498db" opacity="0.3" />
+      <circle cx="200" cy="100" r="5" fill="#333" />
+      <text x="200" y="190" text-anchor="middle" font-size="14">Carte des menaces de sécurité</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Utiliser des couleurs distinctes mais harmonieuses pour représenter différents types de menaces.</li>
+        <li>Employer des formes simples et des dégradés pour indiquer l'intensité des menaces.</li>
+        <li>Maintenir une vue d'ensemble claire tout en permettant l'exploration des détails spécifiques.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>5. Audit trail visuel</h2>
+    <p>Créer une représentation visuelle des accès et modifications des données conformément aux principes de Tufte.</p>
+    <svg id="audit-trail" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <line x1="50" y1="150" x2="350" y2="150" stroke="#333" stroke-width="2" />
+      <line x1="50" y1="150" x2="50" y2="50" stroke="#333" stroke-width="2" />
+      <circle class="interactive" cx="100" cy="120" r="5" fill="#3498db" />
+      <circle class="interactive" cx="150" cy="100" r="5" fill="#e74c3c" />
+      <circle class="interactive" cx="200" cy="130" r="5" fill="#2ecc71" />
+      <circle class="interactive" cx="250" cy="90" r="5" fill="#f39c12" />
+      <circle class="interactive" cx="300" cy="110" r="5" fill="#9b59b6" />
+      <text x="200" y="180" text-anchor="middle" font-size="14">Chronologie des accès aux données</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Utiliser une ligne temporelle simple pour représenter la séquence des événements d'accès.</li>
+        <li>Employer des couleurs ou des formes différentes pour distinguer les types d'accès ou de modifications.</li>
+        <li>Maintenir une représentation épurée tout en fournissant des détails importants sur l'historique des accès.
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="tooltip" class="tooltip"></div>
+
+  <script>
+    const tooltip = document.getElementById('tooltip');
+    const interactiveElements = document.querySelectorAll('.interactive');
+
+    function showTooltip(event, text) {
+      tooltip.innerHTML = text;
+      tooltip.style.opacity = 1;
+      tooltip.style.left = `${event.pageX + 10}px`;
+      tooltip.style.top = `${event.pageY + 10}px`;
+    }
+
+    function hideTooltip() {
+      tooltip.style.opacity = 0;
+    }
+
+    interactiveElements.forEach(element => {
+      element.addEventListener('mouseover', (e) => {
+        let text;
+        switch (e.target.parentNode.id) {
+          case 'data-anonymization':
+            text = "Données agrégées pour protéger l'identité individuelle";
+            break;
+          case 'encrypted-data-viz':
+            text = e.target.getAttribute('stroke') === '#3498db' ? "Données déchiffrées" : "Données chiffrées";
+            break;
+          case 'access-control':
+            text = e.target.x.baseVal.value === 60 ? "Accès de base" :
+              e.target.x.baseVal.value === 160 ? "Accès intermédiaire" : "Accès complet";
+            break;
+          case 'security-threats':
+            text = e.target.getAttribute('fill') === '#e74c3c' ? "Menace élevée" :
+              e.target.getAttribute('fill') === '#f39c12' ? "Menace moyenne" :
+                e.target.getAttribute('fill') === '#2ecc71' ? "Menace faible" : "Zone sécurisée";
+            break;
+          case 'audit-trail':
+            text = "Accès ou modification de données enregistré";
+            break;
+          default:
+            text = "Élément interactif";
+        }
+        showTooltip(e, text);
+      });
+      element.addEventListener('mouseout', hideTooltip);
+    });
+  </script>
+</body>
+
+</html>

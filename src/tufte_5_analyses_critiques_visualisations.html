@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analyses critiques de visualisations par Tufte</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    h1,
+    h2 {
+      color: #2c3e50;
+    }
+
+    .case-study {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .analysis {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #3498db;
+    }
+
+    svg {
+      max-width: 100%;
+      height: auto;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Analyses critiques de visualisations par Tufte</h1>
+
+  <div class="case-study">
+    <h2>1. La carte de John Snow sur l'épidémie de choléra (1854)</h2>
+    <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="300" height="200" fill="#f0f0f0" />
+      <line x1="50" y1="20" x2="50" y2="180" stroke="#666" stroke-width="2" />
+      <line x1="150" y1="20" x2="150" y2="180" stroke="#666" stroke-width="2" />
+      <line x1="250" y1="20" x2="250" y2="180" stroke="#666" stroke-width="2" />
+      <line x1="20" y1="50" x2="280" y2="50" stroke="#666" stroke-width="2" />
+      <line x1="20" y1="100" x2="280" y2="100" stroke="#666" stroke-width="2" />
+      <line x1="20" y1="150" x2="280" y2="150" stroke="#666" stroke-width="2" />
+      <circle cx="100" cy="75" r="5" fill="#e74c3c" />
+      <circle cx="200" cy="125" r="5" fill="#e74c3c" />
+      <circle cx="75" cy="150" r="5" fill="#e74c3c" />
+      <circle cx="225" cy="50" r="5" fill="#e74c3c" />
+      <circle cx="150" cy="100" r="8" fill="#3498db" />
+      <text x="150" y="195" text-anchor="middle" font-size="10">Carte simplifiée de John Snow</text>
+    </svg>
+    <p>Cette carte historique montre la distribution des cas de choléra à Londres, permettant d'identifier la source de
+      l'épidémie.</p>
+    <div class="analysis">
+      <h3>Analyse de Tufte :</h3>
+      <ul>
+        <li>Excellente utilisation de la superposition de données sur une carte géographique.</li>
+        <li>Démontre l'efficacité de la visualisation pour résoudre des problèmes complexes.</li>
+        <li>Illustre le principe de la densité de données : beaucoup d'informations dans un espace limité.</li>
+        <li>Montre l'importance de la contextualisation des données (emplacement des pompes à eau).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="case-study">
+    <h2>2. Le graphique de Minard sur la campagne de Russie de Napoléon (1869)</h2>
+    <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <path d="M20,100 Q100,50 200,80 T380,30" stroke="#e74c3c" stroke-width="20" fill="none" />
+      <path d="M380,30 Q300,60 200,80 T20,150" stroke="#3498db" stroke-width="10" fill="none" />
+      <text x="30" y="90" font-size="12">Aller</text>
+      <text x="350" y="50" font-size="12">Moscou</text>
+      <text x="30" y="170" font-size="12">Retour</text>
+      <line x1="20" y1="180" x2="380" y2="180" stroke="#666" />
+      <text x="200" y="195" text-anchor="middle" font-size="10">Graphique simplifié de Minard</text>
+    </svg>
+    <p>Ce graphique multidimensionnel représente les pertes de l'armée de Napoléon durant sa campagne de Russie.</p>
+    <div class="analysis">
+      <h3>Analyse de Tufte :</h3>
+      <ul>
+        <li>Considéré par Tufte comme "probablement le meilleur graphique statistique jamais réalisé".</li>
+        <li>Excellente intégration de multiples variables : taille de l'armée, géographie, température, temps.</li>
+        <li>Démontre la puissance de la narration visuelle dans la représentation de données complexes.</li>
+        <li>Illustre le principe de la multivariabilité dans un seul graphique cohérent.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="case-study">
+    <h2>3. Graphiques du New York Times sur la crise financière de 2008</h2>
+    <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="300" height="200" fill="#f0f0f0" />
+      <line x1="50" y1="180" x2="250" y2="180" stroke="#666" stroke-width="2" />
+      <line x1="50" y1="20" x2="50" y2="180" stroke="#666" stroke-width="2" />
+      <path d="M50,150 Q100,100 150,160 T250,30" stroke="#e74c3c" stroke-width="2" fill="none" />
+      <text x="150" y="195" text-anchor="middle" font-size="10">Prix des logements aux USA</text>
+      <text x="40" y="20" text-anchor="end" font-size="10" transform="rotate(-90 40 20)">Prix</text>
+      <text x="250" y="195" text-anchor="middle" font-size="10">2008</text>
+    </svg>
+    <p>Série de graphiques interactifs expliquant les causes et les effets de la crise financière de 2008.</p>
+    <div class="analysis">
+      <h3>Analyse de Tufte :</h3>
+      <ul>
+        <li>Utilisation efficace de l'interactivité pour présenter des données complexes.</li>
+        <li>Bon équilibre entre la simplicité visuelle et la profondeur de l'information.</li>
+        <li>Illustre l'importance de la narration dans la visualisation de données.</li>
+        <li>Démontre comment la visualisation peut rendre compréhensibles des concepts économiques complexes.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="case-study">
+    <h2>4. Critique du graphique en camembert</h2>
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="100" cy="100" r="90" fill="#f0f0f0" stroke="#666" />
+      <path d="M100,100 L190,100 A90,90 0 0,1 145,181 Z" fill="#e74c3c" />
+      <path d="M100,100 L145,181 A90,90 0 0,1 10,110 Z" fill="#3498db" />
+      <path d="M100,100 L10,110 A90,90 0 0,1 100,10 Z" fill="#2ecc71" />
+      <path d="M100,100 L100,10 A90,90 0 0,1 190,100 Z" fill="#f1c40f" />
+    </svg>
+    <p>Tufte est connu pour sa critique des graphiques en camembert, couramment utilisés dans les présentations
+      d'entreprise.</p>
+    <div class="analysis">
+      <h3>Analyse de Tufte :</h3>
+      <ul>
+        <li>Inefficace pour comparer des valeurs, surtout quand il y a de nombreuses catégories.</li>
+        <li>Difficile de percevoir les différences précises entre les segments.</li>
+        <li>Occupe beaucoup d'espace pour peu d'information (faible ratio données-encre).</li>
+        <li>Suggère des alternatives comme les graphiques à barres ou les tableaux pour une meilleure comparaison.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="case-study">
+    <h2>5. Analyse des présentations PowerPoint de la NASA</h2>
+    <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="300" height="200" fill="#fff" stroke="#666" />
+      <rect x="10" y="10" width="280" height="40" fill="#3498db" />
+      <text x="20" y="35" fill="#fff" font-size="16">Titre de la diapositive</text>
+      <circle cx="30" cy="70" r="4" fill="#666" />
+      <text x="50" y="75" font-size="12">Point important 1</text>
+      <circle cx="30" cy="100" r="4" fill="#666" />
+      <text x="50" y="105" font-size="12">Point important 2</text>
+      <circle cx="30" cy="130" r="4" fill="#666" />
+      <text x="50" y="135" font-size="12">Point important 3</text>
+      <text x="150" y="190" text-anchor="middle" font-size="10">Exemple de diapositive PowerPoint</text>
+    </svg>
+    <p>Tufte a critiqué l'utilisation de PowerPoint par la NASA, notamment dans le contexte de l'accident de la navette
+      Columbia.</p>
+    <div class="analysis">
+      <h3>Analyse de Tufte :</h3>
+      <ul>
+        <li>Critique de la structure hiérarchique rigide imposée par PowerPoint.</li>
+        <li>Met en garde contre la simplification excessive de données complexes.</li>
+        <li>Souligne les dangers de la fragmentation de l'information en "bullet points".</li>
+        <li>Plaide pour des rapports détaillés et des visualisations complètes plutôt que des diapositives simplifiées.
+        </li>
+      </ul>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tufte : Éthique de la visualisation à l'ère des fake news</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    h1,
+    h2 {
+      color: #2c3e50;
+    }
+
+    .concept {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .example {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #3498db;
+    }
+
+    svg {
+      max-width: 100%;
+      height: auto;
+      margin: 10px 0;
+    }
+
+    .tooltip {
+      position: absolute;
+      background-color: black;
+      color: whitesmoke;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-size: 14px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .interactive {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Tufte : Éthique de la visualisation à l'ère des fake news</h1>
+
+  <div class="concept">
+    <h2>1. Intégrité des données</h2>
+    <p>Maintenir l'intégrité des données est crucial pour combattre la désinformation.</p>
+    <svg id="data-integrity" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <line x1="50" y1="150" x2="350" y2="150" stroke="#333" stroke-width="2" />
+      <line x1="50" y1="150" x2="50" y2="50" stroke="#333" stroke-width="2" />
+      <rect class="interactive" x="75" y="100" width="50" height="50" fill="#3498db" />
+      <rect class="interactive" x="175" y="75" width="50" height="75" fill="#e74c3c" />
+      <rect class="interactive" x="275" y="50" width="50" height="100" fill="#2ecc71" />
+      <text x="200" y="180" text-anchor="middle" font-size="14">Représentation fidèle des données</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Représenter les données de manière proportionnelle et précise.</li>
+        <li>Éviter les distorsions visuelles qui pourraient induire en erreur.</li>
+        <li>Utiliser des échelles appropriées et cohérentes.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>2. Transparence des sources</h2>
+    <p>La transparence sur l'origine des données est essentielle pour établir la confiance.</p>
+    <svg id="source-transparency" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <circle cx="200" cy="100" r="80" fill="#3498db" opacity="0.2" />
+      <circle class="interactive" cx="200" cy="100" r="60" fill="#3498db" opacity="0.5" />
+      <circle class="interactive" cx="200" cy="100" r="40" fill="#3498db" />
+      <text x="200" y="105" text-anchor="middle" font-size="14" fill="white">Sources</text>
+      <text x="200" y="180" text-anchor="middle" font-size="14">Niveaux de vérification des sources</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Citer clairement les sources des données utilisées.</li>
+        <li>Fournir des liens vers les données brutes quand c'est possible.</li>
+        <li>Expliquer les méthodes de collecte et d'analyse des données.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>3. Contextualisation appropriée</h2>
+    <p>Fournir le contexte nécessaire pour éviter les interprétations erronées.</p>
+    <svg id="context-provision" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <rect class="interactive" x="100" y="50" width="200" height="100" fill="#3498db" />
+      <rect class="interactive" x="50" y="25" width="300" height="150" fill="none" stroke="#e74c3c" stroke-width="2"
+        stroke-dasharray="5,5" />
+      <text x="200" y="105" text-anchor="middle" font-size="14" fill="white">Données</text>
+      <text x="200" y="185" text-anchor="middle" font-size="14">Contexte</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Inclure des informations de contexte pertinentes avec les visualisations.</li>
+        <li>Expliquer les limites et les biais potentiels des données.</li>
+        <li>Utiliser des annotations pour clarifier les points importants.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>4. Éviter les manipulations visuelles</h2>
+    <p>Identifier et éviter les techniques visuelles trompeuses.</p>
+    <svg id="visual-manipulation" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <line x1="50" y1="150" x2="350" y2="150" stroke="#333" stroke-width="2" />
+      <line x1="50" y1="150" x2="50" y2="50" stroke="#333" stroke-width="2" />
+      <rect class="interactive" x="75" y="100" width="50" height="50" fill="#3498db" />
+      <rect class="interactive" x="175" y="50" width="50" height="100" fill="#e74c3c" />
+      <text x="100" y="170" text-anchor="middle" font-size="12">Réel</text>
+      <text x="200" y="170" text-anchor="middle" font-size="12">Trompeur</text>
+      <text x="200" y="190" text-anchor="middle" font-size="14">Comparaison équitable vs trompeuse</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Utiliser des échelles cohérentes et commençant à zéro pour les graphiques à barres.</li>
+        <li>Éviter les effets 3D trompeurs ou les perspectives déformantes.</li>
+        <li>Présenter les comparaisons de manière équitable et proportionnelle.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>5. Promouvoir la littératie* des données</h2>
+    <p>Aider le public à mieux comprendre et interpréter les visualisations de données.</p>
+    <i>* : capacité de lire, travailler avec, analyser et argumenter avec des données.</i>
+    <svg id="data-literacy" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <path class="interactive" d="M50,150 Q125,50 200,100 T350,75" fill="none" stroke="#3498db" stroke-width="3" />
+      <circle class="interactive" cx="200" cy="100" r="10" fill="#e74c3c" />
+      <text x="200" y="180" text-anchor="middle" font-size="14">Éduquer sur l'interprétation des données</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Inclure des explications claires sur la façon d'interpréter les visualisations.</li>
+        <li>Fournir des ressources éducatives sur la lecture critique des données.</li>
+        <li>Encourager l'exploration active des données par les utilisateurs.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="tooltip" class="tooltip"></div>
+
+  <script>
+    const tooltip = document.getElementById('tooltip');
+    const interactiveElements = document.querySelectorAll('.interactive');
+
+    function showTooltip(event, text) {
+      tooltip.innerHTML = text;
+      tooltip.style.opacity = 1;
+      tooltip.style.left = `${event.pageX + 10}px`;
+      tooltip.style.top = `${event.pageY + 10}px`;
+    }
+
+    function hideTooltip() {
+      tooltip.style.opacity = 0;
+    }
+
+    interactiveElements.forEach(element => {
+      element.addEventListener('mouseover', (e) => {
+        let text;
+        switch (e.target.parentNode.id) {
+          case 'data-integrity':
+            text = e.target.x.baseVal.value === 75 ? "Données représentées fidèlement" :
+              e.target.x.baseVal.value === 175 ? "Attention : échelle potentiellement trompeuse" :
+                "Vérifiez toujours l'échelle et les proportions";
+            break;
+          case 'source-transparency':
+            text = e.target.r.baseVal.value === 60 ? "Sources vérifiées mais pas primaires" :
+              "Sources primaires, hautement fiables";
+            break;
+          case 'context-provision':
+            text = e.target.width.baseVal.value === 200 ? "Données brutes sans contexte" :
+              "Contexte nécessaire pour une interprétation correcte";
+            break;
+          case 'visual-manipulation':
+            text = e.target.height.baseVal.value === 50 ? "Représentation fidèle des données" :
+              "Attention : cette représentation exagère visuellement la différence";
+            break;
+          case 'data-literacy':
+            text = e.target.tagName === 'path' ? "Comprendre les tendances et les fluctuations" :
+              "Identifier les points de données importants ou atypiques";
+            break;
+          default:
+            text = "Explorez pour plus d'informations";
+        }
+        showTooltip(e, text);
+      });
+      element.addEventListener('mouseout', hideTooltip);
+    });
+  </script>
+</body>
+
+</html>

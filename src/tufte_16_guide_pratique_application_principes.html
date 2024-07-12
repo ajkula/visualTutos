@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guide pratique d'application des principes de Tufte</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    h1,
+    h2 {
+      color: #2c3e50;
+    }
+
+    .section {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .example {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #3498db;
+    }
+
+    svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .tooltip {
+      position: absolute;
+      background-color: black;
+      color: whitesmoke;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-size: 14px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .interactive {
+      cursor: pointer;
+    }
+
+    .checklist-item {
+      margin-bottom: 10px;
+    }
+
+    .checklist-item input[type="checkbox"] {
+      margin-right: 10px;
+    }
+
+    .before-after {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .before-after>div {
+      width: 48%;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Guide pratique d'application des principes de Tufte</h1>
+
+  <div class="section">
+    <h2>1. Résumé des principes clés de Tufte</h2>
+    <svg id="principles-summary" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="300" height="200" fill="#f0f0f0" />
+      <circle class="interactive" cx="150" cy="100" r="80" fill="none" stroke="#3498db" stroke-width="2" />
+      <line class="interactive" x1="150" y1="20" x2="150" y2="180" stroke="#3498db" stroke-width="2" />
+      <line class="interactive" x1="70" y1="100" x2="230" y2="100" stroke="#3498db" stroke-width="2" />
+      <text x="170" y="50" text-anchor="middle" font-size="12">Clarté</text>
+      <text x="122" y="152" text-anchor="middle" font-size="12">Précision</text>
+      <text x="130" y="90" text-anchor="end" font-size="12">Simplicité</text>
+      <text x="175" y="117" text-anchor="start" font-size="12">Densité</text>
+    </svg>
+  </div>
+
+  <div class="section">
+    <h2>2. Checklist d'évaluation des visualisations</h2>
+    <div class="checklist">
+      <div class="checklist-item">
+        <input type="checkbox" id="check1"><label for="check1" class="interactive">Ratio données-encre élevé</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check2"><label for="check2" class="interactive">Absence de chartjunk</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check3"><label for="check3" class="interactive">Utilisation efficace de
+          l'espace</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check4"><label for="check4" class="interactive">Intégrité des données
+          préservée</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check5"><label for="check5" class="interactive">Contexte approprié fourni</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>3. Exemple avant/après</h2>
+    <div class="before-after">
+      <div>
+        <h3>Avant</h3>
+        <svg id="before" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+          <rect width="150" height="150" fill="#f0f0f0" />
+          <rect class="interactive" x="10" y="10" width="40" height="130" fill="#3498db" />
+          <rect class="interactive" x="55" y="50" width="40" height="90" fill="#e74c3c" />
+          <rect class="interactive" x="100" y="30" width="40" height="110" fill="#2ecc71" />
+          <text x="30" y="145" text-anchor="middle" font-size="10">A</text>
+          <text x="75" y="145" text-anchor="middle" font-size="10">B</text>
+          <text x="120" y="145" text-anchor="middle" font-size="10">C</text>
+        </svg>
+      </div>
+      <div>
+        <h3>Après</h3>
+        <svg id="after" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+          <rect width="150" height="150" fill="#fff" />
+          <line x1="10" y1="140" x2="140" y2="140" stroke="#333" stroke-width="1" />
+          <line x1="10" y1="140" x2="10" y2="10" stroke="#333" stroke-width="1" />
+          <rect class="interactive" x="20" y="40" width="30" height="100" fill="#3498db" />
+          <rect class="interactive" x="60" y="80" width="30" height="60" fill="#3498db" />
+          <rect class="interactive" x="100" y="60" width="30" height="80" fill="#3498db" />
+          <text x="35" y="145" text-anchor="middle" font-size="10">A</text>
+          <text x="75" y="145" text-anchor="middle" font-size="10">B</text>
+          <text x="115" y="145" text-anchor="middle" font-size="10">C</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>4. Application dans différents domaines</h2>
+    <svg id="domains" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="300" height="200" fill="#f0f0f0" />
+      <circle class="interactive" cx="75" cy="75" r="50" fill="#3498db" opacity="0.7" />
+      <circle class="interactive" cx="150" cy="125" r="50" fill="#e74c3c" opacity="0.7" />
+      <circle class="interactive" cx="225" cy="75" r="50" fill="#2ecc71" opacity="0.7" />
+      <text x="75" y="80" text-anchor="middle" font-size="12" fill="white">Finance</text>
+      <text x="150" y="130" text-anchor="middle" font-size="12" fill="white">Science</text>
+      <text x="225" y="80" text-anchor="middle" font-size="12" fill="white">Journalisme</text>
+    </svg>
+  </div>
+
+  <div id="tooltip" class="tooltip"></div>
+
+  <script>
+    const tooltip = document.getElementById('tooltip');
+    const interactiveElements = document.querySelectorAll('.interactive');
+
+    function showTooltip(event, text) {
+      tooltip.innerHTML = text;
+      tooltip.style.opacity = 1;
+      tooltip.style.left = `${event.pageX + 10}px`;
+      tooltip.style.top = `${event.pageY + 10}px`;
+    }
+
+    function hideTooltip() {
+      tooltip.style.opacity = 0;
+    }
+
+    interactiveElements.forEach(element => {
+      element.addEventListener('mouseover', (e) => {
+        let text;
+        let context = e.target.closest('svg') ? e.target.closest('svg').id :
+          e.target.htmlFor ? e.target.htmlFor :
+            e.target.id || 'unknown';
+
+        // get circle associated text
+        function getAssociatedText(element) {
+          if (element.tagName.toLowerCase() === 'circle') {
+            // get circle center point
+            let cx = element.cx.baseVal.value;
+            let cy = element.cy.baseVal.value;
+
+            // findclosest circle in same SVG
+            let svgElement = element.closest('svg');
+            let allTexts = svgElement.querySelectorAll('text');
+            let closestText = Array.from(allTexts).reduce((closest, current) => {
+              let x = current.x.baseVal[0].value;
+              let y = current.y.baseVal[0].value;
+              let distance = Math.sqrt(Math.pow(cx - x, 2) + Math.pow(cy - y, 2));
+              return (distance < closest.distance) ? { element: current, distance: distance } : closest;
+            }, { element: null, distance: Infinity });
+
+            return closestText.element ? closestText.element.textContent : '';
+          }
+          return element.textContent || '';
+        }
+
+        let associatedText = getAssociatedText(e.target);
+
+        switch (context) {
+          case 'principles-summary':
+            text = e.target.tagName === 'circle' ? "Les principes de Tufte sont interconnectés" :
+              "Chaque principe contribue à l'efficacité de la visualisation";
+            break;
+          case 'check1':
+            text = "Maximisez la quantité d'informations par unité d'encre";
+            break;
+          case 'check2':
+            text = "Évitez les décorations superflues qui ne contribuent pas à l'information";
+            break;
+          case 'check3':
+            text = "Utilisez l'espace de manière efficace pour communiquer les données";
+            break;
+          case 'check4':
+            text = "Assurez-vous que la visualisation représente fidèlement les données";
+            break;
+          case 'check5':
+            text = "Fournissez suffisamment de contexte pour une interprétation correcte";
+            break;
+          case 'before':
+            text = "Visualisation avec un design surchargé et des couleurs non nécessaires";
+            break;
+          case 'after':
+            text = "Visualisation épurée suivant les principes de Tufte";
+            break;
+          case 'domains':
+            text = `Application des principes de Tufte en ${associatedText}`;
+            break;
+          default:
+            text = associatedText || "Élément interactif";
+        }
+        showTooltip(e, text);
+      });
+      element.addEventListener('mouseout', hideTooltip);
+    });
+
+    // before/after animation
+    const beforeBars = document.querySelectorAll('#before rect');
+    const afterBars = document.querySelectorAll('#after rect');
+
+    function animateBars() {
+      beforeBars.forEach(bar => {
+        const originalHeight = parseInt(bar.getAttribute('height'));
+        bar.setAttribute('height', '0');
+        setTimeout(() => {
+          bar.setAttribute('height', originalHeight);
+        }, 100);
+      });
+
+      afterBars.forEach(bar => {
+        const originalHeight = parseInt(bar.getAttribute('height'));
+        bar.setAttribute('height', '0');
+        setTimeout(() => {
+          bar.setAttribute('height', originalHeight);
+        }, 600);
+      });
+    }
+
+    setInterval(animateBars, 3000);
+  </script>
+</body>
+
+</html>

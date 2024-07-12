@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Techniques innovantes de visualisation selon Tufte</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    h1,
+    h2 {
+      color: #2c3e50;
+    }
+
+    .technique {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .example {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #3498db;
+    }
+
+    svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Techniques innovantes de visualisation selon Tufte</h1>
+
+  <div class="technique">
+    <h2>1. Sparklines</h2>
+    <p>Les sparklines sont des graphiques de très petite taille, généralement sans axes ni coordonnées, intégrés
+      dans le texte ou dans des tableaux.</p>
+    <div class="example">
+      <p>Évolution des ventes sur 12 mois : <svg width="100" height="20" viewBox="0 0 100 20">
+          <polyline points="5,15 15,10 25,12 35,8 45,13 55,7 65,9 75,5 85,11 95,6" fill="none" stroke="#3498db"
+            stroke-width="1" />
+        </svg> avec une tendance à la hausse.</p>
+    </div>
+  </div>
+
+  <div class="technique">
+    <h2>2. Small Multiples</h2>
+    <p>Une série de petits graphiques similaires permettant de comparer facilement plusieurs ensembles de données.
+    </p>
+    <div class="example">
+      <svg viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(10,10)">
+          <rect width="80" height="80" fill="none" stroke="#000" />
+          <polyline points="0,60 20,40 40,50 60,30 80,45" fill="none" stroke="#3498db" stroke-width="2" />
+          <text x="40" y="75" text-anchor="middle" font-size="10">2021</text>
+        </g>
+        <g transform="translate(110,10)">
+          <rect width="80" height="80" fill="none" stroke="#000" />
+          <polyline points="0,50 20,30 40,45 60,20 80,35" fill="none" stroke="#3498db" stroke-width="2" />
+          <text x="40" y="75" text-anchor="middle" font-size="10">2022</text>
+        </g>
+        <g transform="translate(210,10)">
+          <rect width="80" height="80" fill="none" stroke="#000" />
+          <polyline points="0,40 20,25 40,35 60,15 80,20" fill="none" stroke="#3498db" stroke-width="2" />
+          <text x="40" y="75" text-anchor="middle" font-size="10">2023</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="technique">
+    <h2>3. Layering et séparation</h2>
+    <p>Utilisation de différentes couches visuelles pour séparer et hiérarchiser l'information.</p>
+    <div class="example">
+      <svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="280" height="130" fill="#fff" stroke="#000" />
+        <g transform="translate(-10,5)">
+          <line x1="40" y1="120" x2="260" y2="120" stroke="#ccc" />
+          <line x1="40" y1="120" x2="40" y2="20" stroke="#ccc" />
+          <path d="M40,100 L90,90 L140,70 L190,50 L240,30" fill="none" stroke="#3498db" stroke-width="2" />
+          <path d="M40,110 L90,105 L140,95 L190,85 L240,80" fill="none" stroke="#e74c3c" stroke-width="2" />
+          <text x="250" y="35" font-size="10" fill="#3498db">Produit A</text>
+          <text x="250" y="85" font-size="10" fill="#e74c3c">Produit B</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="technique">
+    <h2>4. Micro/Macro Lectures</h2>
+    <p>Conception de visualisations qui offrent à la fois une vue d'ensemble (macro) et des détails précis (micro).
+    </p>
+    <div class="example">
+      <svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="280" height="130" fill="#f0f0f0" stroke="#000" />
+        <g transform="translate(0,-8)">
+          <g transform="translate(20,25)">
+            <rect width="260" height="50" fill="#fff" stroke="#000" />
+            <line x1="0" y1="25" x2="260" y2="25" stroke="#ccc" stroke-dasharray="2,2" />
+            <path d="M0,35 Q65,15 130,35 T260,35" fill="none" stroke="#3498db" stroke-width="2" />
+          </g>
+          <g transform="translate(20,80)">
+            <rect width="60" height="60" fill="#fff" stroke="#000" />
+            <path d="M0,30 Q15,20 30,30 T60,30" fill="none" stroke="#3498db" stroke-width="1" />
+            <circle cx="15" cy="25" r="2" fill="#e74c3c" />
+            <circle cx="30" cy="35" r="2" fill="#e74c3c" />
+            <circle cx="45" cy="28" r="2" fill="#e74c3c" />
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="technique">
+    <h2>5. Chartjunk Minimization</h2>
+    <p>Élimination des éléments graphiques non essentiels pour maximiser le ratio données-encre.</p>
+    <div class="example">
+      <svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="280" height="130" fill="#fff" stroke="#000" />
+        <line x1="40" y1="120" x2="260" y2="120" stroke="#000" />
+        <line x1="40" y1="120" x2="40" y2="20" stroke="#000" />
+        <rect x="60" y="60" width="40" height="60" fill="#3498db" />
+        <rect x="120" y="40" width="40" height="80" fill="#3498db" />
+        <rect x="180" y="20" width="40" height="100" fill="#3498db" />
+        <text x="80" y="135" text-anchor="middle" font-size="10">A</text>
+        <text x="140" y="135" text-anchor="middle" font-size="10">B</text>
+        <text x="200" y="135" text-anchor="middle" font-size="10">C</text>
+      </svg>
+    </div>
+  </div>
+</body>
+
+</html>

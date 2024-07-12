@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Éthique et pièges dans la visualisation des données selon Tufte</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    h1,
+    h2 {
+      color: #2c3e50;
+    }
+
+    .concept {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .example {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #3498db;
+    }
+
+    .good,
+    .bad {
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    .good {
+      background-color: #e6ffe6;
+      border-left: 4px solid #2ecc71;
+    }
+
+    .bad {
+      background-color: #ffe6e6;
+      border-left: 4px solid #e74c3c;
+    }
+
+    svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Éthique et pièges dans la visualisation des données selon Tufte</h1>
+
+  <div class="concept">
+    <h2>1. Le mensonge graphique</h2>
+    <p>Tufte met en garde contre les représentations visuelles qui déforment intentionnellement ou non les données.</p>
+    <div class="example">
+      <p><strong>Exemple : Manipulation de l'échelle</strong></p>
+      <div class="bad">
+        <svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="10" width="280" height="130" fill="#fff" stroke="#000" />
+          <g transform="translate(5,0)">
+            <line x1="40" y1="120" x2="260" y2="120" stroke="#000" />
+            <line x1="40" y1="120" x2="40" y2="20" stroke="#000" />
+            <rect x="60" y="80" width="40" height="40" fill="#e74c3c" />
+            <rect x="120" y="20" width="40" height="100" fill="#3498db" />
+            <text x="80" y="135" text-anchor="middle" font-size="12">A</text>
+            <text x="140" y="135" text-anchor="middle" font-size="12">B</text>
+            <text x="30" y="85" text-anchor="end" font-size="10">50</text>
+            <text x="30" y="25" text-anchor="end" font-size="10">100</text>
+          </g>
+        </svg>
+        <p>Mauvais : L'axe Y ne commence pas à zéro, exagérant la différence.</p>
+      </div>
+      <div class="good">
+        <svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="10" width="280" height="130" fill="#fff" stroke="#000" />
+          <g transform="translate(5,0)">
+            <line x1="40" y1="120" x2="260" y2="120" stroke="#000" />
+            <line x1="40" y1="120" x2="40" y2="20" stroke="#000" />
+            <rect x="60" y="60" width="40" height="60" fill="#e74c3c" />
+            <rect x="120" y="20" width="40" height="100" fill="#3498db" />
+            <text x="80" y="135" text-anchor="middle" font-size="12">A</text>
+            <text x="140" y="135" text-anchor="middle" font-size="12">B</text>
+            <text x="30" y="120" text-anchor="end" font-size="10">0</text>
+            <text x="30" y="25" text-anchor="end" font-size="10">100</text>
+          </g>
+        </svg>
+        <p>Bon : L'axe Y commence à zéro, montrant la vraie proportion.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>2. Le rapport données-encre</h2>
+    <p>Tufte insiste sur l'importance de maximiser le rapport entre les données et l'encre utilisée pour les
+      représenter.</p>
+    <div class="example">
+      <p><strong>Exemple : Simplification d'un graphique</strong></p>
+      <div class="bad">
+        <svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="10" width="280" height="130" fill="#f0f0f0" stroke="#000" />
+          <line x1="40" y1="120" x2="260" y2="120" stroke="#000" />
+          <line x1="40" y1="120" x2="40" y2="20" stroke="#000" />
+          <path d="M40,120 L90,80 L140,100 L190,60 L240,90" fill="none" stroke="#3498db" stroke-width="3" />
+          <circle cx="90" cy="80" r="5" fill="#3498db" />
+          <circle cx="140" cy="100" r="5" fill="#3498db" />
+          <circle cx="190" cy="60" r="5" fill="#3498db" />
+          <circle cx="240" cy="90" r="5" fill="#3498db" />
+          <line x1="40" y1="100" x2="260" y2="100" stroke="#ccc" stroke-dasharray="5,5" />
+          <line x1="40" y1="80" x2="260" y2="80" stroke="#ccc" stroke-dasharray="5,5" />
+          <line x1="40" y1="60" x2="260" y2="60" stroke="#ccc" stroke-dasharray="5,5" />
+          <line x1="40" y1="40" x2="260" y2="40" stroke="#ccc" stroke-dasharray="5,5" />
+        </svg>
+        <p>Mauvais : Trop d'éléments non essentiels (grille, points, fond coloré).</p>
+      </div>
+      <div class="good">
+        <svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="10" width="280" height="130" fill="#fff" stroke="#000" />
+          <line x1="40" y1="120" x2="260" y2="120" stroke="#000" />
+          <line x1="40" y1="120" x2="40" y2="20" stroke="#000" />
+          <path d="M40,120 L90,80 L140,100 L190,60 L240,90" fill="none" stroke="#3498db" stroke-width="2" />
+        </svg>
+        <p>Bon : Éléments essentiels uniquement, meilleur rapport données-encre.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>3. La multidimensionnalité</h2>
+    <p>Tufte encourage à représenter plusieurs dimensions de données de manière efficace et compréhensible.</p>
+    <div class="example">
+      <p><strong>Exemple : Représentation multidimensionnelle</strong></p>
+      <svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="280" height="130" fill="#fff" stroke="#000" />
+        <g transform="translate(-5,5)">
+          <line x1="40" y1="120" x2="260" y2="120" stroke="#000" />
+          <line x1="40" y1="120" x2="40" y2="20" stroke="#000" />
+          <circle cx="90" cy="80" r="10" fill="#3498db" opacity="0.7" />
+          <circle cx="140" cy="60" r="15" fill="#e74c3c" opacity="0.7" />
+          <circle cx="190" cy="40" r="20" fill="#2ecc71" opacity="0.7" />
+          <circle cx="240" cy="90" r="8" fill="#f39c12" opacity="0.7" />
+        </g>
+      </svg>
+      <p>Bon : Utilise la position (x, y), la taille et la couleur pour représenter différentes dimensions de données.
+      </p>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>4. La contextualisation des données</h2>
+    <p>Tufte souligne l'importance de fournir un contexte approprié pour une interprétation correcte des données.</p>
+    <div class="example">
+      <p><strong>Exemple : Ajout de contexte à un graphique</strong></p>
+      <div class="bad">
+        <svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="10" width="280" height="130" fill="#fff" stroke="#000" />
+          <line x1="40" y1="120" x2="260" y2="120" stroke="#000" />
+          <line x1="40" y1="120" x2="40" y2="20" stroke="#000" />
+          <path d="M40,100 L90,90 L140,70 L190,30 L240,50" fill="none" stroke="#3498db" stroke-width="2" />
+        </svg>
+        <p>Insuffisant : Manque de contexte, difficile à interpréter.</p>
+      </div>
+      <div class="good">
+        <svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="10" width="280" height="130" fill="#fff" stroke="#000" />
+          <g transform="translate(15,9) scale(0.93)">
+            <line x1="40" y1="120" x2="260" y2="120" stroke="#000" />
+            <line x1="40" y1="120" x2="40" y2="20" stroke="#000" />
+            <path d="M40,100 L90,90 L140,70 L190,30 L240,50" fill="none" stroke="#3498db" stroke-width="2" />
+            <text x="150" y="15" text-anchor="middle" font-size="12">Évolution des ventes 2020-2024</text>
+            <text x="30" y="25" text-anchor="end" font-size="10">100k€</text>
+            <text x="30" y="120" text-anchor="end" font-size="10">0€</text>
+            <text x="40" y="135" font-size="10">2020</text>
+            <text x="240" y="135" font-size="10">2024</text>
+          </g>
+        </svg>
+        <p>Bon : Ajout de titre, légendes et échelles pour le contexte.</p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

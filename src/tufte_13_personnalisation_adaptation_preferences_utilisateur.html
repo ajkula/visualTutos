@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tufte : Personnalisation et adaptation aux préférences utilisateur</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    h1,
+    h2 {
+      color: #2c3e50;
+    }
+
+    .concept {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .example {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #3498db;
+    }
+
+    svg {
+      max-width: 100%;
+      height: auto;
+      margin: 10px 0;
+    }
+
+    .tooltip {
+      position: absolute;
+      background-color: black;
+      color: whitesmoke;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-size: 14px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .interactive {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Tufte : Personnalisation et adaptation aux préférences utilisateur</h1>
+
+  <div class="concept">
+    <h2>1. Palette de couleurs adaptative</h2>
+    <p>Appliquer les principes de Tufte tout en offrant des options de personnalisation des couleurs.</p>
+    <svg id="adaptive-color-palette" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <rect class="interactive" x="50" y="50" width="100" height="100" fill="#3498db" />
+      <rect class="interactive" x="160" y="50" width="100" height="100" fill="#e74c3c" />
+      <rect class="interactive" x="270" y="50" width="100" height="100" fill="#2ecc71" />
+      <text x="100" y="170" text-anchor="middle" font-size="12">Standard</text>
+      <text x="210" y="170" text-anchor="middle" font-size="12">Daltonisme</text>
+      <text x="320" y="170" text-anchor="middle" font-size="12">Contraste élevé</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Maintenir la clarté et la distinction des données avec différentes palettes de couleurs.</li>
+        <li>Proposer des options adaptées aux besoins spécifiques (daltonisme, contraste élevé) sans compromettre
+          l'intégrité des données.</li>
+        <li>Utiliser des combinaisons de couleurs qui respectent le principe de la plus petite différence efficace.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>2. Niveaux de détail ajustables</h2>
+    <p>Permettre aux utilisateurs de contrôler la quantité d'information affichée tout en respectant les principes de
+      Tufte.</p>
+    <svg id="adjustable-detail" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <line x1="50" y1="150" x2="350" y2="150" stroke="#333" stroke-width="2" />
+      <line x1="50" y1="150" x2="50" y2="50" stroke="#333" stroke-width="2" />
+      <path class="interactive" d="M50,130 Q125,70 200,110 T350,90" fill="none" stroke="#3498db" stroke-width="2" />
+      <circle class="interactive" cx="125" cy="70" r="5" fill="#e74c3c" />
+      <circle class="interactive" cx="200" cy="110" r="5" fill="#e74c3c" />
+      <circle class="interactive" cx="275" cy="100" r="5" fill="#e74c3c" />
+      <text x="200" y="180" text-anchor="middle" font-size="14">Niveaux de détail</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Offrir différents niveaux de granularité des données sans perdre le message principal.</li>
+        <li>Utiliser des techniques de révélation progressive pour permettre l'exploration des détails.</li>
+        <li>Maintenir la cohérence visuelle à travers les différents niveaux de détail.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>3. Styles de visualisation personnalisables</h2>
+    <p>Proposer différents styles de visualisation tout en adhérant aux principes d'efficacité de Tufte.</p>
+    <svg id="customizable-styles" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <g class="interactive" transform="translate(50, 50)">
+        <rect width="100" height="100" fill="#fff" stroke="#333" />
+        <rect x="10" y="30" width="20" height="60" fill="#3498db" />
+        <rect x="40" y="10" width="20" height="80" fill="#3498db" />
+        <rect x="70" y="50" width="20" height="40" fill="#3498db" />
+      </g>
+      <g class="interactive" transform="translate(170, 50)">
+        <rect width="100" height="100" fill="#fff" stroke="#333" />
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#3498db" stroke-width="2" />
+        <path d="M50,50 L50,20 A30,30 0 0,1 76,65 Z" fill="#3498db" />
+      </g>
+      <g class="interactive" transform="translate(290, 50)">
+        <rect width="100" height="100" fill="#fff" stroke="#333" />
+        <path d="M10,90 L50,20 L90,90 Z" fill="none" stroke="#3498db" stroke-width="2" />
+      </g>
+      <text x="100" y="170" text-anchor="middle" font-size="12">Barres</text>
+      <text x="220" y="170" text-anchor="middle" font-size="12">Circulaire</text>
+      <text x="340" y="170" text-anchor="middle" font-size="12">Ligne</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Assurer que chaque style de visualisation communique efficacement les données.</li>
+        <li>Maintenir la cohérence des proportions et des échelles entre les différents styles.</li>
+        <li>Éviter les décorations superflues tout en permettant une certaine flexibilité esthétique.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>4. Annotations personnalisées</h2>
+    <p>Permettre aux utilisateurs d'ajouter leurs propres annotations tout en préservant la clarté de Tufte.</p>
+    <svg id="custom-annotations" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <path d="M50,150 Q200,50 350,150" fill="none" stroke="#333" stroke-width="2" />
+      <circle class="interactive" cx="200" cy="100" r="5" fill="#e74c3c" />
+      <path class="interactive" d="M200,100 L250,70" stroke="#333" stroke-width="1" stroke-dasharray="5,5" />
+      <rect x="250" y="50" width="100" height="40" fill="#fff" stroke="#333" />
+      <text x="300" y="75" text-anchor="middle" font-size="10">Annotation utilisateur</text>
+      <text x="200" y="180" text-anchor="middle" font-size="14">Annotations personnalisées</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Fournir des outils d'annotation qui s'intègrent harmonieusement à la visualisation.</li>
+        <li>Guider les utilisateurs pour créer des annotations concises et pertinentes.</li>
+        <li>Permettre la distinction claire entre les données originales et les annotations ajoutées.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>5. Préférences d'affichage adaptatives</h2>
+    <p>Adapter l'affichage aux préférences de l'utilisateur tout en maintenant l'intégrité des données selon Tufte.</p>
+    <svg id="adaptive-display" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <rect class="interactive" x="50" y="50" width="140" height="100" fill="#fff" stroke="#333" />
+      <text x="120" y="100" text-anchor="middle" font-size="14">Texte</text>
+      <rect class="interactive" x="210" y="50" width="140" height="100" fill="#fff" stroke="#333" />
+      <circle cx="280" cy="100" r="40" fill="#3498db" />
+      <text x="120" y="170" text-anchor="middle" font-size="12">Mode texte</text>
+      <text x="280" y="170" text-anchor="middle" font-size="12">Mode graphique</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Offrir des options d'affichage alternatives (texte, graphique) sans perdre l'essence de l'information.</li>
+        <li>Maintenir la précision et l'intégrité des données à travers différents modes d'affichage.</li>
+        <li>Utiliser des transitions fluides entre les modes pour aider à la compréhension des données.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="tooltip" class="tooltip"></div>
+
+  <script>
+    const tooltip = document.getElementById('tooltip');
+    const interactiveElements = document.querySelectorAll('.interactive');
+
+    function showTooltip(event, text) {
+      tooltip.innerHTML = text;
+      tooltip.style.opacity = 1;
+      tooltip.style.left = `${event.pageX + 10}px`;
+      tooltip.style.top = `${event.pageY + 10}px`;
+    }
+
+    function hideTooltip() {
+      tooltip.style.opacity = 0;
+    }
+
+    interactiveElements.forEach(element => {
+      element.addEventListener('mouseover', (e) => {
+        let text;
+        switch (e.target.parentNode.id) {
+          case 'adaptive-color-palette':
+            text = e.target.x.baseVal.value === 50 ? "Palette de couleurs standard" :
+              e.target.x.baseVal.value === 160 ? "Palette adaptée au daltonisme" :
+                "Palette à contraste élevé";
+            break;
+          case 'adjustable-detail':
+            text = e.target.tagName === 'path' ? "Ajustez le niveau de détail" : "Point de données détaillé";
+            break;
+          case 'customizable-styles':
+            text = e.target.transform.baseVal[0].matrix.e === 50 ? "Style graphique en barres" :
+              e.target.transform.baseVal[0].matrix.e === 170 ? "Style graphique circulaire" :
+                "Style graphique en ligne";
+            break;
+          case 'custom-annotations':
+            text = e.target.tagName === 'circle' ? "Cliquez pour ajouter une annotation" : "Annotation personnalisée";
+            break;
+          case 'adaptive-display':
+            text = e.target.x.baseVal.value === 50 ? "Affichage en mode texte" : "Affichage en mode graphique";
+            break;
+          default:
+            text = "Élément interactif";
+        }
+        showTooltip(e, text);
+      });
+      element.addEventListener('mouseout', hideTooltip);
+    });
+  </script>
+</body>
+
+</html>

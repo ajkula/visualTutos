@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tufte à l'ère numérique : Visualisations interactives et tableaux de bord</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    h1,
+    h2 {
+      color: #2c3e50;
+    }
+
+    .concept {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .example {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #3498db;
+    }
+
+    svg {
+      max-width: 100%;
+      height: auto;
+      margin: 10px 0;
+    }
+
+    .tooltip {
+      position: absolute;
+      background: black;
+      color: whitesmoke;
+      padding: 5px;
+      border-radius: 3px;
+      font-size: 12px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Tufte à l'ère numérique : Visualisations interactives et tableaux de bord</h1>
+
+  <div class="concept">
+    <h2>1. Interactivité et exploration des données</h2>
+    <p>L'interactivité permet une exploration approfondie des données, mais doit être utilisée judicieusement pour ne
+      pas surcharger l'utilisateur.</p>
+    <svg id="interactive-graph" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="300" height="200" fill="#f0f0f0" />
+      <path d="M50,150 Q100,50 150,130 T250,70" stroke="#3498db" stroke-width="2" fill="none" />
+      <circle cx="150" cy="130" r="5" fill="#e74c3c" />
+      <text x="145" y="105" font-size="10">Point de données</text>
+      <text x="145" y="120" font-size="10">Survolez pour plus d'infos</text>
+      <text x="150" y="190" text-anchor="middle" font-size="12">Graphique interactif simplifié</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Maintenir un ratio données-encre élevé, même avec des éléments interactifs.</li>
+        <li>Utiliser l'interactivité pour révéler des détails à la demande, plutôt que de surcharger l'affichage
+          initial.</li>
+        <li>Assurer que l'interactivité ajoute de la valeur à la compréhension des données, pas seulement de
+          l'esthétique.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>2. Tableaux de bord et visualisations en temps réel</h2>
+    <p>Les tableaux de bord modernes doivent équilibrer la densité d'information et la clarté, tout en gérant les mises
+      à jour en temps réel.</p>
+    <svg id="dashboard" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="300" height="200" fill="#fff" stroke="#666" />
+      <rect x="10" y="10" width="135" height="85" fill="#e8f4f8" stroke="#3498db" />
+      <rect x="155" y="10" width="135" height="85" fill="#e8f4f8" stroke="#3498db" />
+      <rect x="10" y="105" width="280" height="85" fill="#e8f4f8" stroke="#3498db" />
+      <text x="77" y="30" text-anchor="middle" font-size="10">Ventes journalières</text>
+      <text id="sales" x="77" y="55" text-anchor="middle" font-size="14">0 €</text>
+      <text x="222" y="30" text-anchor="middle" font-size="10">Nouveaux clients</text>
+      <text id="customers" x="222" y="55" text-anchor="middle" font-size="14">0</text>
+      <text x="150" y="118" text-anchor="middle" font-size="10">Trafic du site (temps réel)</text>
+      <path id="traffic" d="M20,170 L280,170" stroke="#3498db" stroke-width="2" fill="none" />
+      <text x="150" y="185" text-anchor="middle" font-size="11">Exemple de tableau de bord</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Maximiser la densité de données sans compromettre la clarté.</li>
+        <li>Utiliser des micro/macro lectures pour permettre une vue d'ensemble et des détails.</li>
+        <li>Éviter le "chartjunk" dans les mises à jour en temps réel pour maintenir la lisibilité.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>3. Visualisations responsives et multi-appareils</h2>
+    <p>Les principes de Tufte doivent être adaptés pour des visualisations qui fonctionnent sur différents appareils et
+      tailles d'écran.</p>
+    <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="300" height="200" fill="#f0f0f0" />
+      <rect x="10" y="10" width="180" height="165" fill="#fff" stroke="#666" />
+      <rect x="200" y="10" width="90" height="165" fill="#fff" stroke="#666" />
+      <text x="100" y="100" text-anchor="middle" font-size="14">Desktop</text>
+      <text x="245" y="100" text-anchor="middle" font-size="14">Mobile</text>
+      <text x="150" y="190" text-anchor="middle" font-size="12">Design responsif</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Maintenir l'intégrité des données lors du redimensionnement des visualisations.</li>
+        <li>Adapter le niveau de détail en fonction de l'espace disponible sans perdre l'essence de l'information.</li>
+        <li>Utiliser des techniques comme le "progressive disclosure" pour gérer la complexité sur de petits écrans.
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>4. Intégration de l'intelligence artificielle dans la visualisation</h2>
+    <p>L'IA peut aider à créer des visualisations plus pertinentes et personnalisées, mais doit être utilisée avec
+      discernement.</p>
+    <svg id="ai-viz" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="300" height="200" fill="#f0f0f0" />
+      <circle cx="150" cy="100" r="80" fill="none" stroke="#3498db" stroke-width="2" />
+      <path d="M110,140 Q150,60 190,140" fill="none" stroke="#e74c3c" stroke-width="2" />
+      <text x="150" y="40" text-anchor="middle" font-size="14">IA</text>
+      <text x="150" y="170" text-anchor="middle" font-size="14">Données</text>
+      <text x="150" y="194" text-anchor="middle" font-size="10">IA dans la visualisation</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Utiliser l'IA pour identifier les relations pertinentes dans les données, pas pour ajouter de la complexité
+          inutile.</li>
+        <li>Maintenir la transparence sur la manière dont l'IA influence la visualisation.</li>
+        <li>S'assurer que les visualisations générées par l'IA respectent toujours les principes de clarté et
+          d'intégrité des données.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>5. Visualisation de données massives (Big Data)</h2>
+    <p>Les principes de Tufte doivent être adaptés pour gérer l'échelle et la complexité des big data.</p>
+    <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="300" height="200" fill="#f0f0f0" />
+      <g fill="#3498db" fill-opacity="0.6">
+        <circle cx="50" cy="50" r="2" />
+        <circle cx="60" cy="40" r="2" />
+        <circle cx="70" cy="60" r="2" />
+        <circle cx="100" cy="80" r="2" />
+        <circle cx="120" cy="70" r="2" />
+        <circle cx="140" cy="90" r="2" />
+        <circle cx="180" cy="110" r="2" />
+        <circle cx="200" cy="100" r="2" />
+        <circle cx="220" cy="120" r="2" />
+        <circle cx="250" cy="140" r="2" />
+        <circle cx="260" cy="130" r="2" />
+        <circle cx="270" cy="150" r="2" />
+      </g>
+      <text x="150" y="190" text-anchor="middle" font-size="12">Visualisation de Big Data</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Utiliser des techniques d'agrégation et de clustering pour maintenir la lisibilité avec de grands volumes de
+          données.</li>
+        <li>Employer des visualisations multi-échelles pour permettre l'exploration de différents niveaux de détail.
+        </li>
+        <li>Maintenir l'intégrité des données même lors de la simplification de grands ensembles de données.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="tooltip" class="tooltip"></div>
+
+  <script>
+    // interactivity (1st chart)
+    const point = document.querySelector('#interactive-graph circle');
+    const tooltip = document.getElementById('tooltip');
+
+    point.addEventListener('mouseover', (e) => {
+      tooltip.style.opacity = 1;
+      tooltip.innerHTML = "Ventes en Juin 2023: 15,230 €<br>+12% par rapport à Mai";
+      updateTooltipPosition(e);
+    });
+
+    point.addEventListener('mouseout', () => {
+      tooltip.style.opacity = 0;
+    });
+
+    point.addEventListener('mousemove', updateTooltipPosition);
+
+    function updateTooltipPosition(e) {
+      const rect = e.target.getBoundingClientRect();
+      tooltip.style.left = `${rect.left + window.scrollX}px`;
+      tooltip.style.top = `${rect.top + window.scrollY - 40}px`;
+    }
+
+    // dashboard animation
+    let salesValue = 0;
+    let customersValue = 0;
+    let trafficData = Array(26).fill(170);
+
+    function updateDashboard() {
+      salesValue += Math.random() * 100;
+      customersValue += Math.floor(Math.random() * 3);
+      document.getElementById('sales').textContent = `${Math.floor(salesValue)} €`;
+      document.getElementById('customers').textContent = customersValue;
+
+      trafficData.shift();
+      trafficData.push(170 - Math.random() * 50);
+      const path = `M20,${trafficData[0]} ` + trafficData.map((y, x) => `L${20 + x * 10},${y}`).join(' ');
+      document.getElementById('traffic').setAttribute('d', path);
+    }
+
+    setInterval(updateDashboard, 1000);
+
+    // AI viz tooltip
+    const aiElements = document.querySelectorAll('#ai-viz > *');
+    aiElements.forEach(el => {
+      el.addEventListener('mouseover', (e) => {
+        let text;
+        switch (el.tagName) {
+          case 'circle':
+            text = "L'IA analyse l'ensemble des données pour identifier des patterns et relations";
+            break;
+          case 'path':
+            text = "L'IA génère des visualisations adaptatives basées sur l'analyse des données";
+            break;
+          case 'text':
+            text = el.textContent === "IA" ? "Intelligence Artificielle appliquée à la visualisation de données" : "Ensemble de données brutes à analyser et visualiser";
+            break;
+          default:
+            return;
+        }
+        tooltip.style.opacity = 1;
+        tooltip.innerHTML = text;
+        updateTooltipPosition(e);
+      });
+
+      el.addEventListener('mouseout', () => {
+        tooltip.style.opacity = 0;
+      });
+
+      el.addEventListener('mousemove', updateTooltipPosition);
+    });
+  </script>
+</body>
+
+</html>

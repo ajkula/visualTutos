@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Concepts avancés de Tufte : Types de données et méthodes de présentation</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    h1,
+    h2 {
+      color: #2c3e50;
+    }
+
+    .concept {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .example {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #3498db;
+    }
+
+    svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .tooltip {
+      position: absolute;
+      background-color: black;
+      color: whitesmoke;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-size: 14px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .interactive {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Concepts avancés de Tufte : Types de données et méthodes de présentation</h1>
+
+  <div class="concept">
+    <h2>1. Comparaisons multivariées</h2>
+    <p>Pour comparer plusieurs variables simultanément, Tufte recommande l'utilisation de "small multiples" ou de
+      graphiques matriciels.</p>
+    <div class="example">
+      <p><strong>Exemple : Diagramme de dispersion matriciel</strong></p>
+      <svg id="scatter-matrix" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(10,10)">
+          <rect width="280" height="280" fill="#fff" stroke="#000"></rect>
+          <line x1="0" y1="93" x2="280" y2="93" stroke="#000" stroke-dasharray="5,5"></line>
+          <line x1="0" y1="186" x2="280" y2="186" stroke="#000" stroke-dasharray="5,5"></line>
+          <line x1="93" y1="0" x2="93" y2="280" stroke="#000" stroke-dasharray="5,5"></line>
+          <line x1="186" y1="0" x2="186" y2="280" stroke="#000" stroke-dasharray="5,5"></line>
+          <g fill="#3498db" opacity="0.7">
+            <circle class="interactive" cx="30" cy="60" r="3"></circle>
+            <circle class="interactive" cx="50" cy="40" r="3"></circle>
+            <circle class="interactive" cx="120" cy="150" r="3"></circle>
+            <circle class="interactive" cx="170" cy="130" r="3"></circle>
+            <circle class="interactive" cx="220" cy="250" r="3"></circle>
+            <circle class="interactive" cx="260" cy="220" r="3"></circle>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>2. Séries temporelles</h2>
+    <p>Pour les données chronologiques, Tufte préconise des graphiques linéaires simples ou des spark-lines pour des
+      tendances compactes.</p>
+    <div class="example">
+      <p><strong>Exemple : Spark-lines</strong></p>
+      <svg id="sparkline" viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(10,10)">
+          <rect width="280" height="80" fill="#fff" stroke="#000"></rect>
+          <polyline class="interactive" points="10,60 50,30 90,50 130,20 170,40 210,10 250,30" fill="none"
+            stroke="#3498db" stroke-width="2"></polyline>
+          <text x="10" y="90" font-size="12">Jan</text>
+          <text x="250" y="90" font-size="12">Déc</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>3. Visualisation de la causalité</h2>
+    <p>Pour illustrer des relations causales, Tufte suggère des diagrammes de flux ou des graphiques en cascade.</p>
+    <div class="example">
+      <p><strong>Exemple : Diagramme de flux simplifié</strong></p>
+      <svg id="flow-diagram" viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(10,10)">
+          <rect width="280" height="130" fill="#fff" stroke="#000"></rect>
+          <rect class="interactive" x="10" y="50" width="60" height="30" fill="#3498db"></rect>
+          <rect class="interactive" x="110" y="20" width="60" height="30" fill="#3498db"></rect>
+          <rect class="interactive" x="110" y="80" width="60" height="30" fill="#3498db"></rect>
+          <rect class="interactive" x="210" y="50" width="60" height="30" fill="#3498db"></rect>
+          <line x1="70" y1="65" x2="110" y2="35" stroke="#000"></line>
+          <line x1="70" y1="65" x2="110" y2="95" stroke="#000"></line>
+          <line x1="170" y1="35" x2="210" y2="65" stroke="#000"></line>
+          <line x1="170" y1="95" x2="210" y2="65" stroke="#000"></line>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>4. Distributions et densités</h2>
+    <p>Pour représenter des distributions, Tufte recommande des histogrammes épurés ou des diagrammes en boîte (box
+      plots).</p>
+    <div class="example">
+      <p><strong>Exemple : Diagramme en boîte</strong></p>
+      <svg id="box-plot" viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(10,10)">
+          <rect width="280" height="80" fill="#fff" stroke="#000"></rect>
+          <g transform="translate(-10,0)">
+            <line x1="40" y1="40" x2="260" y2="40" stroke="#000" stroke-width="2"></line>
+            <rect class="interactive" x="100" y="20" width="120" height="40" fill="none" stroke="#3498db"
+              stroke-width="2"></rect>
+            <line class="interactive" x1="160" y1="20" x2="160" y2="60" stroke="#3498db" stroke-width="2"></line>
+            <line class="interactive" x1="40" y1="35" x2="40" y2="45" stroke="#000" stroke-width="2"></line>
+            <line class="interactive" x1="260" y1="35" x2="260" y2="45" stroke="#000" stroke-width="2"></line>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>5. Données géospatiales</h2>
+    <p>Pour les données liées à la géographie, Tufte privilégie des cartes minimalistes avec des données superposées.
+    </p>
+    <div class="example">
+      <p><strong>Exemple : Carte minimaliste avec données</strong></p>
+      <svg id="geo-map" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+        <rect width="400" height="300" fill="#e6f3f7" />
+        <path d="M50,100 Q100,50 150,70 T250,90 T350,130 Q300,200 200,220 T80,180 Z" fill="#c8e6c9" stroke="#2e7d32"
+          stroke-width="2" />
+        <path d="M100,50 Q150,100 200,150 T300,250" fill="none" stroke="#64b5f6" stroke-width="3" />
+        <circle class="interactive" cx="120" cy="80" r="6" fill="#f44336" />
+        <circle class="interactive" cx="220" cy="140" r="8" fill="#f44336" />
+        <circle class="interactive" cx="280" cy="200" r="7" fill="#f44336" />
+        <path d="M120,80 L220,140 L280,200" fill="none" stroke="#795548" stroke-width="2" stroke-dasharray="5,5" />
+        <rect x="10" y="260" width="120" height="30" fill="white" opacity="0.7" />
+        <text x="20" y="280" font-size="12">Population:</text>
+        <circle cx="90" cy="276" r="4" fill="#f44336" />
+        <circle cx="105" cy="276" r="6" fill="#f44336" />
+        <circle cx="120" cy="276" r="8" fill="#f44336" />
+        <text x="230" y="290" text-anchor="middle" font-size="14" fill="#333">Carte régionale simplifiée</text>
+      </svg>
+    </div>
+  </div>
+
+  <div id="tooltip" class="tooltip"></div>
+
+  <script>
+    const tooltip = document.getElementById('tooltip');
+    const interactiveElements = document.querySelectorAll('.interactive');
+
+    function showTooltip(event, text) {
+      tooltip.innerHTML = text;
+      tooltip.style.opacity = 1;
+      tooltip.style.left = `${event.pageX + 10}px`;
+      tooltip.style.top = `${event.pageY + 10}px`;
+    }
+
+    function hideTooltip() {
+      tooltip.style.opacity = 0;
+    }
+
+    interactiveElements.forEach(element => {
+      element.addEventListener('mouseover', (e) => {
+        let text;
+        switch (e.target.parentNode.id || e.target.closest('svg').id) {
+          case 'scatter-matrix':
+            text = "Point de données représentant la relation entre deux variables";
+            break;
+          case 'sparkline':
+            text = "Tendance des données sur une année";
+            break;
+          case 'flow-diagram':
+            text = "Étape dans le processus causal";
+            break;
+          case 'box-plot':
+            if (e.target.tagName === 'rect') {
+              text = "Intervalle interquartile (50% des données)";
+            } else if (e.target.x1.baseVal.value === 160) {
+              text = "Médiane";
+            } else {
+              text = "Valeur extrême";
+            }
+            break;
+          case 'geo-map':
+            text = "Ville - La taille représente la population";
+            break;
+          default:
+            text = "Élément interactif";
+        }
+        showTooltip(e, text);
+      });
+      element.addEventListener('mouseout', hideTooltip);
+    });
+  </script>
+</body>
+
+</html>

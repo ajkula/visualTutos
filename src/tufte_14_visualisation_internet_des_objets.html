@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tufte : Visualisation des données de l'Internet des Objets</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    h1,
+    h2 {
+      color: #2c3e50;
+    }
+
+    .concept {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .example {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #3498db;
+    }
+
+    svg {
+      max-width: 100%;
+      height: auto;
+      margin: 10px 0;
+    }
+
+    .tooltip {
+      position: absolute;
+      background-color: black;
+      color: whitesmoke;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-size: 14px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .interactive {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Tufte : Visualisation des données de l'Internet des Objets</h1>
+
+  <div class="concept">
+    <h2>1. Flux de données en temps réel</h2>
+    <p>Appliquer les principes de Tufte pour visualiser efficacement des flux de données IoT en temps réel.</p>
+    <svg id="real-time-data-flow" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <line x1="50" y1="150" x2="350" y2="150" stroke="#333" stroke-width="2" />
+      <line x1="50" y1="150" x2="50" y2="50" stroke="#333" stroke-width="2" />
+      <path id="data-line" class="interactive" fill="none" stroke="#3498db" stroke-width="2" />
+      <circle id="latest-point" class="interactive" r="5" fill="#e74c3c" />
+      <text x="200" y="180" text-anchor="middle" font-size="14">Flux de données en temps réel</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Utiliser des lignes épurées pour représenter clairement les tendances dans les flux de données.</li>
+        <li>Minimiser les éléments décoratifs pour se concentrer sur l'évolution des données.</li>
+        <li>Intégrer des indicateurs subtils pour les mises à jour en temps réel sans surcharger la visualisation.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>2. Visualisation de réseaux IoT</h2>
+    <p>Représenter efficacement les interconnexions complexes entre les appareils IoT.</p>
+    <svg id="iot-network" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <circle class="interactive" cx="200" cy="100" r="30" fill="#3498db" />
+      <circle class="interactive" cx="100" cy="70" r="20" fill="#2ecc71" />
+      <circle class="interactive" cx="300" cy="70" r="20" fill="#2ecc71" />
+      <circle class="interactive" cx="130" cy="150" r="20" fill="#2ecc71" />
+      <circle class="interactive" cx="270" cy="150" r="20" fill="#2ecc71" />
+      <line x1="200" y1="100" x2="100" y2="70" stroke="#333" stroke-width="1" />
+      <line x1="200" y1="100" x2="300" y2="70" stroke="#333" stroke-width="1" />
+      <line x1="200" y1="100" x2="130" y2="150" stroke="#333" stroke-width="1" />
+      <line x1="200" y1="100" x2="270" y2="150" stroke="#333" stroke-width="1" />
+      <text x="200" y="180" text-anchor="middle" font-size="14">Réseau IoT</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Utiliser la taille et la position des nœuds pour représenter l'importance et la hiérarchie des appareils.
+        </li>
+        <li>Simplifier les connexions pour mettre en évidence la structure du réseau sans surcharge visuelle.</li>
+        <li>Employer des couleurs de manière stratégique pour différencier les types d'appareils ou leur statut.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>3. Agrégation de données multi-sources</h2>
+    <p>Visualiser efficacement des données agrégées provenant de multiples sources IoT.</p>
+    <svg id="data-aggregation" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <path class="interactive" d="M50,150 Q125,50 200,100 T350,75" fill="none" stroke="#3498db" stroke-width="2" />
+      <path class="interactive" d="M50,150 Q125,100 200,125 T350,100" fill="none" stroke="#e74c3c" stroke-width="2" />
+      <path class="interactive" d="M50,150 Q125,150 200,75 T350,125" fill="none" stroke="#2ecc71" stroke-width="2" />
+      <circle cx="200" cy="100" r="5" fill="#333" />
+      <text x="200" y="180" text-anchor="middle" font-size="14">Agrégation de données multi-sources</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Utiliser des lignes superposées pour montrer les tendances de différentes sources de données.</li>
+        <li>Employer des couleurs distinctes mais harmonieuses pour différencier les sources.</li>
+        <li>Intégrer des points de convergence pour mettre en évidence les corrélations entre les sources.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>4. Visualisation de séries temporelles IoT</h2>
+    <p>Représenter efficacement l'évolution temporelle des données IoT sur différentes échelles.</p>
+    <svg id="iot-time-series" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <line x1="50" y1="150" x2="350" y2="150" stroke="#333" stroke-width="2" />
+      <line x1="50" y1="150" x2="50" y2="50" stroke="#333" stroke-width="2" />
+      <path id="time-series-line" class="interactive" fill="none" stroke="#3498db" stroke-width="2" />
+      <rect id="time-series-overview" class="interactive" x="50" y="151" width="300" height="20" fill="#e74c3c"
+        opacity="0.3" />
+      <line id="time-cursor" x1="50" y1="50" x2="50" y2="170" stroke="#333" stroke-width="1" stroke-dasharray="5,5" />
+      <text x="200" y="180" text-anchor="middle" font-size="14">Séries temporelles IoT</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Utiliser des lignes claires pour représenter les tendances principales.</li>
+        <li>Intégrer des vues d'ensemble (sparklines) pour montrer les tendances à long terme.</li>
+        <li>Employer des techniques de zoom et de focus pour permettre l'exploration de différentes échelles
+          temporelles.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h2>5. Alertes et anomalies dans les données IoT</h2>
+    <p>Mettre en évidence efficacement les alertes et anomalies dans les flux de données IoT.</p>
+    <svg id="iot-alerts-anomalies" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
+      <path id="alert-data-line" d="M50,150 Q125,50 200,100 T350,75" fill="none" stroke="#3498db" stroke-width="2" />
+      <circle id="anomaly-point" class="interactive" cx="275" cy="80" r="10" fill="#e74c3c" opacity="0" />
+      <path id="anomaly-x" class="interactive" d="M270,75 L280,85 M270,85 L280,75" stroke="white" stroke-width="2"
+        opacity="0" />
+      <rect id="alert-zone" class="interactive" x="50" y="20" width="300" height="30" fill="#f39c12" opacity="0" />
+      <text id="alert-text" x="200" y="40" text-anchor="middle" font-size="12" fill="#333" opacity="0">Zone
+        d'alerte</text>
+      <text x="200" y="180" text-anchor="middle" font-size="14">Alertes et anomalies</text>
+    </svg>
+    <div class="example">
+      <p><strong>Application des principes de Tufte :</strong></p>
+      <ul>
+        <li>Utiliser des couleurs vives et contrastées pour les alertes, tout en maintenant la lisibilité globale.</li>
+        <li>Intégrer des symboles simples mais efficaces pour marquer les anomalies.</li>
+        <li>Employer des zones ombrées pour indiquer les plages de valeurs critiques sans surcharger la visualisation.
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="tooltip" class="tooltip"></div>
+
+  <script>
+    const tooltip = document.getElementById('tooltip');
+    const interactiveElements = document.querySelectorAll('.interactive');
+
+    function showTooltip(event, text) {
+      tooltip.innerHTML = text;
+      tooltip.style.opacity = 1;
+      tooltip.style.left = `${event.pageX + 10}px`;
+      tooltip.style.top = `${event.pageY + 10}px`;
+    }
+
+    function hideTooltip() {
+      tooltip.style.opacity = 0;
+    }
+
+    interactiveElements.forEach(element => {
+      element.addEventListener('mouseover', (e) => {
+        let text;
+        switch (e.target.parentNode.id) {
+          case 'real-time-data-flow':
+            text = e.target.tagName === 'path' ? "Flux de données en temps réel" : "Dernière valeur reçue";
+            break;
+          case 'iot-network':
+            text = e.target.r.baseVal.value === 30 ? "Hub central" : "Appareil IoT connecté";
+            break;
+          case 'data-aggregation':
+            text = "Données agrégées de différentes sources";
+            break;
+          case 'iot-time-series':
+            text = e.target.tagName === 'path' ? "Évolution des données dans le temps" : "Vue d'ensemble à long terme";
+            break;
+          case 'iot-alerts-anomalies':
+            text = e.target.tagName === 'circle' ? "Anomalie détectée" :
+              e.target.tagName === 'rect' ? "Zone de valeurs critiques" : "Point d'alerte";
+            break;
+          default:
+            text = "Élément interactif";
+        }
+        showTooltip(e, text);
+      });
+      element.addEventListener('mouseout', hideTooltip);
+    });
+
+    // Animation flux de données temps réel
+    const realTimeDataFlow = document.getElementById('real-time-data-flow');
+    const dataLine = realTimeDataFlow.getElementById('data-line');
+    const latestPoint = realTimeDataFlow.getElementById('latest-point');
+    let realTimeData = Array(30).fill(0).map(() => Math.random() * 100);
+
+    function updateRealTimeData() {
+      realTimeData.shift();
+      realTimeData.push(Math.random() * 100);
+      const pathD = realTimeData.map((d, i) => `${50 + i * 10},${150 - d}`).join(' L');
+      dataLine.setAttribute('d', `M ${pathD}`);
+      const lastPoint = realTimeData[realTimeData.length - 1];
+      latestPoint.setAttribute('cx', 350);
+      latestPoint.setAttribute('cy', 150 - lastPoint);
+    }
+
+    setInterval(updateRealTimeData, 1000);
+
+    // Animation séries temporelles IoT
+    const iotTimeSeries = document.getElementById('iot-time-series');
+    const timeSeriesLine = iotTimeSeries.getElementById('time-series-line');
+    const timeSeriesOverview = iotTimeSeries.getElementById('time-series-overview');
+    const timeCursor = iotTimeSeries.getElementById('time-cursor');
+    let timeSeriesData = Array(100).fill(0).map(() => Math.random() * 100);
+    let currentTimeIndex = 0;
+
+    function updateTimeSeries() {
+      const visibleData = timeSeriesData.slice(currentTimeIndex, currentTimeIndex + 30);
+      const pathD = visibleData.map((d, i) => `${50 + i * 10},${150 - d}`).join(' L');
+      timeSeriesLine.setAttribute('d', `M ${pathD}`);
+      timeCursor.setAttribute('x1', 50 + currentTimeIndex * 3);
+      timeCursor.setAttribute('x2', 50 + currentTimeIndex * 3);
+      currentTimeIndex = (currentTimeIndex + 1) % 70;
+    }
+
+    setInterval(updateTimeSeries, 500);
+
+    // Animation alertes & anomalies
+    const iotAlertsAnomalies = document.getElementById('iot-alerts-anomalies');
+    const anomalyPoint = iotAlertsAnomalies.getElementById('anomaly-point');
+    const anomalyX = iotAlertsAnomalies.getElementById('anomaly-x');
+    const alertZone = iotAlertsAnomalies.getElementById('alert-zone');
+    const alertText = iotAlertsAnomalies.getElementById('alert-text');
+
+    function showRandomAlert() {
+      const showAnomaly = Math.random() > 0.5;
+      const showAlertZone = Math.random() > 0.7;
+
+      anomalyPoint.style.opacity = showAnomaly ? 1 : 0;
+      anomalyX.style.opacity = showAnomaly ? 1 : 0;
+      alertZone.style.opacity = showAlertZone ? 0.3 : 0;
+      alertText.style.opacity = showAlertZone ? 1 : 0;
+
+      if (showAnomaly) {
+        const x = 50 + Math.random() * 300;
+        const y = 50 + Math.random() * 100;
+        anomalyPoint.setAttribute('cx', x);
+        anomalyPoint.setAttribute('cy', y);
+        anomalyX.setAttribute('d', `M${x - 5},${y - 5} L${x + 5},${y + 5} M${x - 5},${y + 5} L${x + 5},${y - 5}`);
+      }
+    }
+
+    setInterval(showRandomAlert, 2000);
+  </script>
+</body>
+
+</html>
