@@ -226,7 +226,7 @@
       element.addEventListener('mouseout', hideTooltip);
     });
 
-    // Animation flux de données temps réel
+    // real time dataflow animation
     const realTimeDataFlow = document.getElementById('real-time-data-flow');
     const dataLine = realTimeDataFlow.getElementById('data-line');
     const latestPoint = realTimeDataFlow.getElementById('latest-point');
@@ -244,7 +244,7 @@
 
     setInterval(updateRealTimeData, 1000);
 
-    // Animation séries temporelles IoT
+    // IoT timely series animation
     const iotTimeSeries = document.getElementById('iot-time-series');
     const timeSeriesLine = iotTimeSeries.getElementById('time-series-line');
     const timeSeriesOverview = iotTimeSeries.getElementById('time-series-overview');
@@ -263,7 +263,7 @@
 
     setInterval(updateTimeSeries, 500);
 
-    // Animation alertes & anomalies
+    // alerts & anomalies animation
     const iotAlertsAnomalies = document.getElementById('iot-alerts-anomalies');
     const anomalyPoint = iotAlertsAnomalies.getElementById('anomaly-point');
     const anomalyX = iotAlertsAnomalies.getElementById('anomaly-x');
