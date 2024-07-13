@@ -259,6 +259,7 @@
       timeCursor.setAttribute('x1', 50 + currentTimeIndex * 3);
       timeCursor.setAttribute('x2', 50 + currentTimeIndex * 3);
       currentTimeIndex = (currentTimeIndex + 1) % 70;
+      // console.log({currentTimeIndex, pathD})
     }
 
     setInterval(updateTimeSeries, 500);

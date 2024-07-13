@@ -139,11 +139,13 @@
       discernement.</p>
     <svg id="ai-viz" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
       <rect x="0" y="0" width="300" height="200" fill="#f0f0f0" />
-      <circle cx="150" cy="100" r="80" fill="none" stroke="#3498db" stroke-width="2" />
-      <path d="M110,140 Q150,60 190,140" fill="none" stroke="#e74c3c" stroke-width="2" />
-      <text x="150" y="40" text-anchor="middle" font-size="14">IA</text>
-      <text x="150" y="170" text-anchor="middle" font-size="14">Données</text>
-      <text x="150" y="194" text-anchor="middle" font-size="10">IA dans la visualisation</text>
+      <g transform="translate(0,-5)">X
+        <circle cx="150" cy="100" r="80" fill="none" stroke="#3498db" stroke-width="2" />
+        <path d="M110,140 Q150,60 190,140" fill="none" stroke="#e74c3c" stroke-width="2" />
+        <text x="150" y="40" text-anchor="middle" font-size="14">IA</text>
+        <text x="150" y="170" text-anchor="middle" font-size="14">Données</text>
+        <text x="150" y="194" text-anchor="middle" font-size="10">IA dans la visualisation</text>
+      </g>
     </svg>
     <div class="example">
       <p><strong>Application des principes de Tufte :</strong></p>
@@ -193,75 +195,80 @@
   <div id="tooltip" class="tooltip"></div>
 
   <script>
-    // interactivity (1st chart)
-    const point = document.querySelector('#interactive-graph circle');
-    const tooltip = document.getElementById('tooltip');
+    document.addEventListener('DOMContentLoaded', () => {
 
-    point.addEventListener('mouseover', (e) => {
-      tooltip.style.opacity = 1;
-      tooltip.innerHTML = "Ventes en Juin 2023: 15,230 €<br>+12% par rapport à Mai";
-      updateTooltipPosition(e);
-    });
+      // interactivity (1st chart)
+      const point = document.querySelector('#interactive-graph circle');
+      const tooltip = document.getElementById('tooltip');
 
-    point.addEventListener('mouseout', () => {
-      tooltip.style.opacity = 0;
-    });
-
-    point.addEventListener('mousemove', updateTooltipPosition);
-
-    function updateTooltipPosition(e) {
-      const rect = e.target.getBoundingClientRect();
-      tooltip.style.left = `${rect.left + window.scrollX}px`;
-      tooltip.style.top = `${rect.top + window.scrollY - 40}px`;
-    }
-
-    // dashboard animation
-    let salesValue = 0;
-    let customersValue = 0;
-    let trafficData = Array(26).fill(170);
-
-    function updateDashboard() {
-      salesValue += Math.random() * 100;
-      customersValue += Math.floor(Math.random() * 3);
-      document.getElementById('sales').textContent = `${Math.floor(salesValue)} €`;
-      document.getElementById('customers').textContent = customersValue;
-
-      trafficData.shift();
-      trafficData.push(170 - Math.random() * 50);
-      const path = `M20,${trafficData[0]} ` + trafficData.map((y, x) => `L${20 + x * 10},${y}`).join(' ');
-      document.getElementById('traffic').setAttribute('d', path);
-    }
-
-    setInterval(updateDashboard, 1000);
-
-    // AI viz tooltip
-    const aiElements = document.querySelectorAll('#ai-viz > *');
-    aiElements.forEach(el => {
-      el.addEventListener('mouseover', (e) => {
-        let text;
-        switch (el.tagName) {
-          case 'circle':
-            text = "L'IA analyse l'ensemble des données pour identifier des patterns et relations";
-            break;
-          case 'path':
-            text = "L'IA génère des visualisations adaptatives basées sur l'analyse des données";
-            break;
-          case 'text':
-            text = el.textContent === "IA" ? "Intelligence Artificielle appliquée à la visualisation de données" : "Ensemble de données brutes à analyser et visualiser";
-            break;
-          default:
-            return;
-        }
+      point.addEventListener('mouseover', (e) => {
         tooltip.style.opacity = 1;
-        tooltip.innerHTML = text;
+        tooltip.innerHTML = "Ventes en Juin 2023: 15,230 €<br>+12% par rapport à Mai";
         updateTooltipPosition(e);
       });
 
-      el.addEventListener('mouseout', () => {
+      point.addEventListener('mouseout', () => {
         tooltip.style.opacity = 0;
       });
 
-      el.addEventListener('mousemove', updateTooltipPosition);
+      point.addEventListener('mousemove', updateTooltipPosition);
+
+      function updateTooltipPosition(e) {
+        const rect = e.target.getBoundingClientRect();
+        tooltip.style.left = `${rect.left + window.scrollX}px`;
+        tooltip.style.top = `${rect.top + window.scrollY - 40}px`;
+      }
+
+      // AI viz tooltip
+      const aiElements = document.querySelectorAll('#ai-viz > *');
+      aiElements.forEach(grp => {
+        grp.childNodes.forEach(el => {
+          el.addEventListener('mouseover', (e) => {
+            let text;
+            switch (el.tagName) {
+              case 'circle':
+                text = "L'IA analyse l'ensemble des données pour identifier des patterns et relations";
+                break;
+              case 'path':
+                text = "L'IA génère des visualisations adaptatives basées sur l'analyse des données";
+                break;
+              case 'text':
+                text = el.textContent === "IA" ? "Intelligence Artificielle appliquée à la visualisation de données" : "Ensemble de données brutes à analyser et visualiser";
+                break;
+              default:
+                return;
+            }
+            tooltip.style.opacity = 1;
+            tooltip.innerHTML = text;
+            updateTooltipPosition(e);
+          });
+
+          el.addEventListener('mouseout', () => {
+            tooltip.style.opacity = 0;
+          });
+
+          el.addEventListener('mousemove', updateTooltipPosition);
+        });
+      });
+
+      // dashboard animation
+      let salesValue = 0;
+      let customersValue = 0;
+      let trafficData = Array(26).fill(170);
+
+      function updateDashboard() {
+        salesValue += Math.random() * 100;
+        customersValue += Math.floor(Math.random() * 3);
+        document.getElementById('sales').textContent = `${Math.floor(salesValue)} €`;
+        document.getElementById('customers').textContent = customersValue;
+
+        trafficData.shift();
+        trafficData.push(170 - Math.random() * 50);
+        const path = `M20,${trafficData[0]} ` + trafficData.map((y, x) => `L${20 + x * 10},${y}`).join(' ');
+        document.getElementById('traffic').setAttribute('d', path);
+      }
+
+      setInterval(updateDashboard, 1000);
     });
   </script>
 </body>
