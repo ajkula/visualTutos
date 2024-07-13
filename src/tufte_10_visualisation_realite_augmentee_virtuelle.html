@@ -71,7 +71,7 @@
       <rect x="50" y="50" width="300" height="100" fill="#fff" stroke="#333" />
       <circle class="interactive" cx="200" cy="100" r="40" fill="#3498db" opacity="0.7" />
       <path class="interactive" d="M180,80 L220,120 M180,120 L220,80" stroke="#e74c3c" stroke-width="2" />
-      <text x="200" y="170" text-anchor="middle" font-size="14">Vue RA</text>
+      <text x="200" y="180" text-anchor="middle" font-size="14">Vue RA</text>
     </svg>
     <div class="example">
       <p><strong>Application des principes de Tufte :</strong></p>
@@ -109,14 +109,16 @@
     <p>Étendre les principes de Tufte à l'utilisation de multiples sens pour la perception des données.</p>
     <svg id="multisensory-interaction" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
       <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
-      <circle cx="200" cy="100" r="80" fill="#3498db" opacity="0.2" />
-      <path class="interactive" d="M200,100 L250,50" stroke="#e74c3c" stroke-width="2" />
-      <path class="interactive" d="M200,100 L150,50" stroke="#2ecc71" stroke-width="2" />
-      <path class="interactive" d="M200,100 L250,150" stroke="#f39c12" stroke-width="2" />
-      <text x="260" y="45" font-size="12" fill="#e74c3c">Visuel</text>
-      <text x="140" y="45" font-size="12" fill="#2ecc71">Audio</text>
-      <text x="260" y="155" font-size="12" fill="#f39c12">Tactile</text>
-      <text x="200" y="190" text-anchor="middle" font-size="14">Interaction multisensorielle</text>
+      <g transform="translate(0,-10)">
+        <circle cx="200" cy="100" r="80" fill="#3498db" opacity="0.2" />
+        <path class="interactive" d="M200,100 L250,50" stroke="#e74c3c" stroke-width="2" />
+        <path class="interactive" d="M200,100 L150,50" stroke="#2ecc71" stroke-width="2" />
+        <path class="interactive" d="M200,100 L250,150" stroke="#f39c12" stroke-width="2" />
+        <text x="260" y="45" font-size="12" fill="#e74c3c">Visuel</text>
+        <text x="140" y="45" font-size="12" fill="#2ecc71">Audio</text>
+        <text x="260" y="155" font-size="12" fill="#f39c12">Tactile</text>
+      </g>
+      <text x="200" y="180" text-anchor="middle" font-size="14">Interaction multisensorielle</text>
     </svg>
     <div class="example">
       <p><strong>Application des principes de Tufte :</strong></p>
@@ -133,10 +135,12 @@
     <p>Adapter les principes de Tufte pour gérer les changements d'échelle et de perspective en RA/RV.</p>
     <svg id="scale-perspective" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
       <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
-      <path d="M50,150 Q200,50 350,150" fill="none" stroke="#333" stroke-width="2" />
-      <circle class="interactive" cx="125" cy="125" r="20" fill="#3498db" opacity="0.7" />
-      <circle class="interactive" cx="200" cy="100" r="30" fill="#3498db" opacity="0.7" />
-      <circle class="interactive" cx="275" cy="125" r="20" fill="#3498db" opacity="0.7" />
+      <g transform="translate(0,-20)">
+        <path d="M50,150 Q200,50 350,150" fill="none" stroke="#333" stroke-width="2" />
+        <circle class="interactive" cx="125" cy="125" r="20" fill="#3498db" opacity="0.7" />
+        <circle class="interactive" cx="200" cy="100" r="30" fill="#3498db" opacity="0.7" />
+        <circle class="interactive" cx="275" cy="125" r="20" fill="#3498db" opacity="0.7" />
+      </g>
       <text x="200" y="180" text-anchor="middle" font-size="14">Échelle et perspective dynamiques</text>
     </svg>
     <div class="example">
