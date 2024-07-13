@@ -197,7 +197,6 @@
     interactiveElements.forEach(element => {
       element.addEventListener('mouseover', (e) => {
         let text;
-        console.log(e.target.getAttribute('stroke'))
         switch (e.target.parentNode.id) {
           case 'energy-efficiency':
             text = e.target.x.baseVal.value === 50 ? "Visualisation gourmande en ressources" : "Visualisation optimisée et économe";

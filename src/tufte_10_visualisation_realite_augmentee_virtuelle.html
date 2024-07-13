@@ -193,7 +193,6 @@
     interactiveElements.forEach(element => {
       element.addEventListener('mouseover', (e) => {
         let text;
-        console.log(`${e.target.parentNode.id}, ${e.target.tagName}`)
         switch (e.target.parentNode.id) {
           case 'ar-integration':
             text = e.target.tagName === 'circle' ? "Données superposées à la réalité" : "Interaction avec les données en RA";

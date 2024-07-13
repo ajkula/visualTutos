@@ -208,7 +208,8 @@
     interactiveElements.forEach(element => {
       element.addEventListener('mouseover', (e) => {
         let text;
-        switch (e.target.parentNode.id) {
+        const id = e.target.parentNode.id || e.target.parentNode.parentNode.id;
+        switch (id) {
           case 'adaptive-color-palette':
             text = e.target.x.baseVal.value === 50 ? "Palette de couleurs standard" :
               e.target.x.baseVal.value === 160 ? "Palette adaptée au daltonisme" :
@@ -218,8 +219,8 @@
             text = e.target.tagName === 'path' ? "Ajustez le niveau de détail" : "Point de données détaillé";
             break;
           case 'customizable-styles':
-            text = e.target.transform.baseVal[0].matrix.e === 50 ? "Style graphique en barres" :
-              e.target.transform.baseVal[0].matrix.e === 170 ? "Style graphique circulaire" :
+            text = e.target.parentNode.transform.baseVal[0].matrix.e === 50 ? "Style graphique en barres" :
+              e.target.parentNode.transform.baseVal[0].matrix.e === 170 ? "Style graphique circulaire" :
                 "Style graphique en ligne";
             break;
           case 'custom-annotations':
