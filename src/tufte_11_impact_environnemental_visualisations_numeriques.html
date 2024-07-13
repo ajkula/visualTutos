@@ -156,9 +156,9 @@
   <div class="concept">
     <h2>5. Durabilité des visualisations</h2>
     <p>Appliquer les principes de Tufte pour créer des visualisations durables et réutilisables.</p>
-    <svg id="visualization-sustainability" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
       <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
-      <g transform="translate(40,5) scale(0.8)">
+      <g id="visualization-sustainability" transform="translate(40,5) scale(0.8)">
         <circle cx="200" cy="100" r="80" fill="none" stroke="#3498db" stroke-width="3" />
         <path class="interactive" d="M160,140 A60,60 0 0,1 160,60" fill="none" stroke="#2ecc71" stroke-width="3" />
         <path class="interactive" d="M240,60 A60,60 0 0,1 240,140" fill="none" stroke="#e74c3c" stroke-width="3" />
@@ -197,6 +197,7 @@
     interactiveElements.forEach(element => {
       element.addEventListener('mouseover', (e) => {
         let text;
+        console.log(e.target.getAttribute('stroke'))
         switch (e.target.parentNode.id) {
           case 'energy-efficiency':
             text = e.target.x.baseVal.value === 50 ? "Visualisation gourmande en ressources" : "Visualisation optimisée et économe";
@@ -205,8 +206,8 @@
             text = e.target.r.baseVal.value === 70 ? "Volume important de données non optimisées" : "Données compressées et optimisées";
             break;
           case 'adaptive-viz':
-            text = e.target.x.baseVal.value === 50 ? "Version complète pour appareils performants" :
-              e.target.x.baseVal.value === 170 ? "Version allégée pour performances moyennes" : "Version minimaliste pour appareils à faibles ressources";
+            text = e.target.x.baseVal.value === 35 ? "Version complète pour appareils performants" :
+              e.target.x.baseVal.value === 155 ? "Version allégée pour performances moyennes" : "Version minimaliste pour appareils à faibles ressources";
             break;
           case 'environmental-awareness':
             text = e.target.tagName === 'circle' ? "Point de données avec faible impact" : "Indicateur d'empreinte carbone de la visualisation";

@@ -66,14 +66,16 @@
   <div class="concept">
     <h2>1. Processus itératif collaboratif</h2>
     <p>Appliquer les principes de Tufte dans un cycle de développement itératif et collaboratif.</p>
-    <svg id="iterative-process" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
       <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
-      <circle cx="200" cy="100" r="80" fill="none" stroke="#3498db" stroke-width="2" />
-      <path class="interactive" d="M200,20 A80,80 0 0,1 273,100" fill="none" stroke="#e74c3c" stroke-width="3" />
-      <path class="interactive" d="M273,100 A80,80 0 0,1 200,180" fill="none" stroke="#2ecc71" stroke-width="3" />
-      <path class="interactive" d="M200,180 A80,80 0 0,1 127,100" fill="none" stroke="#f39c12" stroke-width="3" />
-      <path class="interactive" d="M127,100 A80,80 0 0,1 200,20" fill="none" stroke="#9b59b6" stroke-width="3" />
-      <text x="200" y="190" text-anchor="middle" font-size="14">Cycle de collaboration</text>
+      <g id="iterative-process" transform="translate(20,-5) scale(0.9)">
+        <circle cx="200" cy="100" r="80" fill="none" stroke="#3498db" stroke-width="2" />
+        <path class="interactive" d="M200,20 A80,80 0 0,1 273,100" fill="none" stroke="#e74c3c" stroke-width="3" />
+        <path class="interactive" d="M273,100 A80,80 0 0,1 200,180" fill="none" stroke="#2ecc71" stroke-width="3" />
+        <path class="interactive" d="M200,180 A80,80 0 0,1 127,100" fill="none" stroke="#f39c12" stroke-width="3" />
+        <path class="interactive" d="M127,100 A80,80 0 0,1 200,20" fill="none" stroke="#9b59b6" stroke-width="3" />
+      </g>
+      <text x="200" y="180" text-anchor="middle" font-size="14">Cycle de collaboration</text>
     </svg>
     <div class="example">
       <p><strong>Application des principes de Tufte :</strong></p>
@@ -192,6 +194,7 @@
 
     interactiveElements.forEach(element => {
       element.addEventListener('mouseover', (e) => {
+        console.log(e.target.parentNode)
         let text;
         switch (e.target.parentNode.id) {
           case 'iterative-process':
