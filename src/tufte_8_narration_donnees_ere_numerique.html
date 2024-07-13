@@ -68,13 +68,15 @@
     <p>Appliquer les principes de Tufte pour créer une progression visuelle claire dans la narration des données.</p>
     <svg id="narrative-structure" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
       <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
-      <line x1="50" y1="100" x2="350" y2="100" stroke="#333" stroke-width="2" />
-      <circle class="interactive" cx="100" cy="100" r="10" fill="#3498db" />
-      <circle class="interactive" cx="200" cy="100" r="10" fill="#e74c3c" />
-      <circle class="interactive" cx="300" cy="100" r="10" fill="#2ecc71" />
-      <text x="100" y="130" text-anchor="middle" font-size="12">Contexte</text>
-      <text x="200" y="130" text-anchor="middle" font-size="12">Analyse</text>
-      <text x="300" y="130" text-anchor="middle" font-size="12">Conclusion</text>
+      <g transform="translate(0,-15)">
+        <line x1="50" y1="100" x2="350" y2="100" stroke="#333" stroke-width="2" />
+        <circle class="interactive" cx="100" cy="100" r="10" fill="#3498db" />
+        <circle class="interactive" cx="200" cy="100" r="10" fill="#e74c3c" />
+        <circle class="interactive" cx="300" cy="100" r="10" fill="#2ecc71" />
+        <text x="100" y="130" text-anchor="middle" font-size="12">Contexte</text>
+        <text x="200" y="130" text-anchor="middle" font-size="12">Analyse</text>
+        <text x="300" y="130" text-anchor="middle" font-size="12">Conclusion</text>
+      </g>
       <text x="200" y="180" text-anchor="middle" font-size="14">Structure narrative visuelle</text>
     </svg>
     <div class="example">
@@ -93,13 +95,15 @@
       engageante.</p>
     <svg id="progressive-reveal" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
       <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
-      <rect class="interactive" x="50" y="50" width="100" height="100" fill="#3498db" opacity="0.3" />
-      <rect class="interactive" x="150" y="50" width="100" height="100" fill="#3498db" opacity="0.6" />
-      <rect class="interactive" x="250" y="50" width="100" height="100" fill="#3498db" />
-      <text x="100" y="170" text-anchor="middle" font-size="12">Étape 1</text>
-      <text x="200" y="170" text-anchor="middle" font-size="12">Étape 2</text>
-      <text x="300" y="170" text-anchor="middle" font-size="12">Étape 3</text>
-      <text x="200" y="190" text-anchor="middle" font-size="14">Révélation progressive</text>
+      <g transform="translate(0,-20)">
+        <rect class="interactive" x="50" y="50" width="100" height="100" fill="#3498db" opacity="0.3" />
+        <rect class="interactive" x="150" y="50" width="100" height="100" fill="#3498db" opacity="0.6" />
+        <rect class="interactive" x="250" y="50" width="100" height="100" fill="#3498db" />
+        <text x="100" y="170" text-anchor="middle" font-size="12">Étape 1</text>
+        <text x="200" y="170" text-anchor="middle" font-size="12">Étape 2</text>
+        <text x="300" y="170" text-anchor="middle" font-size="12">Étape 3</text>
+      </g>
+      <text x="200" y="180" text-anchor="middle" font-size="14">Révélation progressive</text>
     </svg>
     <div class="example">
       <p><strong>Application des principes de Tufte :</strong></p>
@@ -116,12 +120,14 @@
     <p>Combiner différents médias tout en respectant les principes de clarté et d'efficacité de Tufte.</p>
     <svg id="multimedia-integration" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
       <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
-      <rect class="interactive" x="50" y="50" width="100" height="100" fill="#3498db" />
-      <text x="100" y="110" text-anchor="middle" font-size="14" fill="white">Texte</text>
-      <rect class="interactive" x="160" y="50" width="100" height="100" fill="#e74c3c" />
-      <text x="210" y="110" text-anchor="middle" font-size="14" fill="white">Image</text>
-      <rect class="interactive" x="270" y="50" width="100" height="100" fill="#2ecc71" />
-      <text x="320" y="110" text-anchor="middle" font-size="14" fill="white">Vidéo</text>
+      <g transform="translate(0,-15)">
+        <rect class="interactive" x="50" y="50" width="100" height="100" fill="#3498db" />
+        <text x="100" y="110" text-anchor="middle" font-size="14" fill="white">Texte</text>
+        <rect class="interactive" x="160" y="50" width="100" height="100" fill="#e74c3c" />
+        <text x="210" y="110" text-anchor="middle" font-size="14" fill="white">Image</text>
+        <rect class="interactive" x="270" y="50" width="100" height="100" fill="#2ecc71" />
+        <text x="320" y="110" text-anchor="middle" font-size="14" fill="white">Vidéo</text>
+      </g>
       <text x="200" y="180" text-anchor="middle" font-size="14">Intégration multimédia</text>
     </svg>
     <div class="example">
@@ -139,8 +145,10 @@
     <p>Intégrer des éléments interactifs tout en préservant l'intégrité des données selon Tufte.</p>
     <svg id="interactivity" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
       <rect x="0" y="0" width="400" height="200" fill="#f0f0f0" />
-      <path class="interactive" d="M50,150 Q200,50 350,150" fill="none" stroke="#3498db" stroke-width="3" />
-      <circle class="interactive" cx="200" cy="100" r="10" fill="#e74c3c" />
+      <g transform="translate(0,-20)">
+        <path class="interactive" d="M50,150 Q200,50 350,150" fill="none" stroke="#3498db" stroke-width="3" />
+        <circle class="interactive" cx="200" cy="100" r="10" fill="#e74c3c" />
+      </g>
       <text x="200" y="180" text-anchor="middle" font-size="14">Graphique interactif</text>
     </svg>
     <div class="example">
