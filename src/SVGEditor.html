@@ -147,7 +147,7 @@
     #render {
       flex: 1;
       padding: 10px;
-      overflow: auto;
+      overflow: hidden;
     }
 
     #editor {
@@ -160,6 +160,7 @@
       border: none;
       resize: none;
       font-family: monospace;
+      overflow: auto;
     }
 
     #error-zone {
@@ -225,6 +226,11 @@
     .active-session {
       background-color: #e0e0e0;
       font-weight: bold;
+    }
+
+    /* drag & drop */
+    .draggable-shape {
+      cursor: move;
     }
   </style>
 </head>
@@ -554,6 +560,11 @@
     });
 
     function addShape(shapeSvg, shapeName, shapeComment) {
+      const shapeId = `shape-${generateUUID()}`;
+      const newShape = `  <g id="${shapeId}" class="draggable-shape">
+    ${shapeSvg.replace('currentColor', currentColor)}
+  </g>
+`;
       const currentSvg = editor.value;
       const lines = currentSvg.split('\n');
       const svgIndex = lines.findIndex(line => line.trim().endsWith('</svg>'));
@@ -566,7 +577,7 @@
         let newShapeWithComments = '';
         newShapeWithComments += `
 ${commentIndentation}<!-- ${shapeName}: ${shapeComment} -->\n`;
-        newShapeWithComments += `${shapeIndentation}${shapeSvg.trim()}\n`;
+        newShapeWithComments += `${shapeIndentation}${newShape.trim()}\n`;
 
         lines.splice(svgIndex, 0, newShapeWithComments);
         editor.value = lines.join('\n');
@@ -599,6 +610,7 @@ ${commentIndentation}<!-- ${shapeName}: ${shapeComment} -->\n`;
         render.innerHTML = editor.value;
         errorZone.style.display = 'none';
         autoSave();
+        initDragAndDrop();
       } catch (error) {
         showError(`Erreur : ${error.message}`);
       }
@@ -607,6 +619,64 @@ ${commentIndentation}<!-- ${shapeName}: ${shapeComment} -->\n`;
     function showError(message) {
       errorZone.textContent = message;
       errorZone.style.display = 'block';
+    }
+
+    /** drag'n drop <g></g> */
+    function initDragAndDrop() {
+      const svgElement = document.querySelector('#render svg');
+      if (!svgElement) return;
+
+      let selectedElement = null;
+      let offset = { x: 0, y: 0 };
+
+      svgElement.addEventListener('mousedown', startDrag);
+      svgElement.addEventListener('mousemove', drag);
+      svgElement.addEventListener('mouseup', endDrag);
+      svgElement.addEventListener('mouseleave', endDrag);
+
+      function startDrag(e) {
+        if (e.target.closest('.draggable-shape')) {
+          selectedElement = e.target.closest('.draggable-shape');
+          offset = getMousePosition(e);
+
+          // create a transform matrix if not exist
+          if (!selectedElement.transform.baseVal.length) {
+            let transform = svgElement.createSVGTransform();
+            selectedElement.transform.baseVal.appendItem(transform);
+          }
+
+          // get actual translate
+          let transform = selectedElement.transform.baseVal.getItem(0);
+          offset.x -= transform.matrix.e;
+          offset.y -= transform.matrix.f;
+        }
+      }
+
+      function drag(e) {
+        if (selectedElement) {
+          e.preventDefault();
+          let coord = getMousePosition(e);
+          let transform = selectedElement.transform.baseVal.getItem(0);
+          transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
+          updateSVGCode();
+        }
+      }
+
+      function endDrag() {
+        selectedElement = null;
+      }
+
+      function getMousePosition(e) {
+        let CTM = svgElement.getScreenCTM();
+        return {
+          x: (e.clientX - CTM.e) / CTM.a,
+          y: (e.clientY - CTM.f) / CTM.d
+        };
+      }
+    }
+
+    function updateSVGCode() {
+      editor.value = render.innerHTML;
     }
 
     // init
@@ -618,6 +688,7 @@ ${commentIndentation}<!-- ${shapeName}: ${shapeComment} -->\n`;
 
     /**  session init   */
     initializeSession();
+    initDragAndDrop();
 
     document.getElementById('new-session').addEventListener('click', () => {
       if (confirm('Êtes-vous sûr de vouloir créer une nouvelle session ? La session actuelle sera sauvegardée.')) {
