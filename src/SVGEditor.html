@@ -564,7 +564,8 @@
         const shapeIndentation = indentation + '    ';
 
         let newShapeWithComments = '';
-        newShapeWithComments += `${commentIndentation}<!-- ${shapeName}: ${shapeComment} -->\n`;
+        newShapeWithComments += `
+${commentIndentation}<!-- ${shapeName}: ${shapeComment} -->\n`;
         newShapeWithComments += `${shapeIndentation}${shapeSvg.trim()}\n`;
 
         lines.splice(svgIndex, 0, newShapeWithComments);
