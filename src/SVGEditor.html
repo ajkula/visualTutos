@@ -4,27 +4,150 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Éditeur SVG Interactif Amélioré</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.1.1/svg.min.js"></script>
+  <title>Éditeur SVG Interactif</title>
   <style>
     body,
     html {
-      height: 100%;
       margin: 0;
+      padding: 0;
+      height: 100%;
       font-family: Arial, sans-serif;
+      overflow: hidden;
     }
 
-    .container {
+    .editor-container {
       display: flex;
-      height: 90%;
+      height: 100%;
+    }
+
+    #tools-panel {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 50px;
+      background-color: #f0f0f0;
+      transition: width 0.3s ease;
+      overflow: hidden;
+      z-index: 10;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    #tools-panel:hover {
+      width: 300px;
+    }
+
+    .panel-content {
+      width: 300px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .collapsed-content,
+    .expanded-content {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      transition: opacity 0.3s ease;
+    }
+
+    .collapsed-content {
+      position: absolute;
+      opacity: 1;
+    }
+
+    #tools-panel:hover .collapsed-content {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .expanded-content {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #tools-panel:hover .expanded-content {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .icon-container {
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #e0e0e0;
+    }
+
+    .icon-container svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    #color-picker {
+      padding: 10px;
+      background-color: #f0f0f0;
+    }
+
+    #color-selector {
+      width: 100%;
+      height: 40px;
+    }
+
+    #color-input {
+      width: calc(100% - 10px);
+      margin-top: 5px;
+      padding: 5px;
+    }
+
+    #shapes-container {
+      display: grid;
+      /* 2 cols */
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      padding: 10px;
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+
+    .shape-button {
+      width: 100%;
+      max-width: 130px;
+      aspect-ratio: 1;
+      /* for 2 cols */
+      background-color: #fff;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      padding: 5px;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto;
+    }
+
+    .shape-button:hover {
+      background-color: #e0e0e0;
+    }
+
+    .shape-button svg {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      display: flex;
+      margin-left: 60px;
     }
 
     #editor,
     #render {
-      width: 50%;
-      height: 100%;
+      flex: 1;
       padding: 10px;
-      box-sizing: border-box;
+      overflow: auto;
     }
 
     #editor {
@@ -34,114 +157,490 @@
     #svg-code {
       width: 100%;
       height: 100%;
+      border: none;
       resize: none;
+      font-family: monospace;
     }
 
     #error-zone {
-      height: 10%;
-      background-color: #ffeeee;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      color: white;
+      background-color: #ff4444;
       padding: 10px;
-      box-sizing: border-box;
+      text-align: center;
+      display: none;
+    }
+
+    /* sessions */
+
+    #session-manager {
+      padding: 10px;
+      background-color: #f0f0f0;
+    }
+
+    #session-list-container {
+      margin-top: 10px;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      background-color: #fff;
+    }
+
+    #session-list {
+      margin-top: 10px;
+      max-height: 200px;
       overflow-y: auto;
     }
 
-    #render svg {
-      border: 1px solid #ddd;
+    #session-list div {
+      padding: 5px;
+      cursor: pointer;
+      border-bottom: 1px solid #ccc;
+    }
+
+    #session-list div:hover {
+      background-color: #e0e0e0;
+    }
+
+    .session-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .session-item span {
+      cursor: pointer;
+      flex-grow: 1;
+    }
+
+    .session-item button {
+      margin-left: 10px;
+    }
+
+    .active-session {
+      background-color: #e0e0e0;
+      font-weight: bold;
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <div id="editor">
-      <textarea id="svg-code">
-        <!-- SVG viewport définit la zone visible du dessin -->
-        <!-- viewBox="0 0 240 120" signifie que le dessin s'étend de 0 à 240 sur l'axe X et de 0 à 120 sur l'axe Y -->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 120">
-          <defs>
-            <!-- Définition d'un masque pour créer les coins arrondis -->
-            <clipPath id="rounded-corners">
-              <!-- Rectangle avec coins arrondis : x=10, y=10 (position), width=220, height=100 (taille), rx=ry=20 (rayon des coins) -->
-              <rect x="10" y="10" width="150" height="80" rx="20" ry="20" />
-            </clipPath>
-          </defs>
-          
-          <!-- Groupe d'éléments auxquels on applique le masque de coins arrondis -->
-          <g clip-path="url(#rounded-corners)">
-            <!-- Rectangle de fond bleu -->
-            <!-- x=10, y=10 (position du coin supérieur gauche), width=220, height=100 (dimensions) -->
-            <rect x="10" y="10" width="220" height="100" fill="#000091"/>
-            
-            <!-- Chemin pour créer la diagonale rouge -->
-            <!-- d="M10 110 L230 10" signifie : Déplacer à (10,110), tracer une ligne jusqu'à (230,10) -->
-        
-        
-            <!-- Rectangle de fond bleu -->
-            <!-- x=10, y=10 (position du coin supérieur gauche), width=220, height=100 (dimensions) -->
-            <rect x="105" y="10" width="110" height="100" fill="#E1000F" />
-          </g>
-          
-          <!-- Groupe pour le texte -->
-          <g transform="translate(20, 35)">
-            <text font-family="Arial, sans-serif" font-weight="bold" fill="#ffffff">
-              <!-- Premier tspan pour "DSFR" : x=0, y=0 (relatif au groupe), font-size=28 -->
-              <tspan x="0" y="10" font-size="26">DSFR</tspan>
-              <!-- Second tspan pour "Builder" : x=0, y=32 (32 unités sous "DSFR"), font-size=24 -->
-              <tspan x="0" y="38" font-size="22">Builder</tspan>
-            </text>
-          </g>
-          
-          <!-- Texte pour "/>" -->
-          <!-- x=190, y=70 (position), font-size=40, text-anchor="middle" pour centrer horizontalement -->
-          <text x="133" y="68" font-family="Arial, sans-serif" font-weight="bold" font-size="50" fill="#ffffff" text-anchor="middle">/></text>
-        </svg>
-      </textarea>
+  <div class="editor-container">
+    <div id="tools-panel">
+      <div class="panel-content">
+        <div class="collapsed-content">
+          <div class="icon-container" title="Ajouter des formes">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="12" y1="8" x2="12" y2="16"></line>
+              <line x1="8" y1="12" x2="16" y2="12"></line>
+            </svg>
+          </div>
+          <div class="icon-container" title="Déployer le panneau" style="margin-top: auto;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+        </div>
+        <div class="expanded-content">
+          <div id="session-manager">
+            <button id="manage-sessions">Gérer les sessions</button>
+            <button id="new-session">Nouvelle session</button>
+          </div>
+          <div id="color-picker">
+            <input type="color" id="color-selector">
+            <input type="text" id="color-input" maxlength="7">
+          </div>
+          <div id="shapes-container">
+            <!-- shapes btn -->
+          </div>
+        </div>
+      </div>
     </div>
-    <div id="render"></div>
+    <div class="main-content">
+      <div id="editor">
+        <textarea id="svg-code">
+      </textarea>
+      </div>
+      <div id="render"></div>
+    </div>
   </div>
   <div id="error-zone"></div>
 
   <script>
+    const baseSVGModel = `<!-- SVG viewport définit la zone visible du dessin -->
+<!-- viewBox="0 0 240 120" signifie que le dessin s'étend de 0 à 240 sur l'axe X et de 0 à 120 sur l'axe Y -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 120">
+  <defs>
+    <!-- Définition d'un masque pour créer les coins arrondis -->
+    <clipPath id="rounded-corners">
+      <!-- Rectangle avec coins arrondis : x=10, y=10 (position), width=220, height=100 (taille), rx=ry=20 (rayon des coins) -->
+      <rect x="10" y="10" width="150" height="80" rx="20" ry="20" />
+    </clipPath>
+  </defs>
+  
+  <!-- Groupe d'éléments auxquels on applique le masque de coins arrondis -->
+  <g clip-path="url(#rounded-corners)">
+    <!-- Rectangle de fond bleu -->
+    <!-- x=10, y=10 (position du coin supérieur gauche), width=220, height=100 (dimensions) -->
+    <rect x="10" y="10" width="220" height="100" fill="#000091"/>
+    
+    <!-- Chemin pour créer la diagonale rouge -->
+    <!-- d="M10 110 L230 10" signifie : Déplacer à (10,110), tracer une ligne jusqu'à (230,10) -->
+
+
+    <!-- Rectangle de fond bleu -->
+    <!-- x=10, y=10 (position du coin supérieur gauche), width=220, height=100 (dimensions) -->
+    <rect x="105" y="10" width="110" height="100" fill="#E1000F" />
+  </g>
+  
+  <!-- Groupe pour le texte -->
+  <g transform="translate(20, 35)">
+    <text font-family="Arial, sans-serif" font-weight="bold" fill="#ffffff">
+      <!-- Premier tspan pour "DSFR" : x=0, y=0 (relatif au groupe), font-size=28 -->
+      <tspan x="0" y="10" font-size="26">DSFR</tspan>
+      <!-- Second tspan pour "Builder" : x=0, y=32 (32 unités sous "DSFR"), font-size=24 -->
+      <tspan x="0" y="38" font-size="22">Builder</tspan>
+    </text>
+  </g>
+  
+  <!-- Texte pour "/>" -->
+  <!-- x=190, y=70 (position), font-size=40, text-anchor="middle" pour centrer horizontalement -->
+  <text x="133" y="68" font-family="Arial, sans-serif" font-weight="bold" font-size="50" fill="#ffffff" text-anchor="middle">/></text>
+</svg>`;
     const editor = document.getElementById('svg-code');
     const render = document.getElementById('render');
     const errorZone = document.getElementById('error-zone');
-    let draw;
-    let selectedElement;
+    const colorSelector = document.getElementById('color-selector');
+    const colorInput = document.getElementById('color-input');
+    const shapesContainer = document.getElementById('shapes-container');
 
-    function updateRender() {
-      try {
-        render.innerHTML = editor.value;
-        initSVG();
-        errorZone.textContent = '';
-      } catch (e) {
-        errorZone.textContent = 'Erreur : ' + e.message;
-      }
-    }
+    let currentColor = '#000000';
 
-    function initSVG() {
-      if (draw) draw.remove();
-      draw = SVG().addTo('#render').size(400, 300);
-      draw.svg(editor.value);
+    /** sessionmodule */
+    let currentSessionId = null;
+    let lastModified = Date.now();
+    const AUTO_SAVE_DELAY = 30000;
 
-      draw.find('rect, circle').forEach(el => {
-        el.click(function () {
-          if (selectedElement) selectedElement.selectize(false, { pointSize: 5 }).resize('stop');
-          selectedElement = this.selectize({ pointSize: 5 }).resize();
-          selectedElement.on('resizing', function (e) {
-            updateCode();
-          });
-        });
+    function generateUUID() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
       });
     }
 
-    function updateCode() {
-      editor.value = render.innerHTML;
+    function startNewSession() {
+      saveSession();
+      currentSessionId = generateUUID();
+      editor.value = baseSVGModel;
+      currentColor = '#000000';
+      colorSelector.value = currentColor;
+      colorInput.value = currentColor;
+      updateShapesColor();
+      updateRender();
+      saveSession();
+    }
+
+    function updateSessionList() {
+      const sessionManager = document.getElementById('session-manager');
+      let container = document.getElementById('session-list-container');
+      if (!container) {
+        container = document.createElement('div');
+        container.id = 'session-list-container';
+        sessionManager.appendChild(container);
+      }
+      container.innerHTML = '';
+      const newList = createSessionList();
+      container.appendChild(newList);
+    }
+
+    function deleteSession(sessionId) {
+      localStorage.removeItem(`svgSession_${sessionId}`);
+      if (sessionId === currentSessionId) {
+        startNewSession(); // if current is deleted, must create anew one
+      }
+      updateSessionList();
+    }
+
+    function saveSession() {
+      const session = {
+        id: currentSessionId,
+        content: editor.value,
+        color: currentColor,
+        lastModified: Date.now()
+      };
+      localStorage.setItem(`svgSession_${currentSessionId}`, JSON.stringify(session));
+      localStorage.setItem('currentSessionId', currentSessionId);
+    }
+
+    function loadSession(sessionId) {
+      const sessionData = localStorage.getItem(`svgSession_${sessionId}`);
+      if (sessionData) {
+        const session = JSON.parse(sessionData);
+        editor.value = session.content;
+        currentColor = session.color;
+        colorSelector.value = currentColor;
+        colorInput.value = currentColor;
+        updateShapesColor();
+        updateRender();
+        currentSessionId = sessionId;
+      }
+    }
+
+    function listSessions() {
+      const sessions = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('svgSession_')) {
+          const session = JSON.parse(localStorage.getItem(key));
+          sessions.push(session);
+        }
+      }
+      return sessions.sort((a, b) => b.lastModified - a.lastModified);
+    }
+
+    function createSessionList() {
+      const sessions = listSessions();
+      const listContainer = document.createElement('div');
+      listContainer.id = 'session-list';
+      sessions.forEach(session => {
+        const sessionItem = document.createElement('div');
+        sessionItem.className = 'session-item';
+        const sessionInfo = document.createElement('span');
+        sessionInfo.textContent = `Session ${session.id.slice(0, 8)} - ${new Date(session.lastModified).toLocaleString()}`;
+        sessionInfo.onclick = () => {
+          loadSession(session.id);
+          updateSessionList();
+        }
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Supprimer';
+        deleteButton.onclick = (e) => {
+          e.stopPropagation();
+          if (confirm('Êtes-vous sûr de vouloir supprimer cette session ?')) {
+            deleteSession(session.id);
+          }
+        };
+
+        sessionItem.appendChild(sessionInfo);
+        sessionItem.appendChild(deleteButton);
+
+        if (session.id === currentSessionId) {
+          sessionItem.classList.add('active-session');
+        }
+
+        listContainer.appendChild(sessionItem);
+      });
+      return listContainer;
+    }
+
+    function initializeSession() {
+      const savedSessionId = localStorage.getItem('currentSessionId');
+      if (savedSessionId) {
+        currentSessionId = savedSessionId;
+        loadSession(currentSessionId);
+      } else {
+        currentSessionId = generateUUID();
+        saveSession();
+      }
+    }
+
+    function autoSave() {
+      const now = Date.now();
+      if (now - lastModified >= AUTO_SAVE_DELAY) {
+        saveSession();
+        lastModified = now;
+      }
+    }
+
+    /** end session */
+
+    const shapes = [
+      {
+        name: 'Rectangle',
+        svg: '<rect x="10" y="10" width="80" height="80" fill="currentColor" />',
+        comment: 'x/y: position du coin supérieur gauche, width/height: dimensions du rectangle'
+      },
+      {
+        name: 'Cercle',
+        svg: '<circle cx="50" cy="50" r="40" fill="currentColor" />',
+        comment: 'cx/cy: coordonnées du centre, r: rayon du cercle'
+      },
+      {
+        name: 'Ellipse',
+        svg: '<ellipse cx="50" cy="50" rx="40" ry="30" fill="currentColor" />',
+        comment: 'cx/cy: coordonnées du centre, rx/ry: rayons horizontal et vertical'
+      },
+      {
+        name: 'Triangle',
+        svg: '<polygon points="50,10 90,90 10,90" fill="currentColor" />',
+        comment: 'points: liste de coordonnées x,y pour chaque sommet du triangle'
+      },
+      {
+        name: 'Étoile',
+        svg: '<polygon points="50,10 61,40 95,40 67,60 79,90 50,70 21,90 33,60 5,40 39,40" fill="currentColor" />',
+        comment: 'points: série de coordonnées x,y définissant les sommets de l\'étoile'
+      },
+      {
+        name: 'Ligne',
+        svg: '<line x1="10" y1="10" x2="90" y2="90" stroke="currentColor" stroke-width="5" />',
+        comment: 'x1/y1: point de départ, x2/y2: point d\'arrivée, stroke-width: épaisseur de la ligne'
+      },
+      {
+        name: 'Demi-cercle',
+        svg: '<path d="M10,50 A40,40 0 0,1 90,50" fill="none" stroke="currentColor" stroke-width="5"/>',
+        comment: 'M: début du tracé, A: commande d\'arc (rx ry x-axis-rotation large-arc-flag sweep-flag x y)'
+      },
+      {
+        name: 'Onde',
+        svg: '<path d="M10,50 Q30,30 50,50 T90,50" fill="none" stroke="currentColor" stroke-width="5"/>',
+        comment: 'M: début, Q: courbe quadratique (point de contrôle, point final), T: courbe symétrique'
+      },
+      {
+        name: 'Flèche complète',
+        svg: '<path d="M10,50 L80,50 L70,40 M80,50 L70,60" fill="none" stroke="currentColor" stroke-width="5"/>',
+        comment: 'M: début, L: ligne droite, multiples commandes pour dessiner la flèche et sa pointe'
+      },
+      {
+        name: 'Pointe de flèche',
+        svg: '<polygon points="80,50 65,35 65,65" fill="currentColor"/>',
+        comment: 'points: coordonnées x,y des trois sommets formant la pointe de flèche'
+      },
+      {
+        name: 'Éclair',
+        svg: '<polygon points="50,10 20,50 45,50 10,90 80,50 55,50" fill="currentColor"/>',
+        comment: 'points: série de coordonnées x,y définissant les sommets de l\'éclair'
+      },
+      {
+        name: 'Spirale',
+        svg: '<path d="M50,50 m0,-30 a30,30 0 1,1 0,60 a25,25 0 1,1 0,-50 a20,20 0 1,1 0,40 a15,15 0 1,1 0,-30 a10,10 0 1,1 0,20" fill="none" stroke="currentColor" stroke-width="5"/>',
+        comment: 'M: début, m: déplacement relatif, a: arcs successifs avec rayons décroissants'
+      },
+      {
+        name: 'Nuage',
+        svg: '<path d="M25,60 A20,20 0 0,1 25,20 A20,20 0 0,1 45,20 A20,20 0 0,1 75,20 A20,20 0 0,1 75,60 Z" fill="currentColor"/>',
+        comment: 'M: début, A: arcs successifs pour former les bords arrondis du nuage, Z: fermeture du chemin'
+      },
+      {
+        name: 'Croix',
+        svg: '<path d="M20,20 L80,80 M20,80 L80,20" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>',
+        comment: 'M: début de chaque ligne, L: ligne droite, stroke-linecap: extrémités arrondies'
+      },
+      {
+        name: 'Cœur',
+        svg: '<path d="M50,30 A20,20 0 0,1 90,30 A20,20 0 0,1 50,70 A20,20 0 0,1 10,30 A20,20 0 0,1 50,30 Z" fill="currentColor"/>',
+        comment: 'M: début, A: arcs pour les courbes du cœur, Z: fermeture du chemin'
+      },
+      {
+        name: 'Hexagone',
+        svg: '<polygon points="50,10 90,30 90,70 50,90 10,70 10,30" fill="currentColor"/>',
+        comment: 'points: coordonnées x,y des six sommets de l\'hexagone'
+      },
+    ];
+
+    shapes.forEach(shape => {
+      const button = document.createElement('button');
+      button.className = 'shape-button';
+      button.innerHTML = `<svg viewBox="0 0 100 100">${shape.svg}</svg>`;
+      button.onclick = () => addShape(shape.svg, shape.name, shape.comment);
+      shapesContainer.appendChild(button);
+    });
+
+    function addShape(shapeSvg, shapeName, shapeComment) {
+      const currentSvg = editor.value;
+      const lines = currentSvg.split('\n');
+      const svgIndex = lines.findIndex(line => line.trim().endsWith('</svg>'));
+
+      if (svgIndex !== -1) {
+        const indentation = lines[svgIndex].match(/^\s*/)[0];
+        const commentIndentation = indentation + '  ';
+        const shapeIndentation = indentation + '    ';
+
+        let newShapeWithComments = '';
+        newShapeWithComments += `${commentIndentation}<!-- ${shapeName}: ${shapeComment} -->\n`;
+        newShapeWithComments += `${shapeIndentation}${shapeSvg.trim()}\n`;
+
+        lines.splice(svgIndex, 0, newShapeWithComments);
+        editor.value = lines.join('\n');
+        updateRender();
+      } else {
+        showError("Erreur : Balise </svg> non trouvée dans le code SVG.");
+      }
+    }
+
+    colorSelector.addEventListener('input', updateColor);
+    colorInput.addEventListener('input', updateColor);
+
+    function updateColor(e) {
+      currentColor = e.target.value;
+      colorSelector.value = currentColor;
+      colorInput.value = currentColor;
+      updateShapesColor();
+    }
+
+    function updateShapesColor() {
+      document.querySelectorAll('.shape-button svg').forEach(svg => {
+        svg.style.color = currentColor;
+      });
     }
 
     editor.addEventListener('input', updateRender);
 
-    // Initialisation
+    function updateRender() {
+      try {
+        render.innerHTML = editor.value;
+        errorZone.style.display = 'none';
+        autoSave();
+      } catch (error) {
+        showError(`Erreur : ${error.message}`);
+      }
+    }
+
+    function showError(message) {
+      errorZone.textContent = message;
+      errorZone.style.display = 'block';
+    }
+
+    // init
+    editor.value = baseSVGModel;
     updateRender();
+    colorSelector.value = currentColor;
+    colorInput.value = currentColor;
+    updateShapesColor();
+
+    /**  session init   */
+    initializeSession();
+
+    document.getElementById('new-session').addEventListener('click', () => {
+      if (confirm('Êtes-vous sûr de vouloir créer une nouvelle session ? La session actuelle sera sauvegardée.')) {
+        startNewSession();
+        updateSessionList();
+      }
+    });
+
+    document.getElementById('manage-sessions').addEventListener('click', () => {
+      const container = document.getElementById('session-list-container');
+      if (container) {
+        if (container.style.display === 'none') {
+          container.style.display = 'block';
+          updateSessionList(); // damn had to open list b4 tryin to show
+        } else {
+          container.style.display = 'none';
+        }
+      } else {
+        updateSessionList();
+      }
+    });
+
+    window.addEventListener('beforeunload', saveSession);
+
   </script>
 </body>
 
