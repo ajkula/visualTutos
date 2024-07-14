@@ -328,6 +328,7 @@
     const colorInput = document.getElementById('color-input');
     const shapesContainer = document.getElementById('shapes-container');
 
+    let isLoading = false;
     let currentColor = '#000000';
 
     /** sessionmodule */
@@ -352,6 +353,7 @@
       updateShapesColor();
       updateRender();
       saveSession();
+      updateSessionList();
     }
 
     function updateSessionList() {
@@ -365,6 +367,26 @@
       container.innerHTML = '';
       const newList = createSessionList();
       container.appendChild(newList);
+
+      const sessions = listSessions();
+      if (!sessions.some(session => session.id === currentSessionId)) {
+        if (sessions.length > 0) {
+          loadSession(sessions[0].id);
+        } else {
+          startNewSession();
+        }
+      }
+
+      const activeSession = container.querySelector(`[data-session-id="${currentSessionId}"]`);
+      if (activeSession) {
+        activeSession.classList.add('active-session');
+      } else {
+        console.warn(`Session active non trouvée dans la liste : ${currentSessionId}`);
+      }
+
+      if (container.style.display === 'none') {
+        container.style.display = 'block';
+      }
     }
 
     function deleteSession(sessionId) {
@@ -376,17 +398,30 @@
     }
 
     function saveSession() {
-      const session = {
-        id: currentSessionId,
-        content: editor.value,
-        color: currentColor,
-        lastModified: Date.now()
-      };
-      localStorage.setItem(`svgSession_${currentSessionId}`, JSON.stringify(session));
-      localStorage.setItem('currentSessionId', currentSessionId);
+      if (isLoading) return;
+
+      try {
+        const session = {
+          id: currentSessionId,
+          content: editor.value,
+          color: currentColor,
+          lastModified: Date.now()
+        };
+        localStorage.setItem(`svgSession_${currentSessionId}`, JSON.stringify(session));
+        localStorage.setItem('currentSessionId', currentSessionId);
+        updateSessionList();
+      } catch (error) {
+        console.error("Erreur lors de la sauvegarde de la session:", error);
+        showError("Erreur lors de la sauvegarde de la session. Veuillez réessayer.");
+      }
     }
 
     function loadSession(sessionId) {
+      if (currentSessionId !== sessionId) {
+        saveSession();
+      }
+
+      isLoading = true;
       const sessionData = localStorage.getItem(`svgSession_${sessionId}`);
       if (sessionData) {
         const session = JSON.parse(sessionData);
@@ -395,9 +430,12 @@
         colorSelector.value = currentColor;
         colorInput.value = currentColor;
         updateShapesColor();
-        updateRender();
         currentSessionId = sessionId;
+        localStorage.setItem('currentSessionId', currentSessionId);
+        updateRender();
+        updateSessionList();
       }
+      setTimeout(() => { isLoading = false; }, 100);
     }
 
     function listSessions() {
@@ -409,7 +447,7 @@
           sessions.push(session);
         }
       }
-      return sessions.sort((a, b) => b.lastModified - a.lastModified);
+      return sessions.sort((a, b) => a.lastModified - b.lastModified);
     }
 
     function createSessionList() {
@@ -419,11 +457,16 @@
       sessions.forEach(session => {
         const sessionItem = document.createElement('div');
         sessionItem.className = 'session-item';
+        sessionItem.setAttribute('data-session-id', session.id);
         const sessionInfo = document.createElement('span');
         sessionInfo.textContent = `Session ${session.id.slice(0, 8)} - ${new Date(session.lastModified).toLocaleString()}`;
         sessionInfo.onclick = () => {
-          loadSession(session.id);
-          updateSessionList();
+          if (session.id !== currentSessionId) {
+            loadSession(session.id);
+
+            console.log({ currentSessionId, sessionId: session.id })
+            updateSessionList();
+          }
         }
 
         const deleteButton = document.createElement('button');
@@ -456,13 +499,26 @@
         currentSessionId = generateUUID();
         saveSession();
       }
+      updateSessionList();
     }
 
     function autoSave() {
+      if (isLoading) return;
+
       const now = Date.now();
       if (now - lastModified >= AUTO_SAVE_DELAY) {
-        saveSession();
-        lastModified = now;
+        const currentContent = editor.value;
+        const currentSessionData = localStorage.getItem(`svgSession_${currentSessionId}`);
+        if (currentSessionData) {
+          const currentSession = JSON.parse(currentSessionData);
+          if (currentContent !== currentSession.content) {
+            saveSession();
+            lastModified = now;
+          }
+        } else {
+          saveSession();
+          lastModified = now;
+        }
       }
     }
 
