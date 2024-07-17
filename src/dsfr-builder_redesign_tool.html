@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planificateur de composants DSFR</title>
+  <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f0f0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin: 5px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .component-item {
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .checkbox-container input[type="checkbox"] {
+      margin-right: 10px;
+      width: auto;
+    }
+
+    .trait-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .trait-container input,
+    .trait-container select {
+      flex: 1;
+    }
+
+    h2,
+    h3,
+    h4 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // composants UI de base
+    const Button = ({ children, onClick }) => (
+      <button onClick={onClick}>{children}</button>
+    );
+
+    const Input = ({ value, onChange, placeholder }) => (
+      <input value={value} onChange={onChange} placeholder={placeholder} />
+    );
+
+    const Select = ({ value, onChange, options }) => (
+      <select value={value} onChange={onChange}>
+        {options.map(option => (
+          <option key={option.value} value={option.value}>{option.label}</option>
+        ))}
+      </select>
+    );
+
+    const Checkbox = ({ id, checked, onChange, label }) => (
+      <div className="checkbox-container">
+        <input type="checkbox" id={id} checked={checked} onChange={onChange} />
+        <label htmlFor={id}>{label}</label>
+      </div>
+    );
+
+    const VisualComponentGraph = ({ component }) => {
+      if (!component) return null;
+
+      const svgWidth = 800;
+      const svgHeight = 600;
+      const mainBlockWidth = 300;
+      const mainBlockHeight = 200;
+      const subBlockWidth = 150;
+      const subBlockHeight = 80;
+      const spacing = 30;
+      const arrowWidth = 2;
+
+      const mainBlockX = svgWidth / 2 - mainBlockWidth / 2;
+      const mainBlockY = svgHeight / 2 - mainBlockHeight / 2;
+
+      const renderBlock = (x, y, width, height, text, isMain = false) => (
+        <g key={text}>
+          <rect
+            x={x}
+            y={y}
+            width={width}
+            height={height}
+            rx={10}
+            ry={10}
+            fill={isMain ? "#4CAF50" : "#81C784"}
+            stroke="#2E7D32"
+            strokeWidth={2}
+          />
+          <text
+            x={x + width / 2}
+            y={y + height / 2}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fill="white"
+            fontSize={isMain ? 16 : 14}
+          >
+            {text}
+          </text>
+        </g>
+      );
+
+      const renderArrow = (startX, startY, endX, endY) => (
+        <line
+          x1={startX}
+          y1={startY}
+          x2={endX}
+          y2={endY}
+          stroke="#2E7D32"
+          strokeWidth={arrowWidth}
+          markerEnd="url(#arrowhead)"
+        />
+      );
+
+      const configBlocks = (component.traits || []).map((trait, index) => {
+        const x = spacing;
+        const y = mainBlockY + (subBlockHeight + 5) * index;
+        return renderBlock(x, y, subBlockWidth, subBlockHeight, `${trait.name}: ${trait.type}`);
+      });
+
+      const childrenBlocks = (component.allowedChildren || []).map((childId, index) => {
+        const childName = allComponents.find(c => c.id === childId)?.name || childId;
+        const x = svgWidth - spacing - subBlockWidth;
+        const y = mainBlockY + (subBlockHeight + 5) * index;
+        return renderBlock(x, y, subBlockWidth, subBlockHeight, childName);
+      });
+
+      return (
+        <svg width={svgWidth} height={svgHeight}>
+          <defs>
+            <marker
+              id="arrowhead"
+              markerWidth="10"
+              markerHeight="7"
+              refX="0"
+              refY="3.5"
+              orient="auto"
+            >
+              <polygon points="0 0, 10 3.5, 0 7" fill="#2E7D32" />
+            </marker>
+          </defs>
+          {renderBlock(mainBlockX, mainBlockY, mainBlockWidth, mainBlockHeight, component.name || 'Composant sans nom', true)}
+          {configBlocks}
+          {childrenBlocks}
+          {configBlocks.map((_, index) =>
+            renderArrow(
+              spacing + subBlockWidth,
+              mainBlockY + (subBlockHeight + 5) * index + subBlockHeight / 2,
+              mainBlockX,
+              mainBlockY + mainBlockHeight / 2
+            )
+          )}
+          {childrenBlocks.map((_, index) =>
+            renderArrow(
+              mainBlockX + mainBlockWidth,
+              mainBlockY + mainBlockHeight / 2,
+              svgWidth - spacing - subBlockWidth,
+              mainBlockY + (subBlockHeight + 5) * index + subBlockHeight / 2
+            )
+          )}
+        </svg>
+      );
+    };
+
+    // config des composants DSFR
+    const allComponents = [
+      { id: 'button', name: 'Bouton', type: 'atomique' },
+      { id: 'input', name: 'Champ de saisie', type: 'atomique' },
+      { id: 'select', name: 'Sélecteur', type: 'atomique' },
+      { id: 'checkbox', name: 'Case à cocher', type: 'atomique' },
+      { id: 'radio', name: 'Bouton radio', type: 'atomique' },
+      { id: 'card', name: 'Carte', type: 'composé' },
+      { id: 'accordion', name: 'Accordéon', type: 'composé' },
+      { id: 'table', name: 'Tableau', type: 'composé' },
+    ];
+
+    // fonctionnel
+    const ComponentList = ({ onSelectComponent }) => (
+      <div>
+        <h2>Composants DSFR</h2>
+        {allComponents.map((component) => (
+          <div key={component.id} className="component-item" onClick={() => onSelectComponent(component)}>
+            <h3>{component.name}</h3>
+            <p>Type: {component.type}</p>
+          </div>
+        ))}
+      </div>
+    );
+
+    const ComponentEditor = ({ component, onSave }) => {
+      const [name, setName] = useState(component?.name || '');
+      const [type, setType] = useState(component?.type || 'atomique');
+      const [allowedChildren, setAllowedChildren] = useState(component?.allowedChildren || []);
+      const [traits, setTraits] = useState(component?.traits || []);
+
+      const handleSave = () => {
+        onSave({ id: component?.id || Date.now().toString(), name, type, allowedChildren, traits });
+      };
+
+      return (
+        <div>
+          <h3>Éditeur de composant</h3>
+          <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Nom du composant" />
+          <Select
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            options={[
+              { value: 'atomique', label: 'Atomique' },
+              { value: 'composé', label: 'Composé' }
+            ]}
+          />
+          <h4>Enfants autorisés</h4>
+          {allComponents.map((c) => (
+            <Checkbox
+              key={c.id}
+              id={`child-${c.id}`}
+              checked={allowedChildren.includes(c.id)}
+              onChange={(e) => {
+                if (e.target.checked) {
+                  setAllowedChildren([...allowedChildren, c.id]);
+                } else {
+                  setAllowedChildren(allowedChildren.filter((id) => id !== c.id));
+                }
+              }}
+              label={c.name}
+            />
+          ))}
+          <h4>Traits</h4>
+          {traits.map((trait, index) => (
+            <div key={index} className="trait-container">
+              <Input
+                value={trait.name}
+                onChange={(e) => {
+                  const newTraits = [...traits];
+                  newTraits[index].name = e.target.value;
+                  setTraits(newTraits);
+                }}
+                placeholder="Nom du trait"
+              />
+              <Select
+                value={trait.type}
+                onChange={(e) => {
+                  const newTraits = [...traits];
+                  newTraits[index].type = e.target.value;
+                  setTraits(newTraits);
+                }}
+                options={[
+                  { value: 'string', label: 'Chaîne' },
+                  { value: 'number', label: 'Nombre' },
+                  { value: 'boolean', label: 'Booléen' },
+                  { value: 'array', label: 'Tableau' }
+                ]}
+              />
+              <Button onClick={() => setTraits(traits.filter((_, i) => i !== index))}>
+                Supprimer
+              </Button>
+            </div>
+          ))}
+          <Button onClick={() => setTraits([...traits, { name: '', type: 'string' }])}>
+            Ajouter un trait
+          </Button>
+          <Button onClick={handleSave}>Enregistrer le composant</Button>
+        </div>
+      );
+    };
+
+    // rendu svg / listing crados
+    const ComponentGraph = ({ component }) => {
+      if (!component) return null;
+      return (
+        <div className="component-item">
+          <h3>Graphe du composant</h3>
+          <VisualComponentGraph component={component} />
+          <div>
+            <h4>Composant: {component.name}</h4>
+            <p>Type: {component.type}</p>
+            <h4>Enfants acceptés:</h4>
+            <ul>
+              {component.allowedChildren && component.allowedChildren.length > 0 ? (
+                component.allowedChildren.map((childId) => (
+                  <li key={childId}>{allComponents.find(c => c.id === childId)?.name || childId}</li>
+                ))
+              ) : (
+                <li>Aucun enfant autorisé</li>
+              )}
+            </ul>
+            <h4>Traits:</h4>
+            <ul>
+              {component.traits && component.traits.length > 0 ? (
+                component.traits.map((trait, index) => (
+                  <li key={index}>{trait.name}: {trait.type}</li>
+                ))
+              ) : (
+                <li>Aucun trait défini</li>
+              )}
+            </ul>
+          </div>
+        </div>
+      );
+    };
+
+    const Modal = ({ children, onClose }) => (
+      <div className="modal">
+        <div className="modal-content">
+          {children}
+          <Button onClick={onClose}>Fermer</Button>
+        </div>
+      </div>
+    );
+
+    const DSFRComponentPlanner = () => {
+      const [selectedComponent, setSelectedComponent] = useState(null);
+      const [savedComponents, setSavedComponents] = useState([]);
+      const [showShareDialog, setShowShareDialog] = useState(false);
+      const [shareData, setShareData] = useState('');
+
+      useEffect(() => {
+        const storedComponents = localStorage.getItem('dsfr-components');
+        if (storedComponents) {
+          setSavedComponents(JSON.parse(storedComponents));
+        }
+      }, []);
+
+      const saveComponent = (component) => {
+        const updatedComponents = savedComponents.some(c => c.id === component.id)
+          ? savedComponents.map(c => c.id === component.id ? component : c)
+          : [...savedComponents, component];
+        setSavedComponents(updatedComponents);
+        localStorage.setItem('dsfr-components', JSON.stringify(updatedComponents));
+        setSelectedComponent(null);
+      };
+
+      const deleteComponent = (componentId) => {
+        const updatedComponents = savedComponents.filter(c => c.id !== componentId);
+        setSavedComponents(updatedComponents);
+        localStorage.setItem('dsfr-components', JSON.stringify(updatedComponents));
+      };
+
+      const shareComponents = () => {
+        setShareData(JSON.stringify(savedComponents));
+        setShowShareDialog(true);
+      };
+
+      const generateDocumentation = () => {
+        let doc = '# Documentation des composants DSFR\n\n';
+        savedComponents.forEach(component => {
+          doc += `## ${component.name}\n\n`;
+          doc += `Type: ${component.type}\n\n`;
+          doc += '### Enfants autorisés:\n';
+          component.allowedChildren.forEach(childId => {
+            const childName = allComponents.find(c => c.id === childId)?.name || childId;
+            doc += `- ${childName}\n`;
+          });
+          doc += '\n### Traits:\n';
+          component.traits.forEach(trait => {
+            doc += `- ${trait.name}: ${trait.type}\n`;
+          });
+          doc += '\n';
+        });
+        return doc;
+      };
+
+      const downloadDocumentation = () => {
+        const doc = generateDocumentation();
+        const blob = new Blob([doc], { type: 'text/markdown' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'dsfr-components-documentation.md';
+        a.click();
+      };
+
+      return (
+        <div className="container">
+          <h1>Planificateur avancé de composants DSFR</h1>
+          <div className="grid">
+            <div>
+              <ComponentList onSelectComponent={setSelectedComponent} />
+              <h3>Composants sauvegardés</h3>
+              {savedComponents.map(component => (
+                <div key={component.id} className="component-item">
+                  <span>{component.name}</span>
+                  <Button onClick={() => setSelectedComponent(component)}>Éditer</Button>
+                  <Button onClick={() => deleteComponent(component.id)}>Supprimer</Button>
+                </div>
+              ))}
+              <Button onClick={() => setSelectedComponent({ name: '', type: 'atomique', allowedChildren: [], traits: [] })}>
+                Nouveau composant
+              </Button>
+              <Button onClick={shareComponents}>Partager</Button>
+              <Button onClick={downloadDocumentation}>Générer la documentation</Button>
+            </div>
+            <div>
+              {selectedComponent && (
+                <>
+                  <ComponentEditor component={selectedComponent} onSave={saveComponent} />
+                  <ComponentGraph component={selectedComponent} />
+                </>
+              )}
+            </div>
+          </div>
+          {showShareDialog && (
+            <Modal onClose={() => setShowShareDialog(false)}>
+              <h2>Partager les composants</h2>
+              <p>Copiez les données ci-dessous pour les partager avec un collègue.</p>
+              <textarea value={shareData} readOnly rows={10} cols={50} style={{ width: '100%', marginBottom: '10px' }} />
+            </Modal>
+          )}
+        </div>
+      );
+    };
+
+    ReactDOM.render(<DSFRComponentPlanner />, document.getElementById('root'));
+  </script>
+</body>
+
+</html>
