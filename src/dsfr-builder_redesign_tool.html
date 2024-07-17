@@ -57,11 +57,20 @@
     }
 
     .component-item {
+      display: flex;
+      flex-direction: column;
       border: 1px solid #ddd;
       padding: 10px;
       margin-bottom: 10px;
       border-radius: 4px;
       background-color: #f9f9f9;
+    }
+
+    .space-between {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: baseline;
     }
 
     .modal {
@@ -106,10 +115,15 @@
       flex: 1;
     }
 
+    p {
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
     h2,
     h3,
     h4 {
-      margin-top: 20px;
+      margin-top: 10px;
       margin-bottom: 10px;
     }
   </style>
@@ -464,9 +478,13 @@
               <h3>Composants sauvegardés</h3>
               {savedComponents.map(component => (
                 <div key={component.id} className="component-item">
-                  <span>{component.name}</span>
-                  <Button onClick={() => setSelectedComponent(component)}>Éditer</Button>
-                  <Button onClick={() => deleteComponent(component.id)}>Supprimer</Button>
+                  <div className="space-between">
+                    <span>{component.name}</span>
+                    <div>
+                      <Button onClick={() => setSelectedComponent(component)}>Éditer</Button>
+                      <Button onClick={() => deleteComponent(component.id)}>Supprimer</Button>
+                    </div>
+                  </div>
                 </div>
               ))}
               <Button onClick={() => setSelectedComponent({ name: '', type: 'atomique', allowedChildren: [], traits: [] })}>
