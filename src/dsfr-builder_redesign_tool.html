@@ -174,6 +174,185 @@
 
 <body>
   <div id="root"></div>
+
+  <script type="text/javascript">
+    (function () {
+      function escapeHtml(unsafe) {
+        return unsafe
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function generateHTMLDocumentation(savedComponents, allComponents) {
+        let doc = '<!DOCTYPE html>\n<html lang="fr">\n<head>\n';
+        doc += '<meta charset="UTF-8">\n<title>Documentation des composants DSFR</title>\n';
+        doc += '<style>\n';
+        doc += 'body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f0f0f0; margin: 0; padding: 20px; }\n';
+        doc += '.container { max-width: 1200px; margin: 0 auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }\n';
+        doc += 'h1 { text-align: center; }\n';
+        doc += '.accordion { margin-bottom: 10px; background-color: white; }\n';
+        doc += '.accordion summary { cursor: pointer; font-weight: bold; }\n';
+        doc += '.accordion-content { padding: 10px; border: 1px solid #ddd; }\n';
+        doc += '.svg-container { width: 800px; height: 600px; border: 1px solid #ccc; margin: 0 auto 10px; overflow: hidden; }\n';
+        doc += '.draggable { cursor: grab; }\n';
+        doc += '.draggable:active { cursor: grabbing; }\n';
+        doc += '</style>\n</head>\n<body>\n';
+        doc += '<h1>Documentation des composants DSFR</h1>\n';
+        doc += '<div class="container">\n';
+
+        savedComponents.forEach(function (component) {
+          doc += '<details class="accordion">\n';
+          doc += '<summary>' + escapeHtml(component.name) + '</summary>\n';
+          doc += '<div class="accordion-content">\n';
+          doc += '<p><strong>Type:</strong> ' + escapeHtml(component.type) + '</p>\n';
+          doc += '<h3>Enfants autorisés:</h3>\n<ul>\n';
+          component.allowedChildren.forEach(function (childId) {
+            const childName = allComponents.find(function (c) { return c.id === childId; });
+            const childNameEscaped = childName ? escapeHtml(childName.name) : escapeHtml(childId);
+            doc += '<li>' + childNameEscaped + '</li>\n';
+          });
+          doc += '</ul>\n<h3>Traits:</h3>\n<ul>\n';
+          component.traits.forEach(function (trait) {
+            doc += '<li>' + escapeHtml(trait.name) + ': ' + escapeHtml(trait.type) + '</li>\n';
+          });
+          doc += '</ul>\n';
+          doc += '<div class="svg-container" id="svg-' + escapeHtml(component.id) + '"></div>\n';
+          doc += '</div>\n</details>\n';
+        });
+
+        doc += '</div>\n';  // Closing container div
+        doc += '<script>\n';
+        doc += '(function() {\n';
+
+        doc += 'function generateVisualComponentGraph(component, allComponents, containerId) {\n';
+        doc += '  console.log(containerId);\n';
+        doc += '  const svgWidth = 800, svgHeight = 600;\n';
+        doc += '  const mainBlockWidth = 300, mainBlockHeight = 200;\n';
+        doc += '  const subBlockWidth = 150, subBlockHeight = 80;\n';
+        doc += '  const spacing = 30, arrowWidth = 2;\n';
+        doc += '  const mainBlockX = svgWidth / 2 - mainBlockWidth / 2;\n';
+        doc += '  const mainBlockY = svgHeight / 2 - mainBlockHeight / 2;\n';
+        doc += '  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");\n';
+        doc += '  svg.setAttribute("width", svgWidth);\n';
+        doc += '  svg.setAttribute("height", svgHeight);\n';
+        doc += '  svg.innerHTML = \'<defs><marker id="arrowhead-\' + component.id + \'" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2E7D32" /></marker></defs>\';\n';
+        doc += '  const g = document.createElementNS("http://www.w3.org/2000/svg", "g");\n';
+        doc += '  g.setAttribute("id", "component-graph-" + component.id);\n';
+        doc += '  g.setAttribute("class", "draggable");\n';
+        doc += '  g.innerHTML = renderBlock(mainBlockX, mainBlockY, mainBlockWidth, mainBlockHeight, component.name || "Composant sans nom", true);\n';
+        doc += '  g.innerHTML += renderConfigBlocks(component, mainBlockY, subBlockHeight, spacing, subBlockWidth);\n';
+        doc += '  g.innerHTML += renderChildrenBlocks(component, allComponents, svgWidth, mainBlockY, subBlockHeight, spacing, subBlockWidth);\n';
+        doc += '  g.innerHTML += renderArrows(component, svgWidth, mainBlockX, mainBlockY, mainBlockWidth, mainBlockHeight, subBlockWidth, subBlockHeight, spacing);\n';
+        doc += '  svg.appendChild(g);\n';
+        doc += '  document.getElementById(containerId).appendChild(svg);\n';
+        doc += '  setupDraggable(g);\n';
+        doc += '}\n';
+
+        doc += 'function renderBlock(x, y, width, height, text, isMain) {\n';
+        doc += '  return \'<g><rect x="\' + x + \'" y="\' + y + \'" width="\' + width + \'" height="\' + height + \'" rx="10" ry="10" fill="\' + (isMain ? "#4CAF50" : "#81C784") + \'" stroke="#2E7D32" stroke-width="2" /><text x="\' + (x + width / 2) + \'" y="\' + (y + height / 2) + \'" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="\' + (isMain ? 16 : 14) + \'">\' + text + \'</text></g>\';\n';
+        doc += '}\n';
+
+        doc += 'function renderConfigBlocks(component, mainBlockY, subBlockHeight, spacing, subBlockWidth) {\n';
+        doc += '  return (component.traits || []).map(function(trait, index) {\n';
+        doc += '    const x = spacing;\n';
+        doc += '    const y = mainBlockY + (subBlockHeight + 5) * index;\n';
+        doc += '    return renderBlock(x, y, subBlockWidth, subBlockHeight, trait.name + ": " + trait.type);\n';
+        doc += '  }).join("");\n';
+        doc += '}\n';
+
+        doc += 'function renderChildrenBlocks(component, allComponents, svgWidth, mainBlockY, subBlockHeight, spacing, subBlockWidth) {\n';
+        doc += '  return (component.allowedChildren || []).map(function(childId, index) {\n';
+        doc += '    const childName = allComponents.find(function(c) { return c.id === childId; });\n';
+        doc += '    const childNameStr = childName ? childName.name : childId;\n';
+        doc += '    const x = svgWidth - spacing - subBlockWidth;\n';
+        doc += '    const y = mainBlockY + (subBlockHeight + 5) * index;\n';
+        doc += '    return renderBlock(x, y, subBlockWidth, subBlockHeight, childNameStr);\n';
+        doc += '  }).join("");\n';
+        doc += '}\n';
+
+        doc += 'function renderArrows(component, svgWidth, mainBlockX, mainBlockY, mainBlockWidth, mainBlockHeight, subBlockWidth, subBlockHeight, spacing) {\n';
+        doc += '  const configArrows = (component.traits || []).map(function(_, index) {\n';
+        doc += '    return \'<line x1="\' + (spacing + subBlockWidth) + \'" y1="\' + (mainBlockY + (subBlockHeight + 5) * index + subBlockHeight / 2) + \'" x2="\' + mainBlockX + \'" y2="\' + (mainBlockY + mainBlockHeight / 2) + \'" stroke="#2E7D32" stroke-width="2" marker-end="url(#arrowhead-\' + component.id + \')" />\';\n';
+        doc += '  }).join("");\n';
+        doc += '  const childrenArrows = (component.allowedChildren || []).map(function(_, index) {\n';
+        doc += '    return \'<line x1="\' + (mainBlockX + mainBlockWidth) + \'" y1="\' + (mainBlockY + mainBlockHeight / 2) + \'" x2="\' + (svgWidth - spacing - subBlockWidth) + \'" y2="\' + (mainBlockY + (subBlockHeight + 5) * index + subBlockHeight / 2) + \'" stroke="#2E7D32" stroke-width="2" marker-end="url(#arrowhead-\' + component.id + \')" />\';\n';
+        doc += '  }).join("");\n';
+        doc += '  return configArrows + childrenArrows;\n';
+        doc += '}\n';
+
+        doc += 'function setupDraggable(element) {\n';
+        doc += '  const svg = element.ownerSVGElement;\n';
+        doc += '  let isDragging = false;\n';
+        doc += '  let startX, startY;\n';
+        doc += '  const currentTransform = { x: 0, y: 0 };\n';
+
+        doc += '  element.addEventListener("mousedown", startDrag);\n';
+        doc += '  document.addEventListener("mousemove", drag);\n';
+        doc += '  document.addEventListener("mouseup", endDrag);\n';
+
+        doc += '  function getMousePosition(evt) {\n';
+        doc += '    const CTM = svg.getScreenCTM();\n';
+        doc += '    return {\n';
+        doc += '      x: (evt.clientX - CTM.e) / CTM.a,\n';
+        doc += '      y: (evt.clientY - CTM.f) / CTM.d\n';
+        doc += '    };\n';
+        doc += '  }\n';
+
+        doc += '  function startDrag(evt) {\n';
+        doc += '    if (evt.target === element || element.contains(evt.target)) {\n';
+        doc += '      isDragging = true;\n';
+        doc += '      const mousePos = getMousePosition(evt);\n';
+        doc += '      startX = mousePos.x - currentTransform.x;\n';
+        doc += '      startY = mousePos.y - currentTransform.y;\n';
+        doc += '      evt.preventDefault();\n';
+        doc += '    }\n';
+        doc += '  }\n';
+
+        doc += '  function drag(evt) {\n';
+        doc += '    if (isDragging) {\n';
+        doc += '      evt.preventDefault();\n';
+        doc += '      const mousePos = getMousePosition(evt);\n';
+        doc += '      currentTransform.x = mousePos.x - startX;\n';
+        doc += '      currentTransform.y = mousePos.y - startY;\n';
+        doc += '      element.setAttribute("transform", "translate(" + currentTransform.x + "," + currentTransform.y + ")");\n';
+        doc += '    }\n';
+        doc += '  }\n';
+
+        doc += '  function endDrag(evt) {\n';
+        doc += '    isDragging = false;\n';
+        doc += '  }\n';
+        doc += '}\n';
+
+        doc += 'const savedComponents = ' + JSON.stringify(savedComponents) + ';\n';
+        doc += 'const allComponents = ' + JSON.stringify(allComponents) + ';\n';
+        doc += 'document.addEventListener("DOMContentLoaded", function() {\n';
+        doc += '  savedComponents.forEach(function(component) {\n';
+        doc += '    generateVisualComponentGraph(component, allComponents, "svg-" + component.id);\n';
+        doc += '  });\n';
+        doc += '});\n';
+
+        doc += '})();\n';
+        doc += '<\/script>\n';
+        doc += '</body>\n</html>';
+
+        return doc;
+      }
+
+      window.downloadHTMLDocumentation = function (savedComponents, allComponents) {
+        const doc = generateHTMLDocumentation(savedComponents, allComponents);
+        const blob = new Blob([doc], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'dsfr-components-documentation.html';
+        a.click();
+      };
+    })();
+  </script>
+
   <script type="text/babel">
     const { useState, useRef, useMemo, useEffect } = React;
 
@@ -669,7 +848,11 @@
         setShowShareDialog(true);
       };
 
-      const generateDocumentation = () => {
+      const handleDownloadDocumentation = () => {
+        window.downloadHTMLDocumentation(savedComponents, allComponents);
+      };
+
+      /* const generateDocumentation = () => {
         let doc = '# Documentation des composants DSFR\n\n';
         savedComponents.forEach(component => {
           doc += `## ${component.name}\n\n`;
@@ -696,7 +879,7 @@
         a.href = url;
         a.download = 'dsfr-components-documentation.md';
         a.click();
-      };
+      }; */
 
       return (
         <div className="container mx-auto p-5">
@@ -720,7 +903,7 @@
                 Nouveau composant
               </Button>
               <Button onClick={shareComponents}>Partager</Button>
-              <Button onClick={downloadDocumentation}>Générer la documentation</Button>
+              <Button onClick={handleDownloadDocumentation}>Générer la documentation</Button>
             </div>
             <div>
               {selectedComponent && (
