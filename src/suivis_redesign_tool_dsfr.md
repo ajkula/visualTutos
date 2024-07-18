@@ -34,17 +34,9 @@ Légende :
 
 ## Analyse et perspectives d'évolution
 
-### Axes d'amélioration principaux :
-- Enrichir la gestion des composants (variables, interactions, versioning)
-
-### Gestionnaire de variables : fonctionnalités clés
-1. Affichage du système de variables
-2. Gestion de scénarios
-
 ### Stratégie d'export
 Notre approche pour les exports doit être modulaire et flexible. Points à considérer :
-
-- Moteurs d'export configurables : développer des moteurs indépendants par format hors effets de bords
+- Développer des moteurs indépendants par format hors effets de bords
 
 ### Approche centrée contenu
 1. Séparation contenu/présentation :
