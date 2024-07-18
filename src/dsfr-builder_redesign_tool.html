@@ -126,13 +126,56 @@
       margin-top: 10px;
       margin-bottom: 10px;
     }
+
+    /* searchable */
+    .list-container {
+      width: 48%;
+    }
+
+    .searchable-component-list {
+      height: 350px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .search-input {
+      margin-bottom: 10px;
+      padding: 8px;
+      font-size: 16px;
+    }
+
+    .component-list-container {
+      flex-grow: 1;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .component-item {
+      padding: 8px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+    }
+
+    .component-item:hover {
+      background-color: #f0f0f0;
+    }
+
+    /* draggable */
+    .draggable {
+      cursor: grab;
+    }
+
+    .draggable:active {
+      cursor: grabbing;
+    }
   </style>
 </head>
 
 <body>
   <div id="root"></div>
   <script type="text/babel">
-    const { useState, useEffect } = React;
+    const { useState, useRef, useMemo, useEffect } = React;
 
     // composants UI de base
     const Button = ({ children, onClick }) => (
@@ -158,8 +201,94 @@
       </div>
     );
 
+    const AllowedChildrenList = ({ allowedChildren, setAllowedChildren }) => (
+      <div>
+        <h4>Enfants autorisés</h4>
+        <SearchableComponentList
+          components={allComponents}
+          onSelectComponent={(component) => {
+            if (allowedChildren.includes(component.id)) {
+              setAllowedChildren(allowedChildren.filter(id => id !== component.id));
+            } else {
+              setAllowedChildren([...allowedChildren, component.id]);
+            }
+          }}
+          renderItem={(component) => (
+            <div key={component.id} className="flex items-center space-x-2">
+              <Checkbox
+                label={component.name}
+                id={`child-${component.id}`}
+                checked={allowedChildren.includes(component.id)}
+                onChange={() => { }}
+              />
+            </div>
+          )}
+        />
+      </div>
+    );
+
+    const SearchableComponentList = ({ components, onSelectComponent, renderItem }) => {
+      const [searchTerm, setSearchTerm] = useState('');
+
+      const filteredComponents = useMemo(() => {
+        return components.filter(component =>
+          Object.values(component).some(value =>
+            value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        );
+      }, [components, searchTerm]);
+
+      return (
+        <div className="searchable-component-list">
+          <input
+            type="text"
+            placeholder="Rechercher un composant..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full p-2 mb-2 border rounded"
+          />
+          <div className="component-list-container max-h-96 overflow-y-auto">
+            {filteredComponents.map(component => (
+              <div key={component.id} onClick={() => onSelectComponent(component)}>
+                {renderItem(component)}
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    };
+
+    const ComponentLists = ({ allComponents, onSelectComponent }) => {
+      const buttons = allComponents.filter(c => c.type === 'button' || c.id.includes('button'));
+      const checkboxes = allComponents.filter(c => c.type === 'checkbox' || c.id.includes('checkbox'));
+
+      return (
+        <div className="component-lists">
+          <div className="list-container">
+            <h3>Boutons</h3>
+            <SearchableComponentList
+              components={buttons}
+              onSelectComponent={onSelectComponent}
+            />
+          </div>
+          <div className="list-container">
+            <h3>Cases à cocher</h3>
+            <SearchableComponentList
+              components={checkboxes}
+              onSelectComponent={onSelectComponent}
+            />
+          </div>
+        </div>
+      );
+    };
+
     const VisualComponentGraph = ({ component }) => {
       if (!component) return null;
+
+      const [position, setPosition] = useState({ x: 0, y: 0 });
+      const [isDragging, setIsDragging] = useState(false);
+      const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
+      const svgRef = useRef(null);
 
       const svgWidth = 800;
       const svgHeight = 600;
@@ -224,8 +353,48 @@
         return renderBlock(x, y, subBlockWidth, subBlockHeight, childName);
       });
 
+      const handleMouseDown = (e) => {
+        if (e.button !== 0) return; //left mouse button only
+        setIsDragging(true);
+        setStartPosition({
+          x: e.clientX - position.x,
+          y: e.clientY - position.y
+        });
+      };
+
+      const handleMouseMove = (e) => {
+        if (!isDragging) return;
+        setPosition({
+          x: e.clientX - startPosition.x,
+          y: e.clientY - startPosition.y
+        });
+      };
+
+      const handleMouseUp = () => {
+        setIsDragging(false);
+      };
+
+      useEffect(() => {
+        if (isDragging) {
+          document.addEventListener('mousemove', handleMouseMove);
+          document.addEventListener('mouseup', handleMouseUp);
+        } else {
+          document.removeEventListener('mousemove', handleMouseMove);
+          document.removeEventListener('mouseup', handleMouseUp);
+        }
+        return () => {
+          document.removeEventListener('mousemove', handleMouseMove);
+          document.removeEventListener('mouseup', handleMouseUp);
+        };
+      }, [isDragging]);
+
       return (
-        <svg width={svgWidth} height={svgHeight}>
+        <svg
+          width={svgWidth}
+          height={svgHeight}
+          ref={svgRef}
+          style={{ overflow: 'hidden' }}
+        >
           <defs>
             <marker
               id="arrowhead"
@@ -238,113 +407,123 @@
               <polygon points="0 0, 10 3.5, 0 7" fill="#2E7D32" />
             </marker>
           </defs>
-          {renderBlock(mainBlockX, mainBlockY, mainBlockWidth, mainBlockHeight, component.name || 'Composant sans nom', true)}
-          {configBlocks}
-          {childrenBlocks}
-          {configBlocks.map((_, index) =>
-            renderArrow(
-              spacing + subBlockWidth,
-              mainBlockY + (subBlockHeight + 5) * index + subBlockHeight / 2,
-              mainBlockX,
-              mainBlockY + mainBlockHeight / 2
-            )
-          )}
-          {childrenBlocks.map((_, index) =>
-            renderArrow(
-              mainBlockX + mainBlockWidth,
-              mainBlockY + mainBlockHeight / 2,
-              svgWidth - spacing - subBlockWidth,
-              mainBlockY + (subBlockHeight + 5) * index + subBlockHeight / 2
-            )
-          )}
+          <g
+            id="component-graph"
+            className="draggable"
+            transform={`translate(${position.x}, ${position.y})`}
+            onMouseDown={handleMouseDown}
+          >
+            {renderBlock(mainBlockX, mainBlockY, mainBlockWidth, mainBlockHeight, component.name || 'Composant sans nom', true)}
+            {configBlocks}
+            {childrenBlocks}
+            {configBlocks.map((_, index) =>
+              renderArrow(
+                spacing + subBlockWidth,
+                mainBlockY + (subBlockHeight + 5) * index + subBlockHeight / 2,
+                mainBlockX,
+                mainBlockY + mainBlockHeight / 2
+              )
+            )}
+            {childrenBlocks.map((_, index) =>
+              renderArrow(
+                mainBlockX + mainBlockWidth,
+                mainBlockY + mainBlockHeight / 2,
+                svgWidth - spacing - subBlockWidth,
+                mainBlockY + (subBlockHeight + 5) * index + subBlockHeight / 2
+              )
+            )}
+          </g>
         </svg>
       );
     };
 
     // config des composants DSFR
     const allComponents = [
-  // Composants atomiques
-  { id: 'button', name: 'Bouton', type: 'atomique' },
-  { id: 'link', name: 'Lien', type: 'atomique' },
-  { id: 'checkbox', name: 'Case à cocher', type: 'atomique' },
-  { id: 'radio', name: 'Bouton radio', type: 'atomique' },
-  { id: 'input', name: 'Champ de saisie', type: 'atomique' },
-  { id: 'label', name: 'Libellé', type: 'atomique' },
-  { id: 'select', name: 'Sélecteur', type: 'atomique' },
-  { id: 'badge', name: 'Badge', type: 'atomique' },
-  { id: 'tag', name: 'Tag', type: 'atomique' },
-  { id: 'title', name: 'Titre', type: 'atomique' },
-  { id: 'paragraph', name: 'Paragraphe', type: 'atomique' },
-  { id: 'image', name: 'Image', type: 'atomique' },
-  { id: 'pictogram', name: 'Pictogramme', type: 'atomique' },
-  { id: 'separator', name: 'Séparateur', type: 'atomique' },
+      // Composants atomiques
+      { id: 'button', name: 'Bouton', type: 'atomique' },
+      { id: 'link', name: 'Lien', type: 'atomique' },
+      { id: 'checkbox', name: 'Case à cocher', type: 'atomique' },
+      { id: 'radio', name: 'Bouton radio', type: 'atomique' },
+      { id: 'input', name: 'Champ de saisie', type: 'atomique' },
+      { id: 'label', name: 'Libellé', type: 'atomique' },
+      { id: 'select', name: 'Sélecteur', type: 'atomique' },
+      { id: 'badge', name: 'Badge', type: 'atomique' },
+      { id: 'tag', name: 'Tag', type: 'atomique' },
+      { id: 'title', name: 'Titre', type: 'atomique' },
+      { id: 'paragraph', name: 'Paragraphe', type: 'atomique' },
+      { id: 'image', name: 'Image', type: 'atomique' },
+      { id: 'pictogram', name: 'Pictogramme', type: 'atomique' },
+      { id: 'separator', name: 'Séparateur', type: 'atomique' },
 
-  // Composants composés
-  { id: 'search', name: 'Barre de recherche', type: 'composé' },
-  { id: 'button-group', name: 'Groupe de boutons', type: 'composé' },
-  { id: 'breadcrumb', name: 'Fil d\'Ariane', type: 'composé' },
-  { id: 'alert', name: 'Alerte', type: 'composé' },
-  { id: 'badge-group', name: 'Groupe de badges', type: 'composé' },
-  { id: 'callout', name: 'Mise en avant', type: 'composé' },
-  { id: 'connect', name: 'Connexion', type: 'composé' },
-  { id: 'consent', name: 'Consentement', type: 'composé' },
-  { id: 'cookies-disabled', name: 'Cookies désactivés', type: 'composé' },
-  { id: 'follow', name: 'Suivre', type: 'composé' },
-  { id: 'form', name: 'Formulaire (container)', type: 'composé' },
-  { id: 'footer', name: 'Pied de page', type: 'composé' },
-  { id: 'footer-operator', name: 'Pied de page opérateur', type: 'composé' },
-  { id: 'header', name: 'En-tête', type: 'composé' },
-  { id: 'highlight', name: 'Mise en évidence', type: 'composé' },
-  { id: 'logo', name: 'Logo', type: 'composé' },
-  { id: 'skiplinks', name: 'Liens d\'évitement', type: 'composé' },
-  { id: 'tabs', name: 'Onglets', type: 'composé' },
-  { id: 'tag-group', name: 'Groupe de tags', type: 'composé' },
-  { id: 'quote', name: 'Citation', type: 'composé' },
-  { id: 'card', name: 'Carte', type: 'composé' },
-  { id: 'stepper', name: 'Étapes', type: 'composé' },
-  { id: 'input-group', name: 'Groupe de champs', type: 'composé' },
-  { id: 'modal', name: 'Fenêtre modale', type: 'composé' },
-  { id: 'notice', name: 'Avis', type: 'composé' },
-  { id: 'share', name: 'Partage', type: 'composé' },
-  { id: 'accordion', name: 'Accordéon', type: 'composé' },
-  { id: 'side-menu', name: 'Menu latéral', type: 'composé' },
-  { id: 'toggle', name: 'Interrupteur', type: 'composé' },
-  { id: 'toggle-group', name: 'Groupe d\'interrupteurs', type: 'composé' },
-  { id: 'download-card', name: 'Carte de téléchargement', type: 'composé' },
-  { id: 'pagination', name: 'Pagination', type: 'composé' },
-  { id: 'tile', name: 'Tuile', type: 'composé' },
-  { id: 'summary', name: 'Sommaire', type: 'composé' },
-  { id: 'languages_selector', name: 'Sélecteur de langues', type: 'composé' },
-  { id: 'upload', name: 'Téléversement', type: 'composé' },
-  { id: 'table', name: 'Tableau', type: 'composé' },
-  { id: 'table-rich', name: 'Tableau enrichi', type: 'composé' },
-  
-  // Composants de structure
-  { id: 'container', name: 'Conteneur', type: 'structure' },
-  { id: 'container-fluid', name: 'Conteneur fluide', type: 'structure' },
-  { id: 'row', name: 'Ligne', type: 'structure' },
-  
-  // Composants de formulaire spécifiques
-  { id: 'checkboxgroup', name: 'Groupe de cases à cocher', type: 'composé' },
-  { id: 'radiogroup', name: 'Groupe de boutons radio', type: 'composé' },
-  { id: 'radio-rich', name: 'Bouton radio riche', type: 'composé' },
-  { id: 'radio-rich-group', name: 'Groupe de boutons radio riches', type: 'composé' },
-  { id: 'name-form', name: 'Champ de nom', type: 'composé' },
-  { id: 'phone-form', name: 'Champ de téléphone', type: 'composé' },
-  { id: 'email-form', name: 'Champ d\'email', type: 'composé' },
-  { id: 'password-form', name: 'Champ de mot de passe', type: 'composé' },
-];
+      // Composants composés
+      { id: 'search', name: 'Barre de recherche', type: 'composé' },
+      { id: 'button-group', name: 'Groupe de boutons', type: 'composé' },
+      { id: 'breadcrumb', name: 'Fil d\'Ariane', type: 'composé' },
+      { id: 'alert', name: 'Alerte', type: 'composé' },
+      { id: 'badge-group', name: 'Groupe de badges', type: 'composé' },
+      { id: 'callout', name: 'Mise en avant', type: 'composé' },
+      { id: 'connect', name: 'Connexion', type: 'composé' },
+      { id: 'consent', name: 'Consentement', type: 'composé' },
+      { id: 'cookies-disabled', name: 'Cookies désactivés', type: 'composé' },
+      { id: 'follow', name: 'Suivre', type: 'composé' },
+      { id: 'footer', name: 'Pied de page', type: 'composé' },
+      { id: 'footer-operator', name: 'Pied de page opérateur', type: 'composé' },
+      { id: 'header', name: 'En-tête', type: 'composé' },
+      { id: 'highlight', name: 'Mise en évidence', type: 'composé' },
+      { id: 'logo', name: 'Logo', type: 'composé' },
+      { id: 'skiplinks', name: 'Liens d\'évitement', type: 'composé' },
+      { id: 'tabs', name: 'Onglets', type: 'composé' },
+      { id: 'tag-group', name: 'Groupe de tags', type: 'composé' },
+      { id: 'quote', name: 'Citation', type: 'composé' },
+      { id: 'card', name: 'Carte', type: 'composé' },
+      { id: 'stepper', name: 'Étapes', type: 'composé' },
+      { id: 'input-group', name: 'Groupe de champs', type: 'composé' },
+      { id: 'modal', name: 'Fenêtre modale', type: 'composé' },
+      { id: 'notice', name: 'Avis', type: 'composé' },
+      { id: 'share', name: 'Partage', type: 'composé' },
+      { id: 'accordion', name: 'Accordéon', type: 'composé' },
+      { id: 'side-menu', name: 'Menu latéral', type: 'composé' },
+      { id: 'toggle', name: 'Interrupteur', type: 'composé' },
+      { id: 'toggle-group', name: 'Groupe d\'interrupteurs', type: 'composé' },
+      { id: 'download-card', name: 'Carte de téléchargement', type: 'composé' },
+      { id: 'pagination', name: 'Pagination', type: 'composé' },
+      { id: 'tile', name: 'Tuile', type: 'composé' },
+      { id: 'summary', name: 'Sommaire', type: 'composé' },
+      { id: 'languages_selector', name: 'Sélecteur de langues', type: 'composé' },
+      { id: 'upload', name: 'Téléversement', type: 'composé' },
+      { id: 'table', name: 'Tableau', type: 'composé' },
+      { id: 'table-rich', name: 'Tableau enrichi', type: 'composé' },
 
-    // fonctionnel
+      // Composants de structure
+      { id: 'container', name: 'Conteneur', type: 'structure' },
+      { id: 'container-fluid', name: 'Conteneur fluide', type: 'structure' },
+      { id: 'row', name: 'Ligne', type: 'structure' },
+      { id: 'form', name: 'Formulaire (container)', type: 'structure' },
+
+      // Composants de formulaire spécifiques
+      { id: 'checkboxgroup', name: 'Groupe de cases à cocher', type: 'composé' },
+      { id: 'radiogroup', name: 'Groupe de boutons radio', type: 'composé' },
+      { id: 'radio-rich', name: 'Bouton radio riche', type: 'composé' },
+      { id: 'radio-rich-group', name: 'Groupe de boutons radio riches', type: 'composé' },
+      { id: 'name-form', name: 'Champ de nom', type: 'composé' },
+      { id: 'phone-form', name: 'Champ de téléphone', type: 'composé' },
+      { id: 'email-form', name: 'Champ d\'email', type: 'composé' },
+      { id: 'password-form', name: 'Champ de mot de passe', type: 'composé' },
+    ];
+
     const ComponentList = ({ onSelectComponent }) => (
       <div>
         <h2>Composants DSFR</h2>
-        {allComponents.map((component) => (
-          <div key={component.id} className="component-item" onClick={() => onSelectComponent(component)}>
-            <h3>{component.name}</h3>
-            <p>Type: {component.type}</p>
-          </div>
-        ))}
+        <SearchableComponentList
+          components={allComponents}
+          onSelectComponent={onSelectComponent}
+          renderItem={(component) => (
+            <div key={component.id} className="p-2 border rounded cursor-pointer hover:bg-gray-100">
+              <h3 className="font-semibold">{component.name}</h3>
+              <p className="text-sm text-gray-600">Type: {component.type}</p>
+            </div>
+          )}
+        />
       </div>
     );
 
@@ -370,22 +549,10 @@
               { value: 'composé', label: 'Composé' }
             ]}
           />
-          <h4>Enfants autorisés</h4>
-          {allComponents.map((c) => (
-            <Checkbox
-              key={c.id}
-              id={`child-${c.id}`}
-              checked={allowedChildren.includes(c.id)}
-              onChange={(e) => {
-                if (e.target.checked) {
-                  setAllowedChildren([...allowedChildren, c.id]);
-                } else {
-                  setAllowedChildren(allowedChildren.filter((id) => id !== c.id));
-                }
-              }}
-              label={c.name}
-            />
-          ))}
+          <AllowedChildrenList
+            allowedChildren={allowedChildren}
+            setAllowedChildren={setAllowedChildren}
+          />
           <h4>Traits</h4>
           {traits.map((trait, index) => (
             <div key={index} className="trait-container">
@@ -532,9 +699,9 @@
       };
 
       return (
-        <div className="container">
-          <h1>Planificateur avancé de composants DSFR</h1>
-          <div className="grid">
+        <div className="container mx-auto p-5">
+          <h1 className="text-3xl font-bold mb-6">Planificateur avancé de composants DSFR</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <ComponentList onSelectComponent={setSelectedComponent} />
               <h3>Composants sauvegardés</h3>
