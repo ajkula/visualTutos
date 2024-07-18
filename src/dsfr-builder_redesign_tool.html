@@ -223,7 +223,7 @@
           doc += '</div>\n</details>\n';
         });
 
-        doc += '</div>\n';  // Closing container div
+        doc += '</div>\n';
         doc += '<script>\n';
         doc += '(function() {\n';
 
@@ -356,7 +356,6 @@
   <script type="text/babel">
     const { useState, useRef, useMemo, useEffect } = React;
 
-    // composants UI de base
     const Button = ({ children, onClick }) => (
       <button onClick={onClick}>{children}</button>
     );
@@ -616,7 +615,6 @@
       );
     };
 
-    // config des composants DSFR
     const allComponents = [
       // Composants atomiques
       { id: 'button', name: 'Bouton', type: 'atomique' },
@@ -771,7 +769,7 @@
       );
     };
 
-    // rendu svg / listing crados
+    // rendu svg
     const ComponentGraph = ({ component }) => {
       if (!component) return null;
       return (
