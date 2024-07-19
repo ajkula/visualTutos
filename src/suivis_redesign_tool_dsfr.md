@@ -8,7 +8,7 @@
 | Suggestions cohérentes avec le DSFR | ❌ À développer |
 | Sauvegarde locale des composants | ✅ Fonctionnel |
 | Édition et suppression des composants sauvegardés | ✅ Opérationnel |
-| Confirmation avant suppression | ❌ À ajouter |
+| Confirmation avant suppression | ✅ Fonctionnel |
 | Partage des données sauvegardées | ✅ Fonctionnel |
 | Traits avec types JS et input (style GrapesJS) | ⚠️ Base existante, à affiner |
 | Visualisation en graphe des composants | ✅ Implémenté |
