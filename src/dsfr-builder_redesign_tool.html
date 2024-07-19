@@ -402,6 +402,2090 @@
   </script>
 
   <script type="text/babel">
+    /* les composants DSFRde la doc pour commencer : */
+    const dsfrAccordion = {
+      id: 'accordion',
+      name: 'Accordéon',
+      type: 'composé',
+      structure: {
+        tag: 'section',
+        className: 'fr-accordion',
+        children: [
+          {
+            tag: 'h3',
+            className: 'fr-accordion__title',
+            children: [
+              {
+                tag: 'button',
+                className: 'fr-accordion__btn',
+                attributes: {
+                  'aria-expanded': 'false',
+                  'aria-controls': '{accordionId}'
+                },
+                content: '{accordionTitle}'
+              }
+            ]
+          },
+          {
+            tag: 'div',
+            className: 'fr-collapse',
+            attributes: {
+              id: '{accordionId}'
+            },
+            content: '{accordionContent}'
+          }
+        ]
+      },
+      allowedParents: ['div', 'main', 'article', 'aside'],
+      requiredAttributes: ['aria-expanded', 'aria-controls', 'id'],
+      optionalAttributes: [],
+      variables: {
+        accordionId: {
+          type: 'string',
+          description: "Identifiant unique de l'accordéon, utilisé pour lier le bouton au contenu"
+        },
+        accordionTitle: {
+          type: 'string',
+          description: "Titre de l'accordéon affiché sur le bouton"
+        },
+        accordionContent: {
+          type: 'html',
+          description: "Contenu HTML de l'accordéon, affiché lorsqu'il est déplié"
+        }
+      },
+      accessibilityNotes: "Assurez-vous que l'attribut 'aria-controls' du bouton correspond à l'id de la div de contenu. L'attribut 'aria-expanded' doit être mis à jour dynamiquement lors de l'ouverture/fermeture de l'accordéon.",
+      interactivityNotes: "Un script JavaScript est nécessaire pour gérer l'ouverture/fermeture de l'accordéon et la mise à jour de l'attribut 'aria-expanded'."
+    };
+    const dsfrAccordionGroup = {
+      id: 'accordion-group',
+      name: "Groupe d'accordéons",
+      type: 'composé',
+      structure: {
+        tag: 'div',
+        className: 'fr-accordions-group',
+        children: [
+          {
+            tag: 'multiple',
+            component: 'accordion',
+            minOccurs: 1,
+            maxOccurs: 'unbounded'
+          }
+        ]
+      },
+      allowedParents: ['div', 'main', 'article', 'aside'],
+      requiredAttributes: [],
+      optionalAttributes: [],
+      variables: {},
+      accessibilityNotes: "Assurez-vous que chaque accordéon dans le groupe a un identifiant unique et que les contrôles d'accessibilité sont correctement configurés pour chaque accordéon individuel.",
+      interactivityNotes: "Chaque accordéon dans le groupe doit avoir son propre comportement interactif. Vous pouvez envisager d'ajouter une fonctionnalité pour n'ouvrir qu'un seul accordéon à la fois dans le groupe si cela correspond à vos besoins."
+    };
+    const dsfrFileUpload = {
+      id: 'file-upload',
+      name: 'Upload de fichier',
+      type: 'composé',
+      structure: {
+        tag: 'div',
+        className: 'fr-upload-group',
+        children: [
+          {
+            tag: 'label',
+            className: 'fr-label',
+            attributes: {
+              for: '{inputId}'
+            },
+            content: '{labelText}',
+            children: [
+              {
+                tag: 'span',
+                className: 'fr-hint-text',
+                content: '{hintText}'
+              }
+            ]
+          },
+          {
+            tag: 'input',
+            className: 'fr-upload',
+            attributes: {
+              type: 'file',
+              id: '{inputId}',
+              name: '{inputName}',
+              multiple: '{multipleFiles}'
+            }
+          }
+        ]
+      },
+      allowedParents: ['form', 'div'],
+      requiredAttributes: ['id', 'name'],
+      optionalAttributes: ['multiple'],
+      variables: {
+        inputId: {
+          type: 'string',
+          description: "Identifiant unique de l'input file"
+        },
+        inputName: {
+          type: 'string',
+          description: "Nom de l'input file pour la soumission du formulaire"
+        },
+        labelText: {
+          type: 'string',
+          description: "Texte principal du label"
+        },
+        hintText: {
+          type: 'string',
+          description: "Texte d'indication (formats supportés, taille maximale, etc.)"
+        },
+        multipleFiles: {
+          type: 'boolean',
+          description: "Permet l'upload de plusieurs fichiers si true"
+        }
+      },
+      accessibilityNotes: "Assurez-vous que le label est pertinent et descriptif. Le texte d'indication doit contenir toutes les informations sur les formats, poids et tailles attendus.",
+      usageNotes: [
+        "N'utilisez l'upload de fichier que si c'est essentiel au service.",
+        "Précisez les erreurs rencontrées lors de l'envoi de fichier (taille, format).",
+        "Pour plusieurs fichiers de même nature, utilisez l'attribut 'multiple'.",
+        "Pour des fichiers de natures différentes, utilisez plusieurs champs d'upload distincts."
+      ],
+      customizationNotes: "Le composant utilise le comportement natif du navigateur, aucune personnalisation graphique n'est possible.",
+      interactivityNotes: "Gérez les erreurs d'upload côté client et serveur. Affichez les messages d'erreur de manière accessible."
+    };
+    const dsfrAlert = {
+      id: 'alert',
+      name: 'Alerte',
+      type: 'composé',
+      structure: {
+        tag: 'div',
+        className: 'fr-alert',
+        modifiers: [
+          {
+            name: 'type',
+            values: ['success', 'warning', 'error', 'info'],
+            default: 'info'
+          }
+        ],
+        attributes: {
+          role: '{dynamicAppearance}'
+        },
+        children: [
+          {
+            tag: 'h3',
+            className: 'fr-alert__title',
+            content: '{alertTitle}'
+          },
+          {
+            tag: 'p',
+            content: '{alertDescription}'
+          }
+        ]
+      },
+      allowedParents: ['div', 'main', 'section', 'article'],
+      requiredAttributes: [],
+      optionalAttributes: ['role'],
+      variables: {
+        alertTitle: {
+          type: 'string',
+          description: "Titre de l'alerte"
+        },
+        alertDescription: {
+          type: 'string',
+          description: "Description détaillée de l'alerte"
+        },
+        dynamicAppearance: {
+          type: 'string',
+          description: "Valeur 'alert' si l'alerte apparaît dynamiquement, sinon vide",
+          default: ''
+        }
+      },
+      modifiers: [
+        {
+          name: 'type',
+          values: ['success', 'warning', 'error', 'info'],
+          default: 'info',
+          description: "Détermine le style et l'icône de l'alerte"
+        }
+      ],
+      accessibilityNotes: [
+        "La nature du message (erreur, succès, information) doit être clairement exprimée dans le titre de l'alerte.",
+        "Si l'alerte apparaît dynamiquement, utilisez l'attribut role='alert'.",
+        "Le titre de l'alerte doit être dans un élément <h3> ou un autre niveau de titre approprié à votre hiérarchie de contenu.",
+        "Si un bouton de fermeture est ajouté et que l'alerte apparaît dynamiquement, le focus doit être placé sur ce bouton.",
+        "Lors de la fermeture de l'alerte, replacez le focus sur un élément pertinent de la page."
+      ],
+      usageNotes: [
+        "Le message doit être écrit dans un langage facilement compréhensible, évitez le jargon.",
+        "Incluez la nature du message (succès, erreur, information) dans le contenu, ne vous fiez pas uniquement à l'icône ou à la couleur.",
+        "Si une action est requise de la part de l'utilisateur, détaillez clairement ce qui est attendu dans la description."
+      ],
+      contentGuidelines: [
+        "Le titre de l'alerte doit être clair et concis.",
+        "La description doit détailler clairement l'information ou le problème.",
+        "Utilisez un ton courtois, accompagnez l'utilisateur sans le blâmer."
+      ],
+      interactivityNotes: "Si un bouton de fermeture est ajouté, assurez-vous de gérer correctement le focus et l'accessibilité."
+    };
+    const dsfrBadge = {
+      id: 'badge',
+      name: 'Badge',
+      type: 'atomique',
+      structure: {
+        tag: 'p',
+        className: 'fr-badge',
+        modifiers: [
+          {
+            name: 'type',
+            values: ['success', 'error', 'info', 'warning', 'new'],
+            default: ''
+          }
+        ],
+        content: '{badgeLabel}'
+      },
+      allowedParents: ['div', 'span', 'td', 'li', 'a'],
+      requiredAttributes: [],
+      optionalAttributes: [],
+      variables: {
+        badgeLabel: {
+          type: 'string',
+          description: "Texte du badge"
+        }
+      },
+      modifiers: [
+        {
+          name: 'type',
+          values: ['success', 'error', 'info', 'warning', 'new'],
+          default: '',
+          description: "Détermine le style et la couleur du badge"
+        }
+      ],
+      accessibilityNotes: [
+        "Utiliser la balise <p>, ou un <span> si le badge est à l'intérieur d'un <p>",
+        "Éviter l'utilisation de lettres capitales (préférer l'ajout d'une classe CSS)",
+        "Vérifier le bon ratio de contraste entre la couleur du texte et la couleur de fond"
+      ],
+      usageNotes: [
+        "Pour catégoriser, classer, organiser des contenus à l'aide de mots-clés, utiliser plutôt le composant tag.",
+        "Le badge doit être placé directement à côté et à la suite de l'élément qu'il illustre.",
+        "Exemples d'utilisation : badge associé à du texte ou un lien, à des cartes ou des tuiles, dans une cellule d'un tableau, dans des éléments de navigation."
+      ],
+      customizationNotes: [
+        "Il est possible d'utiliser les couleurs illustratives sur les badges 'standard' uniquement"
+      ],
+      contentGuidelines: [
+        "Le texte du badge doit être court et descriptif",
+        "Utiliser des termes cohérents et compréhensibles par l'utilisateur"
+      ]
+    };
+    const dsfrInputGroup = {
+      id: 'input-group',
+      name: 'Champ de saisie',
+      type: 'composé',
+      structure: {
+        tag: 'div',
+        className: 'fr-input-group',
+        children: [
+          {
+            tag: 'label',
+            className: 'fr-label',
+            attributes: {
+              for: '{inputId}'
+            },
+            content: '{labelText}',
+            children: [
+              {
+                tag: 'span',
+                className: 'fr-hint-text',
+                content: '{hintText}',
+                optional: true
+              }
+            ]
+          },
+          {
+            tag: 'input',
+            className: 'fr-input',
+            attributes: {
+              type: '{inputType}',
+              id: '{inputId}',
+              name: '{inputName}',
+              required: '{isRequired}',
+              'aria-describedby': '{inputId}-desc {inputId}-messages',
+              autocomplete: '{autocompleteValue}'
+            }
+          },
+          {
+            tag: 'div',
+            className: 'fr-messages-group',
+            attributes: {
+              id: '{inputId}-messages',
+              'aria-live': 'assertive'
+            },
+            optional: true
+          }
+        ]
+      },
+      allowedParents: ['form', 'div', 'fieldset'],
+      requiredAttributes: ['id', 'name'],
+      optionalAttributes: ['required', 'autocomplete'],
+      variables: {
+        inputId: {
+          type: 'string',
+          description: "ID unique pour l'input"
+        },
+        inputName: {
+          type: 'string',
+          description: "Nom de l'input"
+        },
+        labelText: {
+          type: 'string',
+          description: "Texte du label"
+        },
+        hintText: {
+          type: 'string',
+          description: "Texte d'aide (optionnel)"
+        },
+        inputType: {
+          type: 'string',
+          description: "Type de l'input (text, email, number, etc.)"
+        },
+        isRequired: {
+          type: 'boolean',
+          description: "Indique si le champ est obligatoire"
+        },
+        autocompleteValue: {
+          type: 'string',
+          description: "Valeur pour l'attribut autocomplete"
+        }
+      },
+      modifiers: [
+        {
+          name: 'state',
+          values: ['default', 'error', 'success', 'disabled'],
+          default: 'default',
+          description: "État du champ de saisie"
+        },
+        {
+          name: 'icon',
+          values: [], // Liste des icones
+          default: '',
+          description: "Icône à afficher dans le champ"
+        }
+      ],
+      accessibilityNotes: [
+        "Chaque champ doit avoir un label associé avec les attributs id et for.",
+        "Les champs obligatoires doivent être signalés dans le label et avec l'attribut required.",
+        "Utiliser aria-describedby pour lier les messages d'erreur/succès au champ.",
+        "Pour les informations concernant l'utilisateur, ajouter un attribut autocomplete avec une valeur appropriée.",
+        "Regrouper les champs de même nature dans un fieldset avec une légende."
+      ],
+      usageNotes: [
+        "Utiliser pour la saisie de données courtes (une ligne).",
+        "Pour les saisies plus longues, utiliser un textarea.",
+        "Adapter la largeur du champ à la quantité de contenu attendue.",
+        "Afficher les champs en liste verticale pour une meilleure lisibilité.",
+        "Utiliser un bouton primaire pour la validation et secondaire pour la réinitialisation."
+      ],
+      contentGuidelines: [
+        "Le label doit être clair et concis, décrivant le contenu attendu.",
+        "Utiliser le texte d'aide pour fournir des instructions ou des exemples.",
+        "Les messages d'erreur doivent être précis et indiquer comment corriger le problème.",
+        "Indiquer clairement les champs obligatoires avec un astérisque et une légende explicative."
+      ]
+    };
+    const dsfrNotice = {
+      id: 'notice',
+      name: 'Notice',
+      type: 'composé',
+      structure: {
+        tag: 'div',
+        className: 'fr-notice',
+        modifiers: [
+          {
+            name: 'type',
+            values: ['info', 'success', 'error', 'warning', 'meteo-vigilance', 'alerte'],
+            default: 'info'
+          }
+        ],
+        children: [
+          {
+            tag: 'div',
+            className: 'fr-container',
+            children: [
+              {
+                tag: 'div',
+                className: 'fr-notice__body',
+                children: [
+                  {
+                    tag: 'p',
+                    children: [
+                      {
+                        tag: 'span',
+                        className: 'fr-notice__title',
+                        content: '{noticeTitle}'
+                      },
+                      {
+                        tag: 'span',
+                        className: 'fr-notice__desc',
+                        content: '{noticeDescription}',
+                        optional: true
+                      },
+                      {
+                        tag: 'a',
+                        attributes: {
+                          target: '_blank',
+                          rel: 'noopener external',
+                          title: '{linkTitle}',
+                          href: '{linkHref}'
+                        },
+                        className: 'fr-notice__link',
+                        content: '{linkText}',
+                        optional: true
+                      }
+                    ]
+                  },
+                  {
+                    tag: 'button',
+                    attributes: {
+                      title: 'Masquer le message',
+                      onclick: "const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild(notice)",
+                      id: '{buttonId}'
+                    },
+                    className: 'fr-btn--close fr-btn',
+                    content: 'Masquer le message',
+                    optional: true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      allowedParents: ['body', 'main'],
+      requiredAttributes: [],
+      optionalAttributes: [],
+      variables: {
+        noticeTitle: {
+          type: 'string',
+          description: "Titre du bandeau (obligatoire)"
+        },
+        noticeDescription: {
+          type: 'string',
+          description: "Texte de description (optionnel, recommandé pour apporter du contexte)"
+        },
+        linkTitle: {
+          type: 'string',
+          description: "Titre du lien (optionnel pour bandeaux génériques, obligatoire pour vigilance météo et alertes)"
+        },
+        linkHref: {
+          type: 'string',
+          description: "URL du lien (optionnel pour bandeaux génériques, obligatoire pour vigilance météo et alertes)"
+        },
+        linkText: {
+          type: 'string',
+          description: "Texte du lien (optionnel pour bandeaux génériques, obligatoire pour vigilance météo et alertes)"
+        },
+        buttonId: {
+          type: 'string',
+          description: "ID unique pour le bouton de fermeture (optionnel)"
+        }
+      },
+      modifiers: [
+        {
+          name: 'type',
+          values: ['info', 'success', 'error', 'warning', 'meteo-vigilance', 'alerte'],
+          default: 'info',
+          description: "Détermine le style, la couleur et l'icône de la notice"
+        }
+      ],
+      accessibilityNotes: [
+        "Utiliser des titres et descriptions clairs et concis.",
+        "Assurer un bon contraste entre le texte et l'arrière-plan.",
+        "Fournir une fonctionnalité pour masquer la notice, comme un bouton de fermeture."
+      ],
+      usageNotes: [
+        "Les bandeaux d'information importante doivent être utilisés uniquement pour une information primordiale ou urgente et de façon temporaire.",
+        "Placés directement sous la navigation principale et visibles sur toutes les pages du site.",
+        "L'essentiel de l'information doit être contenue dans le bandeau. Un lien peut être ajouté pour plus de détails.",
+        "Ne doivent pas être utilisés pour relayer des actualités ou se substituer aux pages d'actualité.",
+        "L'état par défaut (info) répond à la plupart des cas d'usage. Les autres états sont à utiliser dans un cadre strictement exceptionnel."
+      ],
+      customizationNotes: [
+        "Le fond est obligatoire et non-personnalisable.",
+        "L'icône est optionnelle pour les bandeaux génériques, obligatoire et normée pour les bandeaux de vigilance météo et les bandeaux d'alertes.",
+        "Le titre est obligatoire, normé pour les bandeaux de vigilance météo et les bandeaux d'alertes.",
+        "La description est optionnelle mais recommandée pour apporter du contexte.",
+        "Le lien est optionnel et personnalisable pour les bandeaux génériques, obligatoire et normé pour les bandeaux de vigilance météo et les bandeaux d'alertes.",
+        "L'icône de fermeture est optionnelle."
+      ],
+      contentGuidelines: [
+        "Le titre doit être court et descriptif.",
+        "La description doit être claire et fournir un contexte pertinent.",
+        "Le lien doit être pertinent et directement lié à l'information contenue dans la notice."
+      ]
+    };
+    const dsfrSearchBar = {
+      id: 'search-bar',
+      name: 'Barre de recherche',
+      type: 'composé',
+      structure: {
+        tag: 'div',
+        className: 'fr-search-bar',
+        attributes: {
+          id: '{searchBarId}',
+          role: 'search'
+        },
+        children: [
+          {
+            tag: 'label',
+            className: 'fr-label',
+            attributes: {
+              for: '{inputId}'
+            },
+            content: '{labelText}'
+          },
+          {
+            tag: 'input',
+            className: 'fr-input',
+            attributes: {
+              placeholder: 'Rechercher',
+              type: 'search',
+              id: '{inputId}',
+              name: '{inputName}'
+            }
+          },
+          {
+            tag: 'button',
+            className: 'fr-btn',
+            attributes: {
+              title: 'Rechercher'
+            },
+            content: 'Rechercher'
+          }
+        ]
+      },
+      allowedParents: ['div', 'form', 'header'],
+      requiredAttributes: ['id', 'role'],
+      optionalAttributes: [],
+      variables: {
+        searchBarId: {
+          type: 'string',
+          description: "ID unique de la barre de recherche"
+        },
+        inputId: {
+          type: 'string',
+          description: "ID de l'input de recherche"
+        },
+        inputName: {
+          type: 'string',
+          description: "Nom de l'input de recherche"
+        },
+        labelText: {
+          type: 'string',
+          description: "Texte du label"
+        }
+      },
+      modifiers: [
+        {
+          name: 'size',
+          values: ['md', 'lg'],
+          default: 'md',
+          description: "Taille de la barre de recherche (MD pour l'en-tête, LG pour la mise en avant)"
+        }
+      ],
+      accessibilityNotes: [
+        "Le champ de recherche doit avoir une étiquette (visible ou non) permettant de comprendre la nature de la saisie attendue.",
+        "Le bouton de validation de recherche doit avoir un attribut title et un libellé (éventuellement masqué avec la classe sr-only).",
+        "L'attribut role='search' doit être présent sur le conteneur principal."
+      ],
+      usageNotes: [
+        "La barre de recherche doit être assez large pour afficher 27 caractères minimum.",
+        "Pour une recherche globale, elle doit être intégrée dans l'en-tête et accessible depuis l'ensemble des pages.",
+        "Utiliser la version LG pour présenter un moteur de recherche global à l'intérieur d'une page (ex: page d'accueil, page de résultats de recherche).",
+        "Utiliser la version MD pour l'en-tête ou pour des recherches contextuelles (ex: filtrer des listes ou un tableau de données).",
+        "Si la recherche est le point de départ de la navigation, la barre de recherche LG doit être l'élément le plus important sur la page d'accueil."
+      ],
+      customizationNotes: [
+        "La largeur du composant s'adapte à son contenant.",
+        "Deux tailles sont disponibles : MD et LG."
+      ],
+      contentGuidelines: [
+        "Utiliser un texte clair et concis pour le libellé du champ de saisie, qui définit le contexte de recherche (globale ou spécifique).",
+        "Le libellé du bouton de recherche doit être 'Rechercher' pour plus de clarté."
+      ]
+    };
+    const dsfrButton = {
+      id: 'button',
+      name: 'Bouton',
+      type: 'atomique',
+      structure: {
+        tag: 'button',
+        className: 'fr-btn',
+        attributes: {
+          type: 'button',
+          title: '{buttonTitle}',
+          disabled: '{buttonDisabled}',
+          'aria-label': '{ariaLabel}'
+        },
+        content: '{buttonLabel}',
+        children: [
+          {
+            tag: 'span',
+            className: '{iconClass}',
+            content: '',
+            optional: true
+          }
+        ]
+      },
+      allowedParents: ['div', 'form', 'section', 'article'],
+      requiredAttributes: [],
+      optionalAttributes: ['title', 'aria-label'],
+      variables: {
+        buttonLabel: {
+          type: 'string',
+          description: "Texte du bouton (obligatoire, 3 mots maximum)"
+        },
+        buttonTitle: {
+          type: 'string',
+          description: "Titre du bouton (pour infobulle, uniquement si nécessaire)"
+        },
+        buttonDisabled: {
+          type: 'boolean',
+          description: "Indique si le bouton est désactivé"
+        },
+        iconClass: {
+          type: 'string',
+          description: "Classe de l'icône (optionnel)"
+        },
+        ariaLabel: {
+          type: 'string',
+          description: "Label ARIA (uniquement si nécessaire, doit reprendre l'intitulé visible)"
+        }
+      },
+      modifiers: [
+        {
+          name: 'type',
+          values: ['primary', 'secondary', 'tertiary'],
+          default: 'primary',
+          description: "Détermine le type de bouton"
+        },
+        {
+          name: 'size',
+          values: ['sm', 'md', 'lg'],
+          default: 'md',
+          description: "Détermine la taille du bouton"
+        },
+        {
+          name: 'iconPosition',
+          values: ['left', 'right', 'only'],
+          default: '',
+          description: "Position de l'icône par rapport au label"
+        }
+      ],
+      accessibilityNotes: [
+        "Le contraste entre la couleur de fond du bouton et du texte doit être de 4.5:1.",
+        "Les libellés doivent être explicites.",
+        "Utiliser l'attribut title ou aria-label uniquement si l'intitulé du bouton n'est pas explicite.",
+        "Pour aria-label, la valeur doit reprendre l'intitulé visible (important pour les utilisateurs en commande vocale).",
+        "Le focus (propriété outline) ne doit être ni dégradé ni supprimé.",
+        "Pour un bouton 'icône seule', ajouter un attribut title contenant la fonction du bouton.",
+        "Vérifier que la couleur de l'icône est suffisamment contrastée (rapport de 3:1) par rapport à la couleur du fond du bouton."
+      ],
+      usageNotes: [
+        "Différencier les boutons des liens : un bouton déclenche une action dans la même page, un lien navigue.",
+        "Limiter l'usage du bouton primaire à 1 par écran et ne jamais utiliser deux boutons primaires côte à côte.",
+        "La couleur bleu du bouton ne peut pas être modifiée.",
+        "Bouton primaire : pour les actions principales (ex: soumettre un formulaire).",
+        "Bouton secondaire : pour les actions moins prioritaires (ex: réinitialiser un formulaire).",
+        "Bouton tertiaire : pour des actions contextuelles ou alternatives.",
+        "État désactivé : à utiliser ponctuellement pour indiquer une action nécessaire en amont.",
+        "Taille MD par défaut, LG pour les actions importantes, SM à éviter en mobile."
+      ],
+      customizationNotes: [
+        "La largeur du composant s'adapte à son contenant.",
+        "Trois déclinaisons possibles pour les icônes : à droite, à gauche, ou icône seule.",
+        "Pour le bouton tertiaire, le contour peut être présent ou absent sans indiquer de hiérarchie."
+      ],
+      contentGuidelines: [
+        "Le libellé doit commencer par un verbe d'action qui exprime clairement l'action.",
+        "Utiliser 3 mots maximum pour le libellé.",
+        "Utiliser le même format d'écriture sur tous les libellés (ex: 1ère lettre en majuscule, reste en minuscule, impératif)."
+      ]
+    };
+    const dsfrButtonGroup = {
+      id: 'button-group',
+      name: 'Groupe de boutons',
+      type: 'composé',
+      structure: {
+        tag: 'ul',
+        className: 'fr-btns-group',
+        modifiers: [
+          {
+            name: 'alignment',
+            values: ['left', 'center', 'right'],
+            default: 'left'
+          },
+          {
+            name: 'orientation',
+            values: ['horizontal', 'vertical'],
+            default: 'horizontal'
+          },
+          {
+            name: 'size',
+            values: ['sm', 'md', 'lg'],
+            default: 'md'
+          },
+          {
+            name: 'iconPosition',
+            values: ['icon-left', 'icon-right'],
+            default: ''
+          },
+          {
+            name: 'equisized',
+            values: [true, false],
+            default: false
+          },
+          {
+            name: 'inlineReverse',
+            values: [true, false],
+            default: false
+          }
+        ],
+        children: [
+          {
+            tag: 'li',
+            children: [
+              {
+                component: 'Button',
+                variables: {
+                  buttonLabel: '{buttonLabel1}',
+                  buttonTitle: '{buttonTitle1}',
+                  buttonDisabled: '{buttonDisabled1}',
+                  buttonType: 'primary'
+                }
+              }
+            ]
+          },
+          {
+            tag: 'li',
+            children: [
+              {
+                component: 'Button',
+                variables: {
+                  buttonLabel: '{buttonLabel2}',
+                  buttonTitle: '{buttonTitle2}',
+                  buttonDisabled: '{buttonDisabled2}',
+                  buttonType: 'secondary'
+                }
+              }
+            ]
+          }
+        ]
+      },
+      allowedParents: ['div', 'form', 'section', 'article'],
+      requiredAttributes: [],
+      optionalAttributes: [],
+      variables: {
+        buttonLabel1: {
+          type: 'string',
+          description: "Texte du premier bouton"
+        },
+        buttonTitle1: {
+          type: 'string',
+          description: "Titre du premier bouton (si nécessaire)"
+        },
+        buttonDisabled1: {
+          type: 'boolean',
+          description: "Indique si le premier bouton est désactivé"
+        },
+        buttonLabel2: {
+          type: 'string',
+          description: "Texte du second bouton"
+        },
+        buttonTitle2: {
+          type: 'string',
+          description: "Titre du second bouton (si nécessaire)"
+        },
+        buttonDisabled2: {
+          type: 'boolean',
+          description: "Indique si le second bouton est désactivé"
+        }
+      },
+      accessibilityNotes: [
+        "Les libellés des boutons doivent être explicites.",
+        "L'utilisation de l'attribut title ou aria-label ne doit être faite que si l'intitulé du bouton n'est pas explicite (déconseillé).",
+        "Pour un bouton 'icône seule', ajouter un attribut title contenant la fonction du bouton."
+      ],
+      usageNotes: [
+        "Limiter l'usage du bouton primaire à 1 par groupe.",
+        "Positionner le bouton primaire avant les boutons secondaires quand le groupe est aligné à gauche ou centré.",
+        "Positionner le bouton primaire après les boutons secondaires quand le groupe est aligné à droite (utiliser le modificateur 'inlineReverse' si nécessaire).",
+        "Utiliser la même taille et typologie pour tous les boutons du groupe.",
+        "En vertical, les boutons prennent 100% de la largeur du conteneur par défaut.",
+        "En horizontal, les boutons sont espacés de 2W à droite, sauf le dernier.",
+        "Utiliser le modificateur 'equisized' pour forcer une même largeur pour tous les boutons."
+      ],
+      customizationNotes: [
+        "La largeur du composant s'adapte à son contenant.",
+        "Utiliser les modificateurs pour changer l'orientation, l'alignement et la taille des boutons.",
+        "L'ajout d'icônes se fait au niveau de chaque bouton, mais la position (gauche/droite) doit être cohérente pour tout le groupe.",
+        "Le modificateur 'inlineReverse' permet d'inverser l'ordre des boutons en alignement à droite."
+      ],
+      contentGuidelines: [
+        "Le libellé des boutons doit commencer par un verbe d'action et être court (3 mots maximum).",
+        "Utiliser le même format d'écriture sur tous les libellés de boutons (ex: 1ère lettre en majuscule, reste en minuscule, infinitif)."
+      ]
+    };
+    const dsfrRadioButtonGroup = {
+      id: 'radio-button-group',
+      name: 'Radio Button Group',
+      type: 'composé',
+      structure: {
+        tag: 'fieldset',
+        className: 'fr-fieldset',
+        attributes: {
+          id: '{groupId}',
+          'aria-labelledby': '{groupId}-legend {groupId}-messages'
+        },
+        children: [
+          {
+            tag: 'legend',
+            className: 'fr-fieldset__legend--regular fr-fieldset__legend',
+            attributes: {
+              id: '{groupId}-legend'
+            },
+            content: '{legendText}'
+          },
+          {
+            tag: 'multiple',
+            component: 'radio-button',
+            minOccurs: 2,
+            maxOccurs: 5
+          },
+          {
+            tag: 'div',
+            className: 'fr-messages-group',
+            attributes: {
+              id: '{groupId}-messages',
+              'aria-live': 'assertive'
+            },
+            content: '{messages}'
+          }
+        ]
+      },
+      allowedParents: ['form', 'div', 'section'],
+      requiredAttributes: ['id', 'name'],
+      optionalAttributes: ['disabled'],
+      variables: {
+        groupId: {
+          type: 'string',
+          description: "Identifiant unique du groupe de boutons radio"
+        },
+        legendText: {
+          type: 'string',
+          description: "Texte de la légende"
+        },
+        messages: {
+          type: 'string',
+          description: "Messages d'erreur ou de succès"
+        }
+      },
+      modifiers: [
+        {
+          name: 'state',
+          values: ['default', 'success', 'error', 'disabled'],
+          default: 'default'
+        }
+      ],
+      accessibilityNotes: [
+        "Les boutons radios doivent être regroupés dans une balise fieldset.",
+        "Une balise legend doit être présente car elle constitue l'en-tête du groupe de bouton.",
+        "Chaque bouton radio est lié à son libellé grâce aux attributs id et for.",
+        "Les messages d'erreur ou de succès, s'ils sont présents, sont liés au groupe de boutons radio au niveau de la balise fieldset, par un role='group' et une liaison avec aria-labelledby qui référence la légende et le message."
+      ],
+      usageNotes: [
+        "Les boutons radios sont recommandés lorsque l'utilisateur doit choisir un élément parmi 2 à 5 choix possibles.",
+        "Au delà de 5 choix ou lorsque l'espace n'est pas suffisant, il est préférable d'utiliser une liste déroulante.",
+        "Si plusieurs choix sont possibles ou que la sélection n'est pas obligatoire, privilégier les cases à cocher.",
+        "Ajoutez un astérisque à la fin du libellé de la balise legend pour informer qu'un élément est obligatoire. Une légende explicative doit être présente en haut du formulaire."
+      ],
+      customizationNotes: [
+        "Le style de ce composant n'est pas personnalisable. Toutefois, certains éléments sont optionnels - voir la structure du composant."
+      ],
+      contentGuidelines: [
+        "Pour les titres (legend) et les libellés (label) :",
+        "Maintenir la cohérence : utilisez les mêmes termes à chaque fois.",
+        "Utiliser un libellé clair et concis.",
+        "Mettre uniquement la première lettre du libellé en majuscule, n'utilisez pas de ponctuation à la fin d'un libellé."
+      ]
+    };
+    const dsfrRadioRich = {
+      id: 'radio-rich',
+      name: 'Bouton radio riche',
+      type: 'composé',
+      structure: {
+        tag: 'fieldset',
+        className: 'fr-fieldset',
+        attributes: {
+          id: '{fieldsetId}',
+          'aria-labelledby': '{fieldsetId}-legend {fieldsetId}-messages'
+        },
+        children: [
+          {
+            tag: 'legend',
+            className: 'fr-fieldset__legend--regular fr-fieldset__legend',
+            attributes: {
+              id: '{fieldsetId}-legend'
+            },
+            content: '{legendText}',
+            children: [
+              {
+                tag: 'span',
+                className: 'fr-hint-text',
+                content: '{legendHintText}',
+                optional: true
+              }
+            ]
+          },
+          {
+            tag: 'div',
+            className: 'fr-fieldset__element',
+            children: [
+              {
+                tag: 'div',
+                className: 'fr-radio-group fr-radio-rich',
+                children: [
+                  {
+                    tag: 'input',
+                    attributes: {
+                      type: 'radio',
+                      id: '{radioId}',
+                      name: '{radioName}',
+                      value: '{radioValue}'
+                    }
+                  },
+                  {
+                    tag: 'label',
+                    className: 'fr-label',
+                    attributes: {
+                      for: '{radioId}'
+                    },
+                    content: '{radioLabel}',
+                    children: [
+                      {
+                        tag: 'span',
+                        className: 'fr-hint-text',
+                        content: '{radioHintText}',
+                        optional: true
+                      }
+                    ]
+                  },
+                  {
+                    tag: 'div',
+                    className: 'fr-radio-rich__pictogram',
+                    children: [
+                      {
+                        tag: 'svg',
+                        attributes: {
+                          'aria-hidden': 'true',
+                          class: 'fr-artwork',
+                          viewBox: '0 0 80 80',
+                          width: '80px',
+                          height: '80px'
+                        },
+                        children: [
+                          {
+                            tag: 'use',
+                            attributes: {
+                              class: 'fr-artwork-decorative',
+                              href: '{pictogramPath}#artwork-decorative'
+                            }
+                          },
+                          {
+                            tag: 'use',
+                            attributes: {
+                              class: 'fr-artwork-minor',
+                              href: '{pictogramPath}#artwork-minor'
+                            }
+                          },
+                          {
+                            tag: 'use',
+                            attributes: {
+                              class: 'fr-artwork-major',
+                              href: '{pictogramPath}#artwork-major'
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            tag: 'div',
+            className: 'fr-messages-group',
+            attributes: {
+              id: '{fieldsetId}-messages',
+              'aria-live': 'polite'
+            }
+          }
+        ]
+      },
+      allowedParents: ['form', 'div'],
+      requiredAttributes: ['id', 'name'],
+      optionalAttributes: [],
+      variables: {
+        fieldsetId: {
+          type: 'string',
+          description: "ID unique pour le fieldset"
+        },
+        legendText: {
+          type: 'string',
+          description: "Texte de la légende"
+        },
+        legendHintText: {
+          type: 'string',
+          description: "Texte d'indication pour la légende (optionnel)"
+        },
+        radioId: {
+          type: 'string',
+          description: "ID unique pour le bouton radio"
+        },
+        radioName: {
+          type: 'string',
+          description: "Nom du groupe de boutons radio"
+        },
+        radioValue: {
+          type: 'string',
+          description: "Valeur du bouton radio"
+        },
+        radioLabel: {
+          type: 'string',
+          description: "Libellé du bouton radio"
+        },
+        radioHintText: {
+          type: 'string',
+          description: "Texte d'indication pour le bouton radio (optionnel)"
+        },
+        pictogramPath: {
+          type: 'string',
+          description: "Chemin vers le fichier SVG du pictogramme"
+        }
+      },
+      modifiers: [
+        {
+          name: 'state',
+          values: ['default', 'error'],
+          default: 'default'
+        }
+      ],
+      accessibilityNotes: [
+        "Pour l'état d'erreur, ajouter un role='group' à la balise fieldset.",
+        "Le message d'erreur et la balise legend sont liés au fieldset via l'attribut aria-labelledby.",
+        "Le pictogramme doit avoir l'attribut aria-hidden='true' pour être ignoré par les lecteurs d'écran."
+      ],
+      usageNotes: [
+        "Utiliser pour sélectionner un choix parmi une liste d'options illustrées.",
+        "L'image permet d'illustrer et d'accompagner l'utilisateur dans son choix.",
+        "La largeur du bouton peut être définie selon la grille proposée par le Système de Design de l'État.",
+        "Les règles d'utilisation sont identiques à celles des boutons radio standard."
+      ],
+      contentGuidelines: [
+        "Le libellé du bouton radio doit être clair et concis.",
+        "Le texte d'indication (hint text) doit apporter des informations complémentaires utiles.",
+        "Le pictogramme doit être pertinent et en lien avec l'option proposée."
+      ]
+    };
+    const dsfrCheckboxGroup = {
+      id: 'checkbox-group',
+      name: 'Groupe de cases à cocher',
+      type: 'composé',
+      structure: {
+        tag: 'fieldset',
+        className: 'fr-fieldset',
+        attributes: {
+          id: '{fieldsetId}',
+          'aria-labelledby': '{fieldsetId}-legend {fieldsetId}-messages'
+        },
+        children: [
+          {
+            tag: 'legend',
+            className: 'fr-fieldset__legend--regular fr-fieldset__legend',
+            attributes: {
+              id: '{fieldsetId}-legend'
+            },
+            content: '{legendText}',
+            children: [
+              {
+                tag: 'span',
+                className: 'fr-hint-text',
+                content: '{legendHintText}',
+                optional: true
+              }
+            ]
+          },
+          {
+            tag: 'div',
+            className: 'fr-fieldset__element',
+            children: [
+              {
+                tag: 'multiple',
+                component: 'Checkbox',
+                minOccurs: 1,
+                maxOccurs: 'unbounded'
+              }
+            ]
+          },
+          {
+            tag: 'div',
+            className: 'fr-messages-group',
+            attributes: {
+              id: '{fieldsetId}-messages',
+              'aria-live': 'assertive'
+            }
+          }
+        ]
+      },
+      allowedParents: ['form', 'div'],
+      requiredAttributes: ['id'],
+      optionalAttributes: [],
+      variables: {
+        fieldsetId: {
+          type: 'string',
+          description: "ID unique pour le fieldset"
+        },
+        legendText: {
+          type: 'string',
+          description: "Texte de la légende"
+        },
+        legendHintText: {
+          type: 'string',
+          description: "Texte d'indication pour la légende (optionnel)"
+        }
+      },
+      modifiers: [
+        {
+          name: 'layout',
+          values: ['vertical', 'horizontal'],
+          default: 'vertical',
+          description: "Disposition des cases à cocher"
+        },
+        {
+          name: 'state',
+          values: ['default', 'error', 'success', 'disabled'],
+          default: 'default',
+          description: "État du groupe de cases à cocher"
+        }
+      ],
+      accessibilityNotes: [
+        "Chaque case à cocher doit avoir un label associé avec les attributs id et for.",
+        "Les champs obligatoires doivent être signalés dans le label et avec l'attribut required.",
+        "Le groupe doit être dans une balise fieldset avec une balise legend.",
+        "Pour l'état d'erreur ou de succès, ajouter un role='group' à la balise fieldset.",
+        "Le message d'erreur/succès et la légende sont liés au fieldset via l'attribut aria-labelledby.",
+        "Les libellés doivent être cohérents pour les champs de même fonction.",
+        "Pour chaque erreur, suggérer le type ou format de donnée attendu."
+      ],
+      usageNotes: [
+        "Utiliser pour permettre la sélection de plusieurs options (0 à N) ou pour un choix binaire.",
+        "Éviter les listes de plus de 5 items.",
+        "Préférer les boutons radio pour un choix unique obligatoire.",
+        "La disposition horizontale ne doit être utilisée que pour 2 options ou des libellés très courts.",
+        "Privilégier la disposition verticale pour une meilleure lisibilité."
+      ],
+      contentGuidelines: [
+        "Le libellé de chaque case à cocher doit être clair et concis.",
+        "La légende du groupe doit décrire clairement le contexte des options.",
+        "Le texte d'aide (hint text) doit apporter des précisions utiles, soit pour le groupe, soit pour chaque option."
+      ]
+    };
+    const dsfrCheckbox = {
+      id: 'checkbox',
+      name: 'Case à cocher',
+      type: 'atomique',
+      structure: {
+        tag: 'div',
+        className: 'fr-checkbox-group',
+        children: [
+          {
+            tag: 'input',
+            attributes: {
+              type: 'checkbox',
+              id: '{checkboxId}',
+              name: '{checkboxName}',
+              'aria-describedby': '{checkboxId}-messages',
+              checked: '{isChecked}',
+              disabled: '{isDisabled}',
+              required: '{isRequired}'
+            }
+          },
+          {
+            tag: 'label',
+            className: 'fr-label',
+            attributes: {
+              for: '{checkboxId}'
+            },
+            content: '{labelText}',
+            children: [
+              {
+                tag: 'span',
+                className: 'fr-hint-text',
+                content: '{hintText}',
+                optional: true
+              }
+            ]
+          },
+          {
+            tag: 'div',
+            className: 'fr-messages-group',
+            attributes: {
+              id: '{checkboxId}-messages',
+              'aria-live': 'assertive'
+            }
+          }
+        ]
+      },
+      allowedParents: ['div', 'fieldset'],
+      requiredAttributes: ['id', 'name'],
+      optionalAttributes: ['checked', 'disabled', 'required'],
+      variables: {
+        checkboxId: {
+          type: 'string',
+          description: "ID unique pour la case à cocher"
+        },
+        checkboxName: {
+          type: 'string',
+          description: "Nom de la case à cocher"
+        },
+        labelText: {
+          type: 'string',
+          description: "Texte du label"
+        },
+        hintText: {
+          type: 'string',
+          description: "Texte d'aide (optionnel)"
+        },
+        isChecked: {
+          type: 'boolean',
+          description: "Indique si la case est cochée par défaut"
+        },
+        isDisabled: {
+          type: 'boolean',
+          description: "Indique si la case à cocher est désactivée"
+        },
+        isRequired: {
+          type: 'boolean',
+          description: "Indique si la case à cocher est obligatoire"
+        }
+      },
+      modifiers: [
+        {
+          name: 'state',
+          values: ['default', 'error', 'success', 'disabled'],
+          default: 'default',
+          description: "État de la case à cocher"
+        }
+      ],
+      accessibilityNotes: [
+        "L'input et le label doivent être associés via les attributs id et for.",
+        "Utiliser l'attribut aria-describedby pour lier les messages d'erreur/succès à l'input.",
+        "Le label doit être explicite et décrivant clairement l'action associée.",
+        "Si la case est obligatoire, l'indiquer dans le label et utiliser l'attribut required."
+      ],
+      usageNotes: [
+        "Utiliser pour des choix binaires ou des sélections multiples.",
+        "Peut être utilisé seul ou dans un groupe de cases à cocher.",
+        "L'état coché doit être visuellement distinct et clairement identifiable."
+      ],
+      contentGuidelines: [
+        "Le libellé doit être court, clair et descriptif de l'action.",
+        "Utiliser le texte d'aide (hint text) pour fournir des informations supplémentaires si nécessaire.",
+        "Les messages d'erreur doivent être concis et indiquer comment corriger le problème."
+      ]
+    };
+    const dsfrCard = {
+      id: 'card',
+      name: 'Carte',
+      type: 'composé',
+      structure: {
+        tag: 'div',
+        className: 'fr-card fr-enlarge-link',
+        children: [
+          {
+            tag: 'div',
+            className: 'fr-card__body',
+            children: [
+              {
+                tag: 'div',
+                className: 'fr-card__content',
+                children: [
+                  {
+                    tag: 'h3',
+                    className: 'fr-card__title',
+                    children: [
+                      {
+                        tag: 'a',
+                        attributes: {
+                          href: '{linkHref}'
+                        },
+                        content: '{cardTitle}'
+                      }
+                    ]
+                  },
+                  {
+                    tag: 'p',
+                    className: 'fr-card__desc',
+                    content: '{cardDescription}',
+                    optional: true
+                  },
+                  {
+                    tag: 'div',
+                    className: 'fr-card__detail',
+                    optional: true,
+                    children: [
+                      {
+                        tag: 'ul',
+                        className: 'fr-tags-group',
+                        optional: true,
+                        children: [
+                          {
+                            tag: 'li',
+                            children: [
+                              {
+                                component: 'dsfrTag',
+                                variables: {
+                                  tagText: '{tagText}'
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            tag: 'div',
+            className: 'fr-card__header',
+            optional: true,
+            children: [
+              {
+                tag: 'div',
+                className: 'fr-card__img',
+                children: [
+                  {
+                    tag: 'img',
+                    className: 'fr-responsive-img',
+                    attributes: {
+                      src: '{imageSrc}',
+                      alt: '{imageAlt}'
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      allowedParents: ['div', 'li'],
+      requiredAttributes: [],
+      optionalAttributes: [],
+      variables: {
+        linkHref: {
+          type: 'string',
+          description: "URL de destination de la carte"
+        },
+        cardTitle: {
+          type: 'string',
+          description: "Titre de la carte"
+        },
+        cardDescription: {
+          type: 'string',
+          description: "Description de la carte (max 5 lignes)"
+        },
+        imageSrc: {
+          type: 'string',
+          description: "Source de l'image"
+        },
+        imageAlt: {
+          type: 'string',
+          description: "Texte alternatif de l'image"
+        },
+        tagText: {
+          type: 'string',
+          description: "Texte du tag (si présent)"
+        }
+      },
+      modifiers: [
+        {
+          name: 'size',
+          values: ['sm', 'md', 'lg'],
+          default: 'md',
+          description: "Taille de la carte"
+        },
+        {
+          name: 'orientation',
+          values: ['vertical', 'horizontal'],
+          default: 'vertical',
+          description: "Orientation de la carte"
+        },
+        {
+          name: 'ratio',
+          values: ['tier', 'half'],
+          default: '',
+          description: "Ratio de l'image pour les cartes horizontales"
+        },
+        {
+          name: 'background',
+          values: ['default', 'grey', 'no-background'],
+          default: 'default',
+          description: "Fond de la carte"
+        },
+        {
+          name: 'border',
+          values: ['default', 'no-border'],
+          default: 'default',
+          description: "Bordure de la carte"
+        },
+        {
+          name: 'shadow',
+          values: [true, false],
+          default: false,
+          description: "Ajoute une ombre portée à la carte"
+        }
+      ],
+      accessibilityNotes: [
+        "L'alternative de l'image (attribut alt) doit toujours être présente, sa valeur peut être vide ou non selon le contexte.",
+        "Le titre doit être dans une balise h3 pour respecter la hiérarchie des titres.",
+        "Le lien doit avoir un intitulé explicite décrivant la destination."
+      ],
+      usageNotes: [
+        "Utiliser pour créer des listes de liens, des grilles de contenus, des blocs de mise en avant, etc.",
+        "Ne jamais présenter une carte de manière isolée.",
+        "Harmoniser la hauteur des cartes au sein d'une même ligne dans une liste.",
+        "Utiliser le même type d'affichage (horizontal ou vertical) au sein d'une même liste ou collection.",
+        "Respecter les recommandations de largeur selon la taille et l'orientation de la carte."
+      ],
+      contentGuidelines: [
+        "Le titre doit reprendre celui de la page de destination.",
+        "La description doit être concise (maximum 5 lignes).",
+        "L'image doit être en lien avec le contenu de la page de destination."
+      ]
+    };
+    const dsfrQuote = {
+      id: 'quote',
+      name: 'Citation',
+      type: 'composé',
+      structure: {
+        tag: 'figure',
+        className: 'fr-quote fr-quote--column',
+        children: [
+          {
+            tag: 'blockquote',
+            attributes: {
+              cite: '{sourceUrl}'
+            },
+            children: [
+              {
+                tag: 'p',
+                content: '« {quoteText} »'
+              }
+            ]
+          },
+          {
+            tag: 'figcaption',
+            children: [
+              {
+                tag: 'p',
+                className: 'fr-quote__author',
+                content: '{authorName}',
+                optional: true
+              },
+              {
+                tag: 'ul',
+                className: 'fr-quote__source',
+                optional: true,
+                children: [
+                  {
+                    tag: 'li',
+                    children: [
+                      {
+                        tag: 'cite',
+                        content: '{sourceTitle}'
+                      }
+                    ]
+                  },
+                  {
+                    tag: 'li',
+                    content: '{detail1}',
+                    optional: true
+                  },
+                  {
+                    tag: 'li',
+                    content: '{detail2}',
+                    optional: true
+                  },
+                  {
+                    tag: 'li',
+                    content: '{detail3}',
+                    optional: true
+                  },
+                  {
+                    tag: 'li',
+                    children: [
+                      {
+                        tag: 'a',
+                        attributes: {
+                          href: '{detailLink}',
+                          target: '_blank',
+                          rel: 'noopener external',
+                          title: '{detailLinkTitle}'
+                        },
+                        content: '{detailLinkText}',
+                        optional: true
+                      }
+                    ],
+                    optional: true
+                  }
+                ]
+              },
+              {
+                tag: 'div',
+                className: 'fr-quote__image',
+                optional: true,
+                children: [
+                  {
+                    tag: 'img',
+                    className: 'fr-responsive-img',
+                    attributes: {
+                      src: '{imageSrc}',
+                      alt: ''
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      allowedParents: ['div', 'section', 'article'],
+      requiredAttributes: [],
+      optionalAttributes: [],
+      variables: {
+        sourceUrl: {
+          type: 'string',
+          description: "URL de la source de la citation"
+        },
+        quoteText: {
+          type: 'string',
+          description: "Texte de la citation"
+        },
+        authorName: {
+          type: 'string',
+          description: "Nom de l'auteur de la citation"
+        },
+        sourceTitle: {
+          type: 'string',
+          description: "Titre de l'ouvrage source"
+        },
+        detail1: {
+          type: 'string',
+          description: "Détail supplémentaire 1"
+        },
+        detail2: {
+          type: 'string',
+          description: "Détail supplémentaire 2"
+        },
+        detail3: {
+          type: 'string',
+          description: "Détail supplémentaire 3"
+        },
+        detailLink: {
+          type: 'string',
+          description: "URL du lien de détail"
+        },
+        detailLinkTitle: {
+          type: 'string',
+          description: "Titre du lien de détail"
+        },
+        detailLinkText: {
+          type: 'string',
+          description: "Texte du lien de détail"
+        },
+        imageSrc: {
+          type: 'string',
+          description: "Source de l'image d'illustration"
+        }
+      },
+      modifiers: [
+        {
+          name: 'layout',
+          values: ['column', 'row'],
+          default: 'column',
+          description: "Disposition de la citation"
+        }
+      ],
+      accessibilityNotes: [
+        "Utiliser l'attribut cite sur blockquote pour indiquer l'URL source si disponible.",
+        "Placer l'ouvrage cité dans une balise <cite>.",
+        "Utiliser la structure <figure> avec <blockquote> et <figcaption> pour une bonne sémantique.",
+        "L'attribut alt de l'image doit rester vide car l'image est illustrative."
+      ],
+      usageNotes: [
+        "Ne pas placer deux citations directement l'une après l'autre.",
+        "Utiliser la variante avec illustration pour incarner l'auteur de la citation.",
+        "En mobile, le séparateur passe sous le texte de la source.",
+        "Pour la citation avec illustration en mobile, l'image est affichée sous le texte de la citation."
+      ],
+      contentGuidelines: [
+        "Intégrer des guillemets avec des espaces insécables au début et à la fin du texte de la citation.",
+        "Mettre l'ouvrage en italique dans la source.",
+        "La citation ne doit pas être trop longue pour éviter de prendre trop de place, surtout en mobile.",
+        "Respecter le droit de citation selon le Code de la Propriété Intellectuelle (article L122-5)."
+      ]
+    };
+    const dsfrContentMedia = {
+      id: 'content-media',
+      name: 'Contenu média',
+      type: 'composé',
+      structure: {
+        tag: 'figure',
+        className: 'fr-content-media',
+        attributes: {
+          role: 'group',
+          'aria-label': '{figureLabel}'
+        },
+        children: [
+          {
+            tag: 'mediaContent',
+            content: '{mediaType}',
+            description: "Contenu média (image, iframe pour vidéo, ou audio)"
+          },
+          {
+            tag: 'figcaption',
+            className: 'fr-content-media__caption',
+            optional: true,
+            content: '{captionText}',
+            children: [
+              {
+                tag: 'a',
+                className: 'fr-link',
+                attributes: {
+                  href: '{captionLinkHref}'
+                },
+                content: '{captionLinkText}',
+                optional: true
+              }
+            ]
+          }
+        ]
+      },
+      allowedParents: ['div', 'section', 'article'],
+      requiredAttributes: [],
+      optionalAttributes: [],
+      variables: {
+        figureLabel: {
+          type: 'string',
+          description: "Label ARIA pour la figure (doit reprendre le contenu de figcaption)"
+        },
+        mediaType: {
+          type: 'enum',
+          values: ['image', 'video', 'audio'],
+          description: "Type de média"
+        },
+        captionText: {
+          type: 'string',
+          description: "Texte de la légende"
+        },
+        captionLinkHref: {
+          type: 'string',
+          description: "URL du lien dans la légende"
+        },
+        captionLinkText: {
+          type: 'string',
+          description: "Texte du lien dans la légende"
+        }
+      },
+      modifiers: [
+        {
+          name: 'size',
+          values: ['sm', 'md', 'lg'],
+          default: 'md',
+          description: "Taille du contenu média"
+        },
+        {
+          name: 'ratio',
+          values: ['16x9', '4x3'],
+          default: '16x9',
+          description: "Ratio du contenu média (pour vidéo)"
+        }
+      ],
+      accessibilityNotes: [
+        "Pour les images, utiliser un alt vide si l'image est décorative, ou un alt descriptif si l'image apporte une information essentielle.",
+        "Pour les SVG inline porteurs de sens, utiliser role='img' et aria-label. Pour les SVG décoratifs, utiliser aria-hidden='true'.",
+        "La figure doit avoir un aria-label reprenant le contenu de figcaption.",
+        "Les vidéos ne doivent pas démarrer automatiquement et doivent être contrôlables au clavier.",
+        "Fournir une transcription textuelle accessible et pertinente pour les vidéos et audios.",
+        "Les vidéos (hors direct) doivent être sous-titrées."
+      ],
+      usageNotes: [
+        "Utiliser des médias qui véhiculent un message clair.",
+        "Homogénéiser le style graphique des images et vidéos.",
+        "N'utiliser que des médias libres de droit ou dont vous avez acquis les droits.",
+        "La taille MD correspond à la largeur du contenu, LG est plus large, et SM est plus étroite.",
+        "Le format par défaut pour les images est 16:9, mais d'autres ratios sont disponibles."
+      ],
+      contentGuidelines: [
+        "Choisir des médias pertinents et de qualité pour illustrer le contenu.",
+        "La légende doit être concise et apporter des informations complémentaires au média.",
+        "Pour les vidéos, fournir une transcription textuelle complète et accessible."
+      ]
+    };
+    const dsfrSegmentedControl = {
+      id: 'segmented-control',
+      name: 'Contrôle segmenté',
+      type: 'composé',
+      structure: {
+        tag: 'fieldset',
+        className: 'fr-segmented',
+        children: [
+          {
+            tag: 'legend',
+            className: 'fr-segmented__legend',
+            content: '{legendText}',
+            optional: true
+          },
+          {
+            tag: 'div',
+            className: 'fr-segmented__elements',
+            children: [
+              {
+                tag: 'multiple',
+                component: 'dsfrSegmentedElement',
+                minOccurs: 2,
+                maxOccurs: 5
+              }
+            ]
+          }
+        ]
+      },
+      allowedParents: ['div', 'form'],
+      requiredAttributes: [],
+      optionalAttributes: [],
+      variables: {
+        legendText: {
+          type: 'string',
+          description: "Texte de la légende du contrôle segmenté"
+        }
+      },
+      modifiers: [
+        {
+          name: 'size',
+          values: ['sm', 'md'],
+          default: 'md',
+          description: "Taille du contrôle segmenté"
+        },
+        {
+          name: 'legendPosition',
+          values: ['top', 'inline'],
+          default: 'top',
+          description: "Position de la légende"
+        }
+      ],
+      accessibilityNotes: [
+        "Utiliser une légende explicite pour décrire le groupe de segments.",
+        "S'assurer que les labels des segments sont clairs et concis.",
+        "Vérifier que le composant est utilisable au clavier."
+      ],
+      usageNotes: [
+        "Utiliser uniquement pour proposer un type d'affichage d'une vue, pas comme système de filtre.",
+        "Limiter à 5 segments maximum (déconseillé d'aller au-delà).",
+        "Un seul segment doit être sélectionné à la fois.",
+        "Ne pas mélanger des segments avec et sans icône dans le même composant.",
+        "L'utilisation avec une icône seule n'est pas autorisée.",
+        "En cas de contenu trop long, le composant s'affiche verticalement.",
+        "Utiliser des labels courts (ex: 'Liste', 'Carte')."
+      ],
+      contentGuidelines: [
+        "Les labels des segments doivent être courts et descriptifs.",
+        "Si des icônes sont utilisées, elles doivent être cohérentes et significatives.",
+        "La légende doit clairement décrire le choix proposé par le contrôle segmenté."
+      ]
+    };
+    const dsfrSegmentedElement = {
+      id: 'segmented-element',
+      name: 'Élément du contrôle segmenté',
+      type: 'atomique',
+      structure: {
+        tag: 'div',
+        className: 'fr-segmented__element',
+        children: [
+          {
+            tag: 'input',
+            attributes: {
+              type: 'radio',
+              id: '{inputId}',
+              name: '{groupName}',
+              value: '{inputValue}',
+              checked: '{isChecked}'
+            }
+          },
+          {
+            tag: 'label',
+            className: 'fr-label',
+            attributes: {
+              for: '{inputId}'
+            },
+            content: '{labelText}',
+            children: [
+              {
+                tag: 'span',
+                className: '{iconClass}',
+                optional: true
+              }
+            ]
+          }
+        ]
+      },
+      variables: {
+        inputId: {
+          type: 'string',
+          description: "ID unique pour l'input radio"
+        },
+        groupName: {
+          type: 'string',
+          description: "Nom du groupe de boutons radio"
+        },
+        inputValue: {
+          type: 'string',
+          description: "Valeur de l'input radio"
+        },
+        isChecked: {
+          type: 'boolean',
+          description: "Indique si le segment est sélectionné par défaut"
+        },
+        labelText: {
+          type: 'string',
+          description: "Texte du label du segment"
+        },
+        iconClass: {
+          type: 'string',
+          description: "Classe de l'icône (si présente)"
+        }
+      }
+    };
+    const dsfrRange = {
+      id: 'range',
+      name: 'Curseur',
+      type: 'composé',
+      structure: {
+        tag: 'div',
+        className: 'fr-range-group',
+        attributes: {
+          id: '{rangeGroupId}'
+        },
+        children: [
+          {
+            tag: 'label',
+            className: 'fr-label',
+            content: '{labelText}',
+            children: [
+              {
+                tag: 'span',
+                className: 'fr-hint-text',
+                content: '{hintText}',
+                optional: true
+              }
+            ]
+          },
+          {
+            tag: 'div',
+            className: 'fr-range',
+            attributes: {
+              'data-fr-prefix': '{prefix}',
+              'data-fr-suffix': '{suffix}'
+            },
+            children: [
+              {
+                tag: 'span',
+                className: 'fr-range__output',
+                content: '{currentValue}'
+              },
+              {
+                tag: 'input',
+                attributes: {
+                  id: '{rangeId}',
+                  name: '{rangeName}',
+                  type: 'range',
+                  'aria-labelledby': '{rangeLabelId}',
+                  max: '{maxValue}',
+                  min: '{minValue}',
+                  step: '{stepValue}',
+                  value: '{defaultValue}',
+                  'aria-describedby': '{rangeMessagesId}'
+                }
+              },
+              {
+                tag: 'span',
+                className: 'fr-range__min',
+                attributes: {
+                  'aria-hidden': 'true'
+                },
+                content: '{minValueDisplay}',
+                optional: true
+              },
+              {
+                tag: 'span',
+                className: 'fr-range__max',
+                attributes: {
+                  'aria-hidden': 'true'
+                },
+                content: '{maxValueDisplay}',
+                optional: true
+              }
+            ]
+          },
+          {
+            tag: 'div',
+            className: 'fr-messages-group',
+            attributes: {
+              id: '{rangeMessagesId}',
+              'aria-live': 'polite'
+            },
+            children: [
+              {
+                tag: 'p',
+                className: 'fr-message fr-message--error',
+                attributes: {
+                  id: '{rangeErrorMessageId}'
+                },
+                content: '{errorMessage}',
+                optional: true
+              }
+            ],
+            optional: true
+          }
+        ]
+      },
+      allowedParents: ['div', 'form'],
+      requiredAttributes: ['id', 'name'],
+      optionalAttributes: [],
+      variables: {
+        rangeGroupId: {
+          type: 'string',
+          description: "ID du groupe de curseur"
+        },
+        labelText: {
+          type: 'string',
+          description: "Texte du label du curseur"
+        },
+        hintText: {
+          type: 'string',
+          description: "Texte de description additionnel"
+        },
+        prefix: {
+          type: 'string',
+          description: "Préfixe pour la valeur"
+        },
+        suffix: {
+          type: 'string',
+          description: "Suffixe pour la valeur"
+        },
+        currentValue: {
+          type: 'string',
+          description: "Valeur actuelle du curseur"
+        },
+        rangeId: {
+          type: 'string',
+          description: "ID de l'input range"
+        },
+        rangeName: {
+          type: 'string',
+          description: "Nom de l'input range"
+        },
+        rangeLabelId: {
+          type: 'string',
+          description: "ID du label du curseur"
+        },
+        maxValue: {
+          type: 'number',
+          description: "Valeur maximale du curseur"
+        },
+        minValue: {
+          type: 'number',
+          description: "Valeur minimale du curseur"
+        },
+        stepValue: {
+          type: 'number',
+          description: "Pas du curseur"
+        },
+        defaultValue: {
+          type: 'number',
+          description: "Valeur par défaut du curseur"
+        },
+        rangeMessagesId: {
+          type: 'string',
+          description: "ID du groupe de messages"
+        },
+        minValueDisplay: {
+          type: 'string',
+          description: "Affichage de la valeur minimale"
+        },
+        maxValueDisplay: {
+          type: 'string',
+          description: "Affichage de la valeur maximale"
+        },
+        rangeErrorMessageId: {
+          type: 'string',
+          description: "ID du message d'erreur"
+        },
+        errorMessage: {
+          type: 'string',
+          description: "Message d'erreur"
+        }
+      },
+      modifiers: [
+        {
+          name: 'size',
+          values: ['sm', 'md'],
+          default: 'md',
+          description: "Taille du curseur"
+        },
+        {
+          name: 'type',
+          values: ['simple', 'double', 'stepped'],
+          default: 'simple',
+          description: "Type de curseur"
+        }
+      ],
+      accessibilityNotes: [
+        "Le label du curseur doit expliciter la nature de la valeur sélectionnée.",
+        "L'utilisateur doit pouvoir cliquer n'importe où sur la piste horizontale (sauf curseur double).",
+        "L'utilisateur doit pouvoir utiliser les flèches du clavier pour modifier la valeur et l'emplacement de la poignée.",
+        "Le focus doit être placé sur la poignée."
+      ],
+      usageNotes: [
+        "Utiliser lorsque la valeur saisie est imprécise ou à déterminer.",
+        "Ne pas utiliser dans les formulaires sauf cas exceptionnel.",
+        "Actualiser le résultat en temps réel en fonction de la valeur sélectionnée.",
+        "La valeur du curseur est toujours un nombre. Des unités peuvent y être ajoutées.",
+        "Éviter d'utiliser sans fournir un retour visuel immédiat.",
+        "Ne pas utiliser si le nombre de valeurs spécifiques est important.",
+        "Ne pas utiliser pour une échelle de valeur trop petite (ex: 1-3).",
+        "Ne pas utiliser pour communiquer l'état d'avancement."
+      ],
+      contentGuidelines: [
+        "Le label doit clairement décrire la valeur à sélectionner.",
+        "Le texte d'aide doit fournir des informations supplémentaires utiles.",
+        "Les valeurs minimales et maximales doivent être clairement indiquées si affichées."
+      ]
+    };
+
+
+
+
+
     const { useState, useRef, useMemo, useEffect } = React;
 
     const Button = ({ children, onClick }) => (
@@ -459,7 +2543,7 @@
       const filteredComponents = useMemo(() => {
         return components.filter(component =>
           Object.values(component).some(value =>
-            value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+            typeof value === 'string' ? value.toString().toLowerCase().includes(searchTerm.toLowerCase()) : false
           )
         );
       }, [components, searchTerm]);
@@ -484,30 +2568,6 @@
       );
     };
 
-    const ComponentLists = ({ allComponents, onSelectComponent }) => {
-      const buttons = allComponents.filter(c => c.type === 'button' || c.id.includes('button'));
-      const checkboxes = allComponents.filter(c => c.type === 'checkbox' || c.id.includes('checkbox'));
-
-      return (
-        <div className="component-lists">
-          <div className="list-container">
-            <h3>Boutons</h3>
-            <SearchableComponentList
-              components={buttons}
-              onSelectComponent={onSelectComponent}
-            />
-          </div>
-          <div className="list-container">
-            <h3>Cases à cocher</h3>
-            <SearchableComponentList
-              components={checkboxes}
-              onSelectComponent={onSelectComponent}
-            />
-          </div>
-        </div>
-      );
-    };
-
     const VisualComponentGraph = ({ component }) => {
       if (!component) return null;
 
@@ -516,17 +2576,36 @@
       const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
       const svgRef = useRef(null);
 
-      const svgWidth = 800;
-      const svgHeight = 600;
+      const baseWidth = 800;
+      const baseHeight = 600;
       const mainBlockWidth = 300;
       const mainBlockHeight = 200;
-      const subBlockWidth = 150;
-      const subBlockHeight = 80;
+      const subBlockHeight = 40;
       const spacing = 30;
       const arrowWidth = 2;
 
+      // calc de la len text
+      const getTextWidth = (text, fontSize = 14) => {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        context.font = `${fontSize}px Arial`;
+        return context.measureText(text).width + 20; // Ajout d'une marge
+      };
+
+      // calc max width
+      const maxTraitWidth = Math.max(150, ...((component.traits || []).map(trait => getTextWidth(`${trait.name}: ${trait.type}`))));
+      const maxChildWidth = Math.max(150, ...((component.allowedChildren || []).map(childId => {
+        const childName = allComponents.find(c => c.id === childId)?.name || childId;
+        return getTextWidth(childName);
+      })));
+
+      // calc nouvelles dim. svg
+      const leftExtension = Math.max(0, maxTraitWidth - (baseWidth / 2 - mainBlockWidth / 2 - spacing));
+      const rightExtension = Math.max(0, maxChildWidth - (baseWidth / 2 - mainBlockWidth / 2 - spacing));
+      const svgWidth = baseWidth + leftExtension + rightExtension;
+
       const mainBlockX = svgWidth / 2 - mainBlockWidth / 2;
-      const mainBlockY = svgHeight / 2 - mainBlockHeight / 2;
+      const mainBlockY = baseHeight / 2 - mainBlockHeight / 2;
 
       const renderBlock = (x, y, width, height, text, isMain = false) => (
         <g key={text}>
@@ -566,17 +2645,18 @@
         />
       );
 
+      const traitsX = mainBlockX - spacing - maxTraitWidth;
+      const childrenX = mainBlockX + mainBlockWidth + spacing;
+
       const configBlocks = (component.traits || []).map((trait, index) => {
-        const x = spacing;
         const y = mainBlockY + (subBlockHeight + 5) * index;
-        return renderBlock(x, y, subBlockWidth, subBlockHeight, `${trait.name}: ${trait.type}`);
+        return renderBlock(traitsX, y, maxTraitWidth, subBlockHeight, `${trait.name}: ${trait.type}`);
       });
 
       const childrenBlocks = (component.allowedChildren || []).map((childId, index) => {
         const childName = allComponents.find(c => c.id === childId)?.name || childId;
-        const x = svgWidth - spacing - subBlockWidth;
         const y = mainBlockY + (subBlockHeight + 5) * index;
-        return renderBlock(x, y, subBlockWidth, subBlockHeight, childName);
+        return renderBlock(childrenX, y, maxChildWidth, subBlockHeight, childName);
       });
 
       const handleMouseDown = (e) => {
@@ -617,7 +2697,7 @@
       return (
         <svg
           width={svgWidth}
-          height={svgHeight}
+          height={baseHeight}
           ref={svgRef}
           style={{ overflow: 'hidden' }}
         >
@@ -644,7 +2724,7 @@
             {childrenBlocks}
             {configBlocks.map((_, index) =>
               renderArrow(
-                spacing + subBlockWidth,
+                traitsX + maxTraitWidth,
                 mainBlockY + (subBlockHeight + 5) * index + subBlockHeight / 2,
                 mainBlockX,
                 mainBlockY + mainBlockHeight / 2
@@ -654,7 +2734,7 @@
               renderArrow(
                 mainBlockX + mainBlockWidth,
                 mainBlockY + mainBlockHeight / 2,
-                svgWidth - spacing - subBlockWidth,
+                childrenX,
                 mainBlockY + (subBlockHeight + 5) * index + subBlockHeight / 2
               )
             )}
@@ -664,76 +2744,26 @@
     };
 
     const allComponents = [
-      // Composants atomiques
-      { id: 'button', name: 'Bouton', type: 'atomique' },
-      { id: 'link', name: 'Lien', type: 'atomique' },
-      { id: 'checkbox', name: 'Case à cocher', type: 'atomique' },
-      { id: 'radio', name: 'Bouton radio', type: 'atomique' },
-      { id: 'input', name: 'Champ de saisie', type: 'atomique' },
-      { id: 'label', name: 'Libellé', type: 'atomique' },
-      { id: 'select', name: 'Sélecteur', type: 'atomique' },
-      { id: 'badge', name: 'Badge', type: 'atomique' },
-      { id: 'tag', name: 'Tag', type: 'atomique' },
-      { id: 'title', name: 'Titre', type: 'atomique' },
-      { id: 'paragraph', name: 'Paragraphe', type: 'atomique' },
-      { id: 'image', name: 'Image', type: 'atomique' },
-      { id: 'pictogram', name: 'Pictogramme', type: 'atomique' },
-      { id: 'separator', name: 'Séparateur', type: 'atomique' },
-
-      // Composants composés
-      { id: 'search', name: 'Barre de recherche', type: 'composé' },
-      { id: 'button-group', name: 'Groupe de boutons', type: 'composé' },
-      { id: 'breadcrumb', name: 'Fil d\'Ariane', type: 'composé' },
-      { id: 'alert', name: 'Alerte', type: 'composé' },
-      { id: 'badge-group', name: 'Groupe de badges', type: 'composé' },
-      { id: 'callout', name: 'Mise en avant', type: 'composé' },
-      { id: 'connect', name: 'Connexion', type: 'composé' },
-      { id: 'consent', name: 'Consentement', type: 'composé' },
-      { id: 'cookies-disabled', name: 'Cookies désactivés', type: 'composé' },
-      { id: 'follow', name: 'Suivre', type: 'composé' },
-      { id: 'footer', name: 'Pied de page', type: 'composé' },
-      { id: 'footer-operator', name: 'Pied de page opérateur', type: 'composé' },
-      { id: 'header', name: 'En-tête', type: 'composé' },
-      { id: 'highlight', name: 'Mise en évidence', type: 'composé' },
-      { id: 'logo', name: 'Logo', type: 'composé' },
-      { id: 'skiplinks', name: 'Liens d\'évitement', type: 'composé' },
-      { id: 'tabs', name: 'Onglets', type: 'composé' },
-      { id: 'tag-group', name: 'Groupe de tags', type: 'composé' },
-      { id: 'quote', name: 'Citation', type: 'composé' },
-      { id: 'card', name: 'Carte', type: 'composé' },
-      { id: 'stepper', name: 'Étapes', type: 'composé' },
-      { id: 'input-group', name: 'Groupe de champs', type: 'composé' },
-      { id: 'modal', name: 'Fenêtre modale', type: 'composé' },
-      { id: 'notice', name: 'Avis', type: 'composé' },
-      { id: 'share', name: 'Partage', type: 'composé' },
-      { id: 'accordion', name: 'Accordéon', type: 'composé' },
-      { id: 'side-menu', name: 'Menu latéral', type: 'composé' },
-      { id: 'toggle', name: 'Interrupteur', type: 'composé' },
-      { id: 'toggle-group', name: 'Groupe d\'interrupteurs', type: 'composé' },
-      { id: 'download-card', name: 'Carte de téléchargement', type: 'composé' },
-      { id: 'pagination', name: 'Pagination', type: 'composé' },
-      { id: 'tile', name: 'Tuile', type: 'composé' },
-      { id: 'summary', name: 'Sommaire', type: 'composé' },
-      { id: 'languages_selector', name: 'Sélecteur de langues', type: 'composé' },
-      { id: 'upload', name: 'Téléversement', type: 'composé' },
-      { id: 'table', name: 'Tableau', type: 'composé' },
-      { id: 'table-rich', name: 'Tableau enrichi', type: 'composé' },
-
-      // Composants de structure
-      { id: 'container', name: 'Conteneur', type: 'structure' },
-      { id: 'container-fluid', name: 'Conteneur fluide', type: 'structure' },
-      { id: 'row', name: 'Ligne', type: 'structure' },
-      { id: 'form', name: 'Formulaire (container)', type: 'structure' },
-
-      // Composants de formulaire spécifiques
-      { id: 'checkboxgroup', name: 'Groupe de cases à cocher', type: 'composé' },
-      { id: 'radiogroup', name: 'Groupe de boutons radio', type: 'composé' },
-      { id: 'radio-rich', name: 'Bouton radio riche', type: 'composé' },
-      { id: 'radio-rich-group', name: 'Groupe de boutons radio riches', type: 'composé' },
-      { id: 'name-form', name: 'Champ de nom', type: 'composé' },
-      { id: 'phone-form', name: 'Champ de téléphone', type: 'composé' },
-      { id: 'email-form', name: 'Champ d\'email', type: 'composé' },
-      { id: 'password-form', name: 'Champ de mot de passe', type: 'composé' },
+      dsfrAccordion,
+      dsfrAccordionGroup,
+      dsfrAlert,
+      dsfrBadge,
+      dsfrButton,
+      dsfrButtonGroup,
+      dsfrCard,
+      dsfrCheckbox,
+      dsfrCheckboxGroup,
+      dsfrContentMedia,
+      dsfrFileUpload,
+      dsfrInputGroup,
+      dsfrNotice,
+      dsfrQuote,
+      dsfrRadioButtonGroup,
+      dsfrRadioRich,
+      dsfrSearchBar,
+      dsfrSegmentedControl,
+      dsfrSegmentedElement,
+      dsfrRange,
     ];
 
     const ComponentList = ({ onSelectComponent }) => (
@@ -752,50 +2782,50 @@
       </div>
     );
 
-    const ComponentEditor = ({ component, onSave }) => {
-      const [name, setName] = useState(component?.name || '');
-      const [type, setType] = useState(component?.type || 'atomique');
-      const [allowedChildren, setAllowedChildren] = useState(component?.allowedChildren || []);
-      const [traits, setTraits] = useState(component?.traits || []);
-
-      const handleSave = () => {
-        onSave({ id: component?.id || Date.now().toString(), name, type, allowedChildren, traits });
+    const ComponentEditor = ({ component, onSave, onChange }) => {
+      const handleChange = (field, value) => {
+        const updatedComponent = { ...component, [field]: value };
+        onChange(updatedComponent);
       };
 
       return (
         <div>
           <h3>Éditeur de composant</h3>
-          <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Nom du composant" />
+          <Input
+            value={component.name}
+            onChange={(e) => handleChange('name', e.target.value)}
+            placeholder="Nom du composant"
+          />
           <Select
-            value={type}
-            onChange={(e) => setType(e.target.value)}
+            value={component.type}
+            onChange={(e) => handleChange('type', e.target.value)}
             options={[
               { value: 'atomique', label: 'Atomique' },
               { value: 'composé', label: 'Composé' }
             ]}
           />
           <AllowedChildrenList
-            allowedChildren={allowedChildren}
-            setAllowedChildren={setAllowedChildren}
+            allowedChildren={component.allowedChildren}
+            setAllowedChildren={(newChildren) => handleChange('allowedChildren', newChildren)}
           />
           <h4>Traits</h4>
-          {traits.map((trait, index) => (
+          {component.traits.map((trait, index) => (
             <div key={index} className="trait-container">
               <Input
                 value={trait.name}
                 onChange={(e) => {
-                  const newTraits = [...traits];
+                  const newTraits = [...component.traits];
                   newTraits[index].name = e.target.value;
-                  setTraits(newTraits);
+                  handleChange('traits', newTraits);
                 }}
                 placeholder="Nom du trait"
               />
               <Select
                 value={trait.type}
                 onChange={(e) => {
-                  const newTraits = [...traits];
+                  const newTraits = [...component.traits];
                   newTraits[index].type = e.target.value;
-                  setTraits(newTraits);
+                  handleChange('traits', newTraits);
                 }}
                 options={[
                   { value: 'string', label: 'Chaîne' },
@@ -804,15 +2834,15 @@
                   { value: 'array', label: 'Tableau' }
                 ]}
               />
-              <Button onClick={() => setTraits(traits.filter((_, i) => i !== index))}>
+              <Button onClick={() => handleChange('traits', component.traits.filter((_, i) => i !== index))}>
                 Supprimer
               </Button>
             </div>
           ))}
-          <Button onClick={() => setTraits([...traits, { name: '', type: 'string' }])}>
+          <Button onClick={() => handleChange('traits', [...component.traits, { name: '', type: 'string' }])}>
             Ajouter un trait
           </Button>
-          <Button onClick={handleSave}>Enregistrer le composant</Button>
+          <Button onClick={() => onSave(component)}>Enregistrer le composant</Button>
         </div>
       );
     };
@@ -876,7 +2906,14 @@
         }
       }, []);
 
-      const saveComponent = (component) => {
+      const handleComponentChange = (updatedComponent) => {
+        setSelectedComponent(updatedComponent);
+        setSavedComponents(prevComponents =>
+          prevComponents.map(c => c.id === updatedComponent.id ? updatedComponent : c)
+        );
+      };
+
+      const handleSave = (component) => {
         const updatedComponents = savedComponents.some(c => c.id === component.id)
           ? savedComponents.map(c => c.id === component.id ? component : c)
           : [...savedComponents, component];
@@ -927,35 +2964,6 @@
         window.downloadHTMLDocumentation(savedComponents, allComponents);
       };
 
-      /* const generateDocumentation = () => {
-        let doc = '# Documentation des composants DSFR\n\n';
-        savedComponents.forEach(component => {
-          doc += `## ${component.name}\n\n`;
-          doc += `Type: ${component.type}\n\n`;
-          doc += '### Enfants autorisés:\n';
-          component.allowedChildren.forEach(childId => {
-            const childName = allComponents.find(c => c.id === childId)?.name || childId;
-            doc += `- ${childName}\n`;
-          });
-          doc += '\n### Traits:\n';
-          component.traits.forEach(trait => {
-            doc += `- ${trait.name}: ${trait.type}\n`;
-          });
-          doc += '\n';
-        });
-        return doc;
-      };
-
-      const downloadDocumentation = () => {
-        const doc = generateDocumentation();
-        const blob = new Blob([doc], { type: 'text/markdown' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'dsfr-components-documentation.md';
-        a.click();
-      }; */
-
       return (
         <div className="container mx-auto p-5">
           <h1 className="text-3xl font-bold mb-6">Planificateur avancé de composants DSFR</h1>
@@ -983,7 +2991,11 @@
             <div>
               {selectedComponent && (
                 <>
-                  <ComponentEditor component={selectedComponent} onSave={saveComponent} />
+                  <ComponentEditor
+                    component={selectedComponent}
+                    onSave={handleSave}
+                    onChange={handleComponentChange}
+                  />
                   <ComponentGraph component={selectedComponent} />
                 </>
               )}
@@ -1007,6 +3019,37 @@
     };
 
     ReactDOM.render(<DSFRComponentPlanner />, document.getElementById('root'));
+
+
+
+    /* const generateDocumentation = () => {
+      let doc = '# Documentation des composants DSFR\n\n';
+      savedComponents.forEach(component => {
+        doc += `## ${component.name}\n\n`;
+        doc += `Type: ${component.type}\n\n`;
+        doc += '### Enfants autorisés:\n';
+        component.allowedChildren.forEach(childId => {
+          const childName = allComponents.find(c => c.id === childId)?.name || childId;
+          doc += `- ${childName}\n`;
+        });
+        doc += '\n### Traits:\n';
+        component.traits.forEach(trait => {
+          doc += `- ${trait.name}: ${trait.type}\n`;
+        });
+        doc += '\n';
+      });
+      return doc;
+    };
+
+    const downloadDocumentation = () => {
+      const doc = generateDocumentation();
+      const blob = new Blob([doc], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'dsfr-components-documentation.md';
+      a.click();
+    }; */
   </script>
 </body>
 
