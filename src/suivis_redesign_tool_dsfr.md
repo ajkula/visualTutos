@@ -32,7 +32,20 @@ Légende :
 ⚠️ Partiellement implémenté
 ❌ À développer
 
-## Analyse et perspectives d'évolution
+## Objectifs de l'outil de documentation
+
+- Faciliter la compréhension et la documentation du projet DSFR-builder pour les product managers et owners
+- Offrir une plateforme pour repenser et planifier l'évolution du DSFR-builder
+- Permettre la définition et la documentation claire des règles métier du DSFR-builder
+- Servir d'aide-mémoire pour les considérations techniques et stratégiques importantes du DSFR-builder
+- Centraliser les informations sur l'état actuel et les perspectives d'évolution du DSFR-builder
+- Améliorer la communication entre les équipes de développement et les parties prenantes du projet
+- Fournir une base solide pour la prise de décisions éclairées concernant le développement futur du DSFR-builder
+- Permettre une visualisation claire des composants, de leurs relations et de leurs contraintes dans le DSFR-builder
+- Faciliter l'identification des opportunités d'amélioration et d'optimisation du DSFR-builder
+- Assurer la cohérence entre la documentation et l'implémentation réelle du DSFR-builder
+
+## Considérations pour les évolutions futur du DSFR-builder
 
 ### Stratégie d'export
 Notre approche pour les exports doit être modulaire et flexible. Points à considérer :
