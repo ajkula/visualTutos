@@ -290,14 +290,14 @@
         doc += '  return context.measureText(text).width + 20;\n';
         doc += '}\n';
 
-        doc += 'function generateVisualComponentGraph(component, allComponents, containerId) {\n';
+        doc += 'function generateVisualComponentGraph(component, savedComponents, containerId) {\n';
         doc += '  const baseWidth = 800, baseHeight = 600;\n';
         doc += '  const mainBlockWidth = 300, mainBlockHeight = 200;\n';
         doc += '  const subBlockHeight = 40, spacing = 30, arrowWidth = 2;\n';
 
         doc += '  const maxTraitWidth = Math.max(150, ...(component.traits || []).map(trait => getTextWidth(trait.name + ": " + trait.type)));\n';
         doc += '  const maxChildWidth = Math.max(150, ...(component.allowedChildren || []).map(childId => {\n';
-        doc += '    const childName = allComponents.find(c => c.id === childId)?.name || childId;\n';
+        doc += '    const childName = savedComponents.find(c => c.id === childId)?.name || childId;\n';
         doc += '    return getTextWidth(childName);\n';
         doc += '  }));\n';
 
@@ -328,7 +328,7 @@
         doc += '  });\n';
 
         doc += '  (component.allowedChildren || []).forEach((childId, index) => {\n';
-        doc += '    const childName = allComponents.find(c => c.id === childId)?.name || childId;\n';
+        doc += '    const childName = savedComponents.find(c => c.id === childId)?.name || childId;\n';
         doc += '    const y = mainBlockY + (subBlockHeight + 5) * index;\n';
         doc += '    g.innerHTML += renderBlock(childrenX, y, maxChildWidth, subBlockHeight, childName);\n';
         doc += '  });\n';
@@ -410,10 +410,9 @@
         doc += '}\n';
 
         doc += 'const savedComponents = ' + JSON.stringify(savedComponents) + ';\n';
-        doc += 'const allComponents = ' + JSON.stringify(allComponents) + ';\n';
         doc += 'document.addEventListener("DOMContentLoaded", function() {\n';
         doc += '  savedComponents.forEach(function(component) {\n';
-        doc += '    generateVisualComponentGraph(component, allComponents, "svg-" + component.id);\n';
+        doc += '    generateVisualComponentGraph(component, savedComponents, "svg-" + component.id);\n';
         doc += '  });\n';
         doc += '});\n';
 
