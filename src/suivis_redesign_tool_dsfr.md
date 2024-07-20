@@ -3,28 +3,25 @@
 | Fonctionnalité | État actuel |
 |----------------|-------------|
 | Outils d'aide | ⚠️ Base existante, à améliorer |
-| Liste exhaustive des composants (atomiques et composés) | ⚠️ Partielle, à compléter |
 | Sélection des enfants possibles en liste blanche | ✅ Implémenté (checkboxes) |
-| Suggestions cohérentes avec le DSFR | ❌ À développer |
 | Sauvegarde locale des composants | ✅ Fonctionnel |
 | Édition et suppression des composants sauvegardés | ✅ Opérationnel |
 | Confirmation avant suppression | ✅ Fonctionnel |
 | Partage des données sauvegardées | ✅ Fonctionnel |
-| Traits avec types JS et input (style GrapesJS) | ⚠️ Base existante, à affiner |
 | Visualisation en graphe des composants | ✅ Implémenté |
 | Représentation des enfants acceptés | ✅ Intégré au graphe |
 | Visualisation des traits (types) | ✅ Dans le graphe |
-| Représentation des éléments proposables | ❌ À concevoir |
 | Génération de documentation | ✅ Fonctionnel |
+| Sélection dynamique des composants | ✅ Fonctionnel |
+| Liste exhaustive des composants (atomiques et composés) | ⚠️ Partielle, à compléter |
+| Suggestions cohérentes avec le DSFR | ⚠️ Base existante, à affiner |
+| Traits avec types JS et input (style GrapesJS) | ⚠️ Base existante, à affiner |
+| Représentation des éléments proposables | ⚠️ Base existante, à affiner |
 | Documentation interactive | ⚠️ Partiellement implémenté |
-| Gestion de variables globales | ❌ À développer |
-| Valeurs réutilisables entre traits | ❌ À implémenter |
-| Définition de valeurs par défaut et limites | ❌ À ajouter |
+| Interface de règles métier pour exports | ⚠️ Base existante, à affiner |
 | Mapping des interactions entre composants | ❌ À concevoir |
 | Définition d'événements inter-composants | ❌ À développer |
 | Visualisation des dépendances | ❌ À concevoir |
-| Interface de règles métier pour exports | ❌ À concevoir |
-| Sélection dynamique des composants | ❌ À implémenter |
 | Adaptation contextuelle des composants | ❌ À concevoir |
 
 Légende :
