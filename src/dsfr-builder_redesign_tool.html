@@ -2523,8 +2523,8 @@
               setAllowedChildren([...allowedChildren, component.id]);
             }
           }}
-          renderItem={(component) => (
-            <div key={component.id} className="flex items-center space-x-2">
+          renderItem={(component) => allowedChildren ? (
+            <div key={component.id} className="flex items-center space-x-2 p-2 border rounded cursor-pointer hover:bg-gray-100">
               <Checkbox
                 label={component.name}
                 id={`child-${component.id}`}
@@ -2532,7 +2532,7 @@
                 onChange={() => { }}
               />
             </div>
-          )}
+          ) : null}
         />
       </div>
     );
@@ -2782,6 +2782,149 @@
       </div>
     );
 
+
+    const TreeViewEditor = ({ data, onChange, excludeFields = [], path = [], level = 0 }) => {
+      const [isExpanded, setIsExpanded] = useState(level < 1);
+
+      if (Array.isArray(data)) {
+        return (
+          <details open={isExpanded}>
+            <summary onClick={() => setIsExpanded(!isExpanded)}>
+              Array [{data.length}]
+            </summary>
+            <div style={{ marginLeft: '20px' }}>
+              {data.map((item, index) => (
+                <div key={index} className="array-item">
+                  {path[path.length - 1] === 'traits' ? (
+                    <PrimitiveEditor
+                      data={item}
+                      onChange={(newValue) => {
+                        const newData = [...data];
+                        newData[index] = newValue;
+                        onChange(newData);
+                      }}
+                      path={[...path, index]}
+                    />
+                  ) : (
+                    <TreeViewEditor
+                      data={item}
+                      onChange={(newValue) => {
+                        const newData = [...data];
+                        newData[index] = newValue;
+                        onChange(newData);
+                      }}
+                      excludeFields={excludeFields}
+                      path={[...path, index]}
+                      level={level + 1}
+                    />
+                  )}
+                  <Button onClick={() => {
+                    const newData = data.filter((_, i) => i !== index);
+                    onChange(newData);
+                  }}>
+                    Supprimer
+                  </Button>
+                </div>
+              ))}
+              <Button onClick={() => {
+                const newItem = path[path.length - 1] === 'traits'
+                  ? { name: '', type: 'string' }
+                  : (typeof data[0] === 'object' ? {} : '');
+                onChange([...data, newItem]);
+              }}>
+                Ajouter un élément
+              </Button>
+            </div>
+          </details>
+        );
+      }
+
+      if (typeof data === 'object' && data !== null) {
+        return (
+          <details open={isExpanded}>
+            <summary onClick={() => setIsExpanded(!isExpanded)}>
+              Object {path[path.length - 1] || 'Root'}
+            </summary>
+            <div style={{ marginLeft: '20px' }}>
+              {Object.entries(data)
+                .filter(([key]) => !excludeFields.includes(key))
+                .map(([key, value]) => (
+                  <div key={key} className="object-field">
+                    <strong>{key}:</strong>
+                    <TreeViewEditor
+                      data={value}
+                      onChange={(newValue) => {
+                        const newData = { ...data, [key]: newValue };
+                        onChange(newData);
+                      }}
+                      excludeFields={excludeFields}
+                      path={[...path, key]}
+                      level={level + 1}
+                    />
+                  </div>
+                ))}
+            </div>
+          </details>
+        );
+      }
+
+      return <PrimitiveEditor data={data} onChange={onChange} path={path} />;
+    };
+
+    const PrimitiveEditor = ({ data, onChange, path = [] }) => {
+      if (path[path.length - 2] === 'traits' && typeof data === 'object') {
+        // case trait
+        return (
+          <div>
+            <input
+              type="text"
+              value={data.name || ''}
+              onChange={(e) => onChange({ ...data, name: e.target.value })}
+              placeholder="Nom du trait"
+            />
+            <select
+              value={data.type || 'string'}
+              onChange={(e) => onChange({ ...data, type: e.target.value })}
+            >
+              <option value="string">Chaîne</option>
+              <option value="number">Nombre</option>
+              <option value="boolean">Booléen</option>
+              <option value="array">Tableau</option>
+            </select>
+          </div>
+        );
+      }
+
+      if (typeof data === 'boolean') {
+        return (
+          <input
+            type="checkbox"
+            checked={data}
+            onChange={(e) => onChange(e.target.checked)}
+          />
+        );
+      }
+
+      if (typeof data === 'number') {
+        return (
+          <input
+            type="number"
+            value={data}
+            onChange={(e) => onChange(Number(e.target.value))}
+          />
+        );
+      }
+
+      // fallback types
+      return (
+        <input
+          type="text"
+          value={data?.toString() || ''}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      );
+    };
+
     const ComponentEditor = ({ component, onSave, onChange }) => {
       const handleChange = (field, value) => {
         const updatedComponent = { ...component, [field]: value };
@@ -2808,40 +2951,16 @@
             allowedChildren={component.allowedChildren}
             setAllowedChildren={(newChildren) => handleChange('allowedChildren', newChildren)}
           />
-          <h4>Traits</h4>
-          {component.traits.map((trait, index) => (
-            <div key={index} className="trait-container">
-              <Input
-                value={trait.name}
-                onChange={(e) => {
-                  const newTraits = [...component.traits];
-                  newTraits[index].name = e.target.value;
-                  handleChange('traits', newTraits);
-                }}
-                placeholder="Nom du trait"
-              />
-              <Select
-                value={trait.type}
-                onChange={(e) => {
-                  const newTraits = [...component.traits];
-                  newTraits[index].type = e.target.value;
-                  handleChange('traits', newTraits);
-                }}
-                options={[
-                  { value: 'string', label: 'Chaîne' },
-                  { value: 'number', label: 'Nombre' },
-                  { value: 'boolean', label: 'Booléen' },
-                  { value: 'array', label: 'Tableau' }
-                ]}
-              />
-              <Button onClick={() => handleChange('traits', component.traits.filter((_, i) => i !== index))}>
-                Supprimer
-              </Button>
-            </div>
-          ))}
-          <Button onClick={() => handleChange('traits', [...component.traits, { name: '', type: 'string' }])}>
-            Ajouter un trait
-          </Button>
+          <h4>Structure du composant</h4>
+          <TreeViewEditor
+            data={component}
+            onChange={(updatedComponent) => {
+              /* préserver les champs gérés séparément */
+              const { name, type, allowedChildren } = component;
+              onChange({ ...updatedComponent, name, type, allowedChildren });
+            }}
+            excludeFields={['name', 'type', 'allowedChildren']}
+          />
           <Button onClick={() => onSave(component)}>Enregistrer le composant</Button>
         </div>
       );
@@ -2850,33 +2969,84 @@
     // rendu svg
     const ComponentGraph = ({ component }) => {
       if (!component) return null;
+
+      const renderList = (items, renderItem, emptyMessage) => {
+        if (!items) return <p>{emptyMessage}</p>;
+
+        const itemsArray = Array.isArray(items) ? items : [items];
+
+        return (
+          <ul>
+            {itemsArray.length > 0 ? (
+              itemsArray.map((item, index) => <li key={index}>{renderItem(item, index)}</li>)
+            ) : (
+              <li>{emptyMessage}</li>
+            )}
+          </ul>
+        );
+      };
+
+      const renderSection = (title, items, renderItem, emptyMessage) => {
+        if (!items || (Array.isArray(items) && items.length === 0)) return null;
+        return (
+          <>
+            <h4>{title}</h4>
+            {renderList(items, renderItem, emptyMessage)}
+          </>
+        );
+      };
+
+      const sections = [
+        {
+          title: "Enfants acceptés",
+          items: component.allowedChildren,
+          render: (childId) => allComponents.find(c => c.id === childId)?.name || childId,
+          emptyMessage: "Aucun enfant autorisé"
+        },
+        {
+          title: "Traits",
+          items: component.traits,
+          render: (trait) => `${trait.name}: ${trait.type}`,
+          emptyMessage: "Aucun trait défini"
+        },
+        {
+          title: "Notes d'accessibilité",
+          items: component.accessibilityNotes,
+          render: (note) => note,
+          emptyMessage: "Aucune note d'accessibilité"
+        },
+        {
+          title: "Notes d'utilisation",
+          items: component.usageNotes,
+          render: (note) => note,
+          emptyMessage: "Aucune note d'utilisation"
+        },
+        {
+          title: "Directives de contenu",
+          items: component.contentGuidelines,
+          render: (guideline) => guideline,
+          emptyMessage: "Aucune directive de contenu"
+        },
+        {
+          title: "Modificateurs",
+          items: component.modifiers,
+          render: (modifier) => `${modifier.name}: ${modifier.values.join(', ')} (Défaut: ${modifier.default})`,
+          emptyMessage: "Aucun modificateur"
+        }
+      ];
+
       return (
         <div className="component-item">
           <h3>Graphe du composant</h3>
           <VisualComponentGraph component={component} />
-          <div>
+          <div className="component-details">
             <h4>Composant: {component.name}</h4>
             <p>Type: {component.type}</p>
-            <h4>Enfants acceptés:</h4>
-            <ul>
-              {component.allowedChildren && component.allowedChildren.length > 0 ? (
-                component.allowedChildren.map((childId) => (
-                  <li key={childId}>{allComponents.find(c => c.id === childId)?.name || childId}</li>
-                ))
-              ) : (
-                <li>Aucun enfant autorisé</li>
-              )}
-            </ul>
-            <h4>Traits:</h4>
-            <ul>
-              {component.traits && component.traits.length > 0 ? (
-                component.traits.map((trait, index) => (
-                  <li key={index}>{trait.name}: {trait.type}</li>
-                ))
-              ) : (
-                <li>Aucun trait défini</li>
-              )}
-            </ul>
+            {sections.map((section, index) => (
+              <React.Fragment key={index}>
+                {renderSection(section.title, section.items, section.render, section.emptyMessage)}
+              </React.Fragment>
+            ))}
           </div>
         </div>
       );
@@ -2892,12 +3062,26 @@
     );
 
     const DSFRComponentPlanner = () => {
-      const [selectedComponent, setSelectedComponent] = useState(null);
+      const [selectedComponent, setSelectedComponentSafe] = useState(null);
       const [savedComponents, setSavedComponents] = useState([]);
       const [showShareDialog, setShowShareDialog] = useState(false);
       const [shareData, setShareData] = useState('');
       const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
       const [componentToDelete, setComponentToDelete] = useState(null);
+      const setSelectedComponent = component => {
+        if (component && typeof component === 'object') {
+          const updatedComponent = {
+            name: '',
+            type: 'atomique',
+            allowedChildren: [],
+            traits: [],
+            ...component
+          };
+          setSelectedComponentSafe(updatedComponent);
+        } else {
+          setSelectedComponentSafe(null);
+        }
+      };
 
       useEffect(() => {
         const storedComponents = localStorage.getItem('dsfr-components');
